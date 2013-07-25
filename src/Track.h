@@ -9,9 +9,21 @@
 #ifndef TRACK_H
 #define TRACK_H
 
-class Track
+#include "Types.h"
+
+#include <QList>
+#include <QString>
+
+struct TrackPoint
 {
-    
+    LonLat pos;
+    unsigned int time;
+};
+
+struct Track
+{
+    QString sport;
+    QList<TrackPoint> points;
 };
 
 #endif

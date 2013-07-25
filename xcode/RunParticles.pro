@@ -99,15 +99,17 @@ HEADERS = ../src/Layer.h \
           ../src/Map.h \
           ../src/MapView.h \
           ../src/Particle.h \
+          ../src/TcxHandler.h \
           ../src/TimeCtx.h \
           ../src/Track.h \
           ../src/Types.h \
-          ../src/ViewCtx.h
+          ../src/ViewCtx.h \
 
 SOURCES = ../src/Map.cpp \
           ../src/MapView.cpp \
           ../src/RunParticlesApp.cpp \
           ../src/Particle.cpp \
+          ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
           ../src/Track.cpp \
           ../src/ViewCtx.cpp

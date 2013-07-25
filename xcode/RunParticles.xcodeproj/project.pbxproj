@@ -1,0 +1,1099 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+		D7BA7D76DAB5DD13389D6332 = {
+			buildActionMask = 2147483647;
+			files = (
+				);
+			generatedFileNames = (
+				);
+			isa = PBXShellScriptBuildPhase;
+			name = "Qt Qmake";
+			neededFileNames = (
+				);
+			shellPath = "/bin/sh";
+			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_makeqmake.mak\'";
+		};
+		733527686FDCD63BEC7B5251 = {
+			isa = PBXFileReference;
+			name = "Map.cpp";
+			path = "../src/Map.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		AA99E5F14E054E62B553DBA5 = {
+			fileRef = "733527686FDCD63BEC7B5251";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		C4D8568B4D2A69A1D7A4D3DA = {
+			isa = PBXFileReference;
+			name = "MapView.cpp";
+			path = "../src/MapView.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		E841EDE132C823DB407E580A = {
+			fileRef = "C4D8568B4D2A69A1D7A4D3DA";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		6CC5D6FA466027A45DF34C4F = {
+			isa = PBXFileReference;
+			name = "RunParticlesApp.cpp";
+			path = "../src/RunParticlesApp.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		AB385FD1C9AE830D7D5C518B = {
+			fileRef = "6CC5D6FA466027A45DF34C4F";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		A5BC167F73B880D5A253771B = {
+			isa = PBXFileReference;
+			name = "Particle.cpp";
+			path = "../src/Particle.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		B569D4432D7909CABEEB100E = {
+			fileRef = "A5BC167F73B880D5A253771B";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		726E02FD0D4EDA7EA5B45E24 = {
+			isa = PBXFileReference;
+			name = "TimeCtx.cpp";
+			path = "../src/TimeCtx.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		1230654D328A74C345289118 = {
+			fileRef = "726E02FD0D4EDA7EA5B45E24";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		29278738EB18506880D7B954 = {
+			isa = PBXFileReference;
+			name = "Track.cpp";
+			path = "../src/Track.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		6BB9FD530195BBCE77D6D89F = {
+			fileRef = "29278738EB18506880D7B954";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		A8164F2E335227ACC408437B = {
+			isa = PBXFileReference;
+			name = "ViewCtx.cpp";
+			path = "../src/ViewCtx.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		0174E42383F8EA419215C9BE = {
+			fileRef = "A8164F2E335227ACC408437B";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		290B40E1081732F53E2489DE = {
+			isa = PBXFileReference;
+			name = "Layer.h";
+			path = "../src/Layer.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		245A1835322098C52B654A17 = {
+			isa = PBXFileReference;
+			name = "Map.h";
+			path = "../src/Map.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		515A8F63771690694B8EE115 = {
+			isa = PBXFileReference;
+			name = "MapView.h";
+			path = "../src/MapView.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		3AAB450F0F6E472F72DF56AC = {
+			isa = PBXFileReference;
+			name = "Particle.h";
+			path = "../src/Particle.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		43DE819D1B00A6317CA6C03E = {
+			isa = PBXFileReference;
+			name = "TimeCtx.h";
+			path = "../src/TimeCtx.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		5037C8859D1552EEA8810EF1 = {
+			isa = PBXFileReference;
+			name = "Track.h";
+			path = "../src/Track.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		716387C61E131D3E3F611C22 = {
+			isa = PBXFileReference;
+			name = "Types.h";
+			path = "../src/Types.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		FD3FE89C76DAE4123EDD7EC3 = {
+			isa = PBXFileReference;
+			name = "ViewCtx.h";
+			path = "../src/ViewCtx.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		4C2DA36C27C5F653C388931E = {
+			isa = PBXFileReference;
+			name = "RunParticles.pro";
+			path = "RunParticles.pro";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		883D7615C4D2DE3FA1218F12 = {
+			isa = PBXGroup;
+			children = (
+				"4458B98565818D7E2682FA2D");
+			name = "Headers";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		4458B98565818D7E2682FA2D = {
+			isa = PBXGroup;
+			children = (
+				"90EA38E2E04640FD4C27618C");
+			name = "..";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		90EA38E2E04640FD4C27618C = {
+			isa = PBXGroup;
+			children = (
+				"290B40E1081732F53E2489DE",
+				"245A1835322098C52B654A17",
+				"515A8F63771690694B8EE115",
+				"3AAB450F0F6E472F72DF56AC",
+				"43DE819D1B00A6317CA6C03E",
+				"5037C8859D1552EEA8810EF1",
+				"716387C61E131D3E3F611C22",
+				"FD3FE89C76DAE4123EDD7EC3");
+			name = "src";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		BFA3A29D17FD123C907B6E35 = {
+			isa = PBXGroup;
+			children = (
+				"58044B046310C858CE5E1612");
+			name = "..";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		58044B046310C858CE5E1612 = {
+			isa = PBXGroup;
+			children = (
+				"733527686FDCD63BEC7B5251",
+				"C4D8568B4D2A69A1D7A4D3DA",
+				"6CC5D6FA466027A45DF34C4F",
+				"A5BC167F73B880D5A253771B",
+				"726E02FD0D4EDA7EA5B45E24",
+				"29278738EB18506880D7B954",
+				"A8164F2E335227ACC408437B");
+			name = "src";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		FB61758D0F0FDA4BA867C3D5 = {
+			isa = PBXGroup;
+			children = (
+				"BFA3A29D17FD123C907B6E35");
+			name = "Sources";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		7CABE3C80E79AD2B307756D2 = {
+			isa = PBXGroup;
+			children = (
+				"4C2DA36C27C5F653C388931E");
+			name = "Sources [qmake]";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		A0A52A2ADF7A1E2A99738674 = {
+			buildActionMask = 2147483647;
+			files = (
+				);
+			generatedFileNames = (
+				"AA99E5F14E054E62B553DBA5",
+				"E841EDE132C823DB407E580A",
+				"AB385FD1C9AE830D7D5C518B",
+				"B569D4432D7909CABEEB100E",
+				"1230654D328A74C345289118",
+				"6BB9FD530195BBCE77D6D89F",
+				"0174E42383F8EA419215C9BE");
+			isa = PBXShellScriptBuildPhase;
+			name = "Qt Preprocessors";
+			neededFileNames = (
+				"AA99E5F14E054E62B553DBA5",
+				"E841EDE132C823DB407E580A",
+				"AB385FD1C9AE830D7D5C518B",
+				"B569D4432D7909CABEEB100E",
+				"1230654D328A74C345289118",
+				"6BB9FD530195BBCE77D6D89F",
+				"0174E42383F8EA419215C9BE");
+			shellPath = "/bin/sh";
+			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_preprocess.mak\'";
+		};
+		C29B8785722055ED95EF7B57 = {
+			buildActionMask = 2147483647;
+			files = (
+				"AA99E5F14E054E62B553DBA5",
+				"E841EDE132C823DB407E580A",
+				"AB385FD1C9AE830D7D5C518B",
+				"B569D4432D7909CABEEB100E",
+				"1230654D328A74C345289118",
+				"6BB9FD530195BBCE77D6D89F",
+				"0174E42383F8EA419215C9BE");
+			isa = PBXSourcesBuildPhase;
+			name = "Build Sources";
+		};
+		A482F097FBCD53622FDAB7CD = {
+			isa = PBXFileReference;
+			name = "Accelerate.framework";
+			path = "/System/Library/Frameworks/Accelerate.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		282D0943B44B6A7FAC16A702 = {
+			fileRef = "A482F097FBCD53622FDAB7CD";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		DCDFF7D4DAE217C12A322FC8 = {
+			isa = PBXFileReference;
+			name = "AudioToolbox.framework";
+			path = "/System/Library/Frameworks/AudioToolbox.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		BE29FCEBE353C8375F034751 = {
+			fileRef = "DCDFF7D4DAE217C12A322FC8";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		5A5E07CEF4D0A51E8FE3D953 = {
+			isa = PBXFileReference;
+			name = "AudioUnit.framework";
+			path = "/System/Library/Frameworks/AudioUnit.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		7D24C4AAFE054CB4F844982B = {
+			fileRef = "5A5E07CEF4D0A51E8FE3D953";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		5047022CEBDAD3272EE3C4D2 = {
+			isa = PBXFileReference;
+			name = "CoreAudio.framework";
+			path = "/System/Library/Frameworks/CoreAudio.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		6AFFA5CC440B7A45A7B1BFFC = {
+			fileRef = "5047022CEBDAD3272EE3C4D2";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C2671CDA2D916DA7D9731334 = {
+			isa = PBXFileReference;
+			name = "QTKit.framework";
+			path = "/System/Library/Frameworks/QTKit.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		97EAD7884AEED6A7BAA6A6AD = {
+			fileRef = "C2671CDA2D916DA7D9731334";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7F0BFC15F1C54499F627799B = {
+			isa = PBXFileReference;
+			name = "CoreVideo.framework";
+			path = "/System/Library/Frameworks/CoreVideo.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		9F41E56D8DF62E748214621A = {
+			fileRef = "7F0BFC15F1C54499F627799B";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		DA138F75C9F545CDAE7FB264 = {
+			isa = PBXFileReference;
+			name = "Carbon.framework";
+			path = "/System/Library/Frameworks/Carbon.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		C8FD4A1AAA37CF2CA2824CCF = {
+			fileRef = "DA138F75C9F545CDAE7FB264";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		DA18A6831232F53228631AD1 = {
+			isa = PBXFileReference;
+			name = "OpenGL.framework";
+			path = "/System/Library/Frameworks/OpenGL.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		BCEF71E1EDFB18DA77DC750B = {
+			fileRef = "DA18A6831232F53228631AD1";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		336CB11D929F5E35FA69020F = {
+			isa = PBXFileReference;
+			name = "Cocoa.framework";
+			path = "/System/Library/Frameworks/Cocoa.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		77C663449ABEE93BEE5F2771 = {
+			fileRef = "336CB11D929F5E35FA69020F";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		821416211D63F190AAAD016A = {
+			isa = PBXFileReference;
+			name = "AppKit.framework";
+			path = "/System/Library/Frameworks/AppKit.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		51D4DBF7CB8537BE86EBD055 = {
+			fileRef = "821416211D63F190AAAD016A";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C27A2209D3BA2FF0054F1674 = {
+			isa = PBXFileReference;
+			name = "CoreData.framework";
+			path = "/System/Library/Frameworks/CoreData.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		720C777D1DB36D86FBE495C6 = {
+			fileRef = "C27A2209D3BA2FF0054F1674";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BC52FAE3CF80A871217A111D = {
+			isa = PBXFileReference;
+			name = "Foundation.framework";
+			path = "/System/Library/Frameworks/Foundation.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		5AAC0D9BBAE5CD615557CD7D = {
+			fileRef = "BC52FAE3CF80A871217A111D";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		5722065C68933E29F927F0CE = {
+			isa = PBXFileReference;
+			name = "libcinder.a";
+			path = "/usr/local/cinder_0.8.5_mac/lib/libcinder.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		26DBFFB1A08226E2F16AA4E8 = {
+			fileRef = "5722065C68933E29F927F0CE";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0E710D5040069804D5E24963 = {
+			isa = PBXFileReference;
+			name = "libboost_date_time.a";
+			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_date_time.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		4A31460D8B2D5931C0C199D4 = {
+			fileRef = "0E710D5040069804D5E24963";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3115C225E04302C7E25EB851 = {
+			isa = PBXFileReference;
+			name = "libboost_filesystem.a";
+			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_filesystem.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		08BF389A0CE532301000DCEA = {
+			fileRef = "3115C225E04302C7E25EB851";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		750DE5A7200792154C928F98 = {
+			isa = PBXFileReference;
+			name = "libboost_system.a";
+			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_system.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		39ABBD83F78766CC15E7310B = {
+			fileRef = "750DE5A7200792154C928F98";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		87B941E8EB46B1E26289A4D8 = {
+			isa = PBXFileReference;
+			name = "libboost_thread.a";
+			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_thread.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		8B5542686E1BE23AC80C1F4B = {
+			fileRef = "87B941E8EB46B1E26289A4D8";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		84B90F5664CE65067F1639BC = {
+			isa = PBXFileReference;
+			name = "libboost_regex.a";
+			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_regex.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		1F8BE8CCB21853C76F99E213 = {
+			fileRef = "84B90F5664CE65067F1639BC";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B42AA02B4D19934453CAFFD0 = {
+			isa = PBXFileReference;
+			name = "libcairo.a";
+			path = "/usr/local/Cellar/cairo/1.12.14/lib/libcairo.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		E749DA7F0F3B6BC8AA5A7DBC = {
+			fileRef = "B42AA02B4D19934453CAFFD0";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		75CD288A01C35FEE947E486B = {
+			isa = PBXFileReference;
+			name = "libpixman-1.a";
+			path = "/usr/local/Cellar/pixman/0.28.2/lib/libpixman-1.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		A191D6D8A2E3F9BCD6F8FF32 = {
+			fileRef = "75CD288A01C35FEE947E486B";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		DBE2DD789DD1AD5E2473CFF3 = {
+			isa = PBXFileReference;
+			name = "libpng.a";
+			path = "/usr/local/Cellar/libpng/1.5.14/lib/libpng15.a";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		D64282AD947732CCBFD44182 = {
+			fileRef = "DBE2DD789DD1AD5E2473CFF3";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B7224C93433801FF6247874B = {
+			isa = PBXFileReference;
+			name = "QtXml.framework";
+			path = "/usr/local/Trolltech/Qt-4.8.4/lib/QtXml.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		6BF10227EA5E83EE5D4D4F09 = {
+			fileRef = "B7224C93433801FF6247874B";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		879AAAB17BA0A77D3097F95F = {
+			isa = PBXFileReference;
+			name = "QtCore.framework";
+			path = "/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		C4EB4B2EAF3A49A2DCC28178 = {
+			fileRef = "879AAAB17BA0A77D3097F95F";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		5CB6F8B4A159ED991BD3DAA2 = {
+			isa = PBXFileReference;
+			name = "QtOpenGL.framework";
+			path = "/usr/local/Trolltech/Qt-4.8.4/lib/QtOpenGL.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		5F9E4ABD7AD30EB54AB9DA70 = {
+			fileRef = "5CB6F8B4A159ED991BD3DAA2";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		AAC81F19099646AE44475FD9 = {
+			isa = PBXFileReference;
+			name = "QtGui.framework";
+			path = "/usr/local/Trolltech/Qt-4.8.4/lib/QtGui.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		8F0E7A0EF2862AFF400E41AA = {
+			fileRef = "AAC81F19099646AE44475FD9";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C6766F86E49E9C8701C8E637 = {
+			isa = PBXFileReference;
+			name = "AGL.framework";
+			path = "/System/Library/Frameworks/AGL.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		0C6D4628EE0B0D1479A20551 = {
+			fileRef = "C6766F86E49E9C8701C8E637";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		ED1E82605DD74B483AF3C982 = {
+			children = (
+				"A482F097FBCD53622FDAB7CD",
+				"DCDFF7D4DAE217C12A322FC8",
+				"5A5E07CEF4D0A51E8FE3D953",
+				"5047022CEBDAD3272EE3C4D2",
+				"C2671CDA2D916DA7D9731334",
+				"7F0BFC15F1C54499F627799B",
+				"DA138F75C9F545CDAE7FB264",
+				"DA18A6831232F53228631AD1",
+				"336CB11D929F5E35FA69020F",
+				"821416211D63F190AAAD016A",
+				"C27A2209D3BA2FF0054F1674",
+				"BC52FAE3CF80A871217A111D",
+				"5722065C68933E29F927F0CE",
+				"0E710D5040069804D5E24963",
+				"3115C225E04302C7E25EB851",
+				"750DE5A7200792154C928F98",
+				"87B941E8EB46B1E26289A4D8",
+				"84B90F5664CE65067F1639BC",
+				"B42AA02B4D19934453CAFFD0",
+				"75CD288A01C35FEE947E486B",
+				"DBE2DD789DD1AD5E2473CFF3",
+				"B7224C93433801FF6247874B",
+				"879AAAB17BA0A77D3097F95F",
+				"5CB6F8B4A159ED991BD3DAA2",
+				"AAC81F19099646AE44475FD9",
+				"C6766F86E49E9C8701C8E637");
+			isa = PBXGroup;
+			name = "External Frameworks and Libraries";
+			path = "";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		2A1043669E6E5A7426EA502A = {
+			buildActionMask = 2147483647;
+			files = (
+				"282D0943B44B6A7FAC16A702",
+				"BE29FCEBE353C8375F034751",
+				"7D24C4AAFE054CB4F844982B",
+				"6AFFA5CC440B7A45A7B1BFFC",
+				"97EAD7884AEED6A7BAA6A6AD",
+				"9F41E56D8DF62E748214621A",
+				"C8FD4A1AAA37CF2CA2824CCF",
+				"BCEF71E1EDFB18DA77DC750B",
+				"77C663449ABEE93BEE5F2771",
+				"51D4DBF7CB8537BE86EBD055",
+				"720C777D1DB36D86FBE495C6",
+				"5AAC0D9BBAE5CD615557CD7D",
+				"26DBFFB1A08226E2F16AA4E8",
+				"4A31460D8B2D5931C0C199D4",
+				"08BF389A0CE532301000DCEA",
+				"39ABBD83F78766CC15E7310B",
+				"8B5542686E1BE23AC80C1F4B",
+				"1F8BE8CCB21853C76F99E213",
+				"E749DA7F0F3B6BC8AA5A7DBC",
+				"A191D6D8A2E3F9BCD6F8FF32",
+				"D64282AD947732CCBFD44182",
+				"6BF10227EA5E83EE5D4D4F09",
+				"C4EB4B2EAF3A49A2DCC28178",
+				"5F9E4ABD7AD30EB54AB9DA70",
+				"8F0E7A0EF2862AFF400E41AA",
+				"0C6D4628EE0B0D1479A20551");
+			isa = PBXFrameworksBuildPhase;
+			name = "Frameworks & Libraries";
+		};
+		3787F99312C85FF0073FD7BA = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			name = "Bundle Resources";
+		};
+		05596AB53D8D521C69802C27 = {
+			children = (
+				"FB61758D0F0FDA4BA867C3D5",
+				"883D7615C4D2DE3FA1218F12",
+				"7CABE3C80E79AD2B307756D2",
+				"ED1E82605DD74B483AF3C982");
+			isa = PBXGroup;
+			name = "RunParticles";
+			path = "";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
+		CC64FC219F0344C47BEB506E = {
+			isa = PBXFileReference;
+			explicitFileType = "wrapper.application";
+			path = "RunParticles.app";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		068F80C7519D0528FB08E821 = {
+			children = (
+				"CC64FC219F0344C47BEB506E");
+			isa = PBXGroup;
+			name = "Products";
+			refType = 4;
+		};
+		B2A5E289DE25D585117B840A = {
+			buildPhases = (
+				"D7BA7D76DAB5DD13389D6332",
+				"A0A52A2ADF7A1E2A99738674",
+				"C29B8785722055ED95EF7B57",
+				"2A1043669E6E5A7426EA502A",
+				"3787F99312C85FF0073FD7BA");
+			buildSettings = {
+				CC = "/usr/bin/gcc";
+				CPLUSPLUS = "/usr/bin/g++";
+				LEXFLAGS = "";
+				YACCFLAGS = "-d";
+				OTHER_REZFLAGS = "";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "";
+				PREBINDING = NO;
+				INFOPLIST_FILE = "Info.plist";
+				BUILD_ROOT = "/Users/dal/Documents/cinder/RunParticles/xcode";
+				OTHER_LDFLAGS = (
+						"-headerpad_max_install_names",
+						"-L/System/Library/Frameworks/Accelerate.framework",
+						"-L/System/Library/Frameworks/AudioToolbox.framework",
+						"-L/System/Library/Frameworks/AudioUnit.framework",
+						"-L/System/Library/Frameworks/CoreAudio.framework",
+						"-L/System/Library/Frameworks/QTKit.framework",
+						"-L/System/Library/Frameworks/CoreVideo.framework",
+						"-L/System/Library/Frameworks/Carbon.framework",
+						"-L/System/Library/Frameworks/OpenGL.framework",
+						"-L/System/Library/Frameworks/Cocoa.framework",
+						"-L/System/Library/Frameworks/AppKit.framework",
+						"-L/System/Library/Frameworks/CoreData.framework",
+						"-L/System/Library/Frameworks/Foundation.framework",
+						"-L/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-F/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-L/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-F/usr/local/Trolltech/Qt-4.8.4/lib");
+				DYLIB_CURRENT_VERSION = "1.0.0";
+				DYLIB_COMPATIBILITY_VERSION = "1.0";
+				MACOSX_DEPLOYMENT_TARGET = "10.4";
+				PRODUCT_NAME = "RunParticles";
+			};
+			conditionalBuildSettings = {
+			};
+			dependencies = (
+				);
+			productReference = "CC64FC219F0344C47BEB506E";
+			shouldUseHeadermap = 1;
+			buildConfigurationList = 17B3380A4D6A7D415E7F2E1E;
+			isa = PBXNativeTarget;
+			productType = "com.apple.product-type.application";
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">
+<plist version=\"0.9\">
+<dict>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+ 	<key>CFBundleGetInfoString</key>
+	<string>Created by Qt/QMake</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleExecutable</key>
+	<string>RunParticles</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.RunParticles</string>
+	<key>NOTE</key>
+	<string>This file was generated by Qt/QMake.</string>
+</dict>
+</plist>
+";
+			name = "RunParticles";
+			productName = "RunParticles";
+			startupPath = "<<ProjectDirectory>>";
+		};
+		4B72B24813252891014BCF61 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = "NO";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = "YES";
+				GCC_OPTIMIZATION_LEVEL = "0";
+				PRODUCT_NAME = "RunParticles";
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtCore",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtGui.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtGui",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtOpenGL.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtOpenGL",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtXml.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtXml",
+					"/usr/local/Trolltech/Qt-4.8.4/include",
+					"/usr/local/cinder_0.8.5_mac/include",
+					"/usr/local/cinder_0.8.5_mac/boost/boost",
+					"/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers",
+					"/System/Library/Frameworks/AGL.framework/Headers",
+					".",
+					"/usr/local/include",
+					"/System/Library/Frameworks/CarbonCore.framework/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/mkspecs/macx-xcode");
+				LIBRARY_SEARCH_PATHS = (
+					"/System/Library/Frameworks/Accelerate.framework",
+					"/System/Library/Frameworks/AudioToolbox.framework",
+					"/System/Library/Frameworks/AudioUnit.framework",
+					"/System/Library/Frameworks/CoreAudio.framework",
+					"/System/Library/Frameworks/QTKit.framework",
+					"/System/Library/Frameworks/CoreVideo.framework",
+					"/System/Library/Frameworks/Carbon.framework",
+					"/System/Library/Frameworks/OpenGL.framework",
+					"/System/Library/Frameworks/Cocoa.framework",
+					"/System/Library/Frameworks/AppKit.framework",
+					"/System/Library/Frameworks/CoreData.framework",
+					"/System/Library/Frameworks/Foundation.framework",
+					"/usr/local/Trolltech/Qt-4.8.4/lib",
+					"/System/Library/Frameworks/",
+					"/usr/local/cinder_0.8.5_mac/lib",
+					"/usr/local/cinder_0.8.5_mac/lib/macosx",
+					"/usr/local/lib",
+					"/usr/local/Trolltech/Qt-4.8.4/lib");
+				FRAMEWORK_SEARCH_PATHS = (
+					"/usr/local/Trolltech/Qt-4.8.4/lib",
+					"/usr/local/Trolltech/Qt-4.8.4/lib",
+					"/usr/local/Trolltech/Qt-4.8.4/lib");
+				INFOPLIST_FILE = "Info.plist";
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_XML_LIB",
+					"-DQT_OPENGL_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED");
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-std=c++11",
+					"-stdlib=libc++",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_XML_LIB",
+					"-DQT_OPENGL_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED");
+				OTHER_LDFLAGS = (
+						"-headerpad_max_install_names",
+						"-L/System/Library/Frameworks/Accelerate.framework",
+						"-L/System/Library/Frameworks/AudioToolbox.framework",
+						"-L/System/Library/Frameworks/AudioUnit.framework",
+						"-L/System/Library/Frameworks/CoreAudio.framework",
+						"-L/System/Library/Frameworks/QTKit.framework",
+						"-L/System/Library/Frameworks/CoreVideo.framework",
+						"-L/System/Library/Frameworks/Carbon.framework",
+						"-L/System/Library/Frameworks/OpenGL.framework",
+						"-L/System/Library/Frameworks/Cocoa.framework",
+						"-L/System/Library/Frameworks/AppKit.framework",
+						"-L/System/Library/Frameworks/CoreData.framework",
+						"-L/System/Library/Frameworks/Foundation.framework",
+						"-L/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-F/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-L/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-F/usr/local/Trolltech/Qt-4.8.4/lib");
+				ARCHS = "x86_64";
+			};
+			name = "Debug";
+		};
+		BEC09A62E69C3553534FF35E = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = "NO";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = "YES";
+				GCC_OPTIMIZATION_LEVEL = "0";
+				PRODUCT_NAME = "RunParticles";
+				PRODUCT_NAME = "RunParticles";
+			};
+			name = "Debug";
+		};
+		2C641C3335766025DD51B7BD = {
+			buildRules = (
+				);
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = "NO";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = "YES";
+				GCC_OPTIMIZATION_LEVEL = "0";
+				PRODUCT_NAME = "RunParticles";
+			};
+			isa = "PBXBuildStyle";
+			name = "Debug";
+		};
+		D70590BEB531B51029F711BB = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = "YES";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = "NO";
+				PRODUCT_NAME = "RunParticles";
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtCore",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtGui.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtGui",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtOpenGL.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtOpenGL",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtXml.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtXml",
+					"/usr/local/Trolltech/Qt-4.8.4/include",
+					"/usr/local/cinder_0.8.5_mac/include",
+					"/usr/local/cinder_0.8.5_mac/boost/boost",
+					"/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers",
+					"/System/Library/Frameworks/AGL.framework/Headers",
+					".",
+					"/usr/local/include",
+					"/System/Library/Frameworks/CarbonCore.framework/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/mkspecs/macx-xcode");
+				LIBRARY_SEARCH_PATHS = (
+					"/System/Library/Frameworks/Accelerate.framework",
+					"/System/Library/Frameworks/AudioToolbox.framework",
+					"/System/Library/Frameworks/AudioUnit.framework",
+					"/System/Library/Frameworks/CoreAudio.framework",
+					"/System/Library/Frameworks/QTKit.framework",
+					"/System/Library/Frameworks/CoreVideo.framework",
+					"/System/Library/Frameworks/Carbon.framework",
+					"/System/Library/Frameworks/OpenGL.framework",
+					"/System/Library/Frameworks/Cocoa.framework",
+					"/System/Library/Frameworks/AppKit.framework",
+					"/System/Library/Frameworks/CoreData.framework",
+					"/System/Library/Frameworks/Foundation.framework",
+					"/usr/local/Trolltech/Qt-4.8.4/lib",
+					"/System/Library/Frameworks/",
+					"/usr/local/cinder_0.8.5_mac/lib",
+					"/usr/local/cinder_0.8.5_mac/lib/macosx",
+					"/usr/local/lib",
+					"/usr/local/Trolltech/Qt-4.8.4/lib");
+				FRAMEWORK_SEARCH_PATHS = (
+					"/usr/local/Trolltech/Qt-4.8.4/lib",
+					"/usr/local/Trolltech/Qt-4.8.4/lib",
+					"/usr/local/Trolltech/Qt-4.8.4/lib");
+				INFOPLIST_FILE = "Info.plist";
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_XML_LIB",
+					"-DQT_OPENGL_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED");
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-std=c++11",
+					"-stdlib=libc++",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_XML_LIB",
+					"-DQT_OPENGL_LIB",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED");
+				OTHER_LDFLAGS = (
+						"-headerpad_max_install_names",
+						"-L/System/Library/Frameworks/Accelerate.framework",
+						"-L/System/Library/Frameworks/AudioToolbox.framework",
+						"-L/System/Library/Frameworks/AudioUnit.framework",
+						"-L/System/Library/Frameworks/CoreAudio.framework",
+						"-L/System/Library/Frameworks/QTKit.framework",
+						"-L/System/Library/Frameworks/CoreVideo.framework",
+						"-L/System/Library/Frameworks/Carbon.framework",
+						"-L/System/Library/Frameworks/OpenGL.framework",
+						"-L/System/Library/Frameworks/Cocoa.framework",
+						"-L/System/Library/Frameworks/AppKit.framework",
+						"-L/System/Library/Frameworks/CoreData.framework",
+						"-L/System/Library/Frameworks/Foundation.framework",
+						"-L/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-F/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-L/usr/local/Trolltech/Qt-4.8.4/lib",
+						"-F/usr/local/Trolltech/Qt-4.8.4/lib");
+				ARCHS = "x86_64";
+			};
+			name = "Release";
+		};
+		8C7174830A1E4DCBA0332EC1 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = "YES";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = "NO";
+				PRODUCT_NAME = "RunParticles";
+				PRODUCT_NAME = "RunParticles";
+			};
+			name = "Release";
+		};
+		26DE8D2AEA4B3714B41E931F = {
+			buildRules = (
+				);
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				COPY_PHASE_STRIP = "YES";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = "NO";
+				PRODUCT_NAME = "RunParticles";
+			};
+			isa = "PBXBuildStyle";
+			name = "Release";
+		};
+		CC82A9286117DFED018F418F = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				"4B72B24813252891014BCF61",
+				"D70590BEB531B51029F711BB");
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationIsName = "Debug";
+		};
+		17B3380A4D6A7D415E7F2E1E = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				"BEC09A62E69C3553534FF35E",
+				"8C7174830A1E4DCBA0332EC1");
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationIsName = "Debug";
+		};
+		91B15E841AA80083484172DE = {
+			buildStyles = (
+				"2C641C3335766025DD51B7BD",
+				"26DE8D2AEA4B3714B41E931F");
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = "05596AB53D8D521C69802C27";
+			buildConfigurationList = "CC82A9286117DFED018F418F";
+			projectDirPath = "";
+			targets = (
+				"B2A5E289DE25D585117B840A");
+		};
+	};
+	rootObject = "91B15E841AA80083484172DE";
+}

@@ -22,7 +22,7 @@ public:
         
     void mouseDown(const Vec2i &mousePos);
     
-    void mouseWheel(const float);
+    void mouseWheel(const int);
     
     void mouseDrag(const Vec2i &mousePos, 
                    bool leftDown, 

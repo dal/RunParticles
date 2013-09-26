@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+/// Class that represents a time context. Maps real time and playback to map
+/// time.
 class TimeCtx
 {
 public:

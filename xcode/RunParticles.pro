@@ -95,7 +95,8 @@ CONFIG += qt
 
 TEMPLATE = app
 
-HEADERS = ../src/Layer.h \
+HEADERS = ../src/GLWidget.h \
+          ../src/Layer.h \
           ../src/Map.h \
           ../src/MapView.h \
           ../src/Particle.h \
@@ -105,7 +106,8 @@ HEADERS = ../src/Layer.h \
           ../src/Types.h \
           ../src/ViewCtx.h \
 
-SOURCES = ../src/Map.cpp \
+SOURCES = ../src/GLWidget.cpp \
+          ../src/Map.cpp \
           ../src/MapView.cpp \
           ../src/RunParticlesApp.cpp \
           ../src/Particle.cpp \

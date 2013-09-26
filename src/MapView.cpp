@@ -36,7 +36,7 @@ MapView::mouseDown( const Vec2i &mousePos )
     mLastAction = ACTION_NONE;
 }
 
-void MapView::mouseWheel(const float wheelIncrement)
+void MapView::mouseWheel(const int delta)
 {
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
     // *left, *top, *right, *bottom, *near, *far
@@ -46,6 +46,7 @@ void MapView::mouseWheel(const float wheelIncrement)
                            &oldBottom, 
                            &oldNear, 
                            &oldFar);
+    // TODO
     
 }
 

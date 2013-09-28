@@ -18,6 +18,38 @@
 			shellPath = "/bin/sh";
 			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_makeqmake.mak\'";
 		};
+		8FD2780091D775D5CCEBBD38 = {
+			isa = PBXFileReference;
+			name = "GLWidget.cpp";
+			path = "../src/GLWidget.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		70C64B0C4DF679A983BD58E8 = {
+			fileRef = "8FD2780091D775D5CCEBBD38";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		A98C72B30428A8FB182A3E06 = {
+			isa = PBXFileReference;
+			name = "main.cpp";
+			path = "../src/main.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		0906DF28750D0609E141693F = {
+			fileRef = "A98C72B30428A8FB182A3E06";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		733527686FDCD63BEC7B5251 = {
 			isa = PBXFileReference;
 			name = "Map.cpp";
@@ -44,22 +76,6 @@
 		};
 		E841EDE132C823DB407E580A = {
 			fileRef = "C4D8568B4D2A69A1D7A4D3DA";
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					);
-			};
-		};
-		6CC5D6FA466027A45DF34C4F = {
-			isa = PBXFileReference;
-			name = "RunParticlesApp.cpp";
-			path = "../src/RunParticlesApp.cpp";
-			refType = 4;
-			sourceTree = "SOURCE_ROOT";
-			lastKnownFileType = "sourcecode.cpp.cpp";
-		};
-		AB385FD1C9AE830D7D5C518B = {
-			fileRef = "6CC5D6FA466027A45DF34C4F";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -145,6 +161,13 @@
 				ATTRIBUTES = (
 					);
 			};
+		};
+		71B064E2E08701E9869193DB = {
+			isa = PBXFileReference;
+			name = "GLWidget.h";
+			path = "../src/GLWidget.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
 		};
 		290B40E1081732F53E2489DE = {
 			isa = PBXFileReference;
@@ -235,6 +258,7 @@
 		90EA38E2E04640FD4C27618C = {
 			isa = PBXGroup;
 			children = (
+				"71B064E2E08701E9869193DB",
 				"290B40E1081732F53E2489DE",
 				"245A1835322098C52B654A17",
 				"515A8F63771690694B8EE115",
@@ -259,9 +283,10 @@
 		58044B046310C858CE5E1612 = {
 			isa = PBXGroup;
 			children = (
+				"8FD2780091D775D5CCEBBD38",
+				"A98C72B30428A8FB182A3E06",
 				"733527686FDCD63BEC7B5251",
 				"C4D8568B4D2A69A1D7A4D3DA",
-				"6CC5D6FA466027A45DF34C4F",
 				"A5BC167F73B880D5A253771B",
 				"27E989ABCC1E6197D3D6CD1C",
 				"726E02FD0D4EDA7EA5B45E24",
@@ -292,9 +317,10 @@
 			files = (
 				);
 			generatedFileNames = (
+				"70C64B0C4DF679A983BD58E8",
+				"0906DF28750D0609E141693F",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
-				"AB385FD1C9AE830D7D5C518B",
 				"B569D4432D7909CABEEB100E",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
@@ -303,9 +329,10 @@
 			isa = PBXShellScriptBuildPhase;
 			name = "Qt Preprocessors";
 			neededFileNames = (
+				"70C64B0C4DF679A983BD58E8",
+				"0906DF28750D0609E141693F",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
-				"AB385FD1C9AE830D7D5C518B",
 				"B569D4432D7909CABEEB100E",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
@@ -317,9 +344,10 @@
 		C29B8785722055ED95EF7B57 = {
 			buildActionMask = 2147483647;
 			files = (
+				"70C64B0C4DF679A983BD58E8",
+				"0906DF28750D0609E141693F",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
-				"AB385FD1C9AE830D7D5C518B",
 				"B569D4432D7909CABEEB100E",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",

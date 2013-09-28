@@ -107,9 +107,9 @@ HEADERS = ../src/GLWidget.h \
           ../src/ViewCtx.h \
 
 SOURCES = ../src/GLWidget.cpp \
+          ../src/main.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \
-          ../src/RunParticlesApp.cpp \
           ../src/Particle.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \

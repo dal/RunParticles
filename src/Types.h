@@ -12,12 +12,14 @@
 
 struct LonLat
 {
+    LonLat(double x_, double y_) : lon(x_), lat(y_) {};
     double lon;
     double lat;
 };
 
 struct MapPoint
 {
+    MapPoint(double x_, double y_) : x(x_), y(y_) {};
     double x;
     double y;
 };

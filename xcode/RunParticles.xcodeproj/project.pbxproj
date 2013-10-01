@@ -34,6 +34,22 @@
 					);
 			};
 		};
+		34EA36EC0999F4312FDB0223 = {
+			isa = PBXFileReference;
+			name = "LineLayer.cpp";
+			path = "../src/LineLayer.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		CF8195F36426CE61F6B73A21 = {
+			fileRef = "34EA36EC0999F4312FDB0223";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		A98C72B30428A8FB182A3E06 = {
 			isa = PBXFileReference;
 			name = "main.cpp";
@@ -176,6 +192,13 @@
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
+		C46B1811911A37B80DF320B6 = {
+			isa = PBXFileReference;
+			name = "LineLayer.h";
+			path = "../src/LineLayer.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		245A1835322098C52B654A17 = {
 			isa = PBXFileReference;
 			name = "Map.h";
@@ -260,6 +283,7 @@
 			children = (
 				"71B064E2E08701E9869193DB",
 				"290B40E1081732F53E2489DE",
+				"C46B1811911A37B80DF320B6",
 				"245A1835322098C52B654A17",
 				"515A8F63771690694B8EE115",
 				"3AAB450F0F6E472F72DF56AC",
@@ -284,6 +308,7 @@
 			isa = PBXGroup;
 			children = (
 				"8FD2780091D775D5CCEBBD38",
+				"34EA36EC0999F4312FDB0223",
 				"A98C72B30428A8FB182A3E06",
 				"733527686FDCD63BEC7B5251",
 				"C4D8568B4D2A69A1D7A4D3DA",
@@ -318,6 +343,7 @@
 				);
 			generatedFileNames = (
 				"70C64B0C4DF679A983BD58E8",
+				"CF8195F36426CE61F6B73A21",
 				"0906DF28750D0609E141693F",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
@@ -330,6 +356,7 @@
 			name = "Qt Preprocessors";
 			neededFileNames = (
 				"70C64B0C4DF679A983BD58E8",
+				"CF8195F36426CE61F6B73A21",
 				"0906DF28750D0609E141693F",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
@@ -345,6 +372,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				"70C64B0C4DF679A983BD58E8",
+				"CF8195F36426CE61F6B73A21",
 				"0906DF28750D0609E141693F",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",

@@ -97,6 +97,7 @@ TEMPLATE = app
 
 HEADERS = ../src/GLWidget.h \
           ../src/Layer.h \
+          ../src/LineLayer.h \
           ../src/Map.h \
           ../src/MapView.h \
           ../src/Particle.h \
@@ -107,6 +108,7 @@ HEADERS = ../src/GLWidget.h \
           ../src/ViewCtx.h \
 
 SOURCES = ../src/GLWidget.cpp \
+          ../src/LineLayer.cpp \
           ../src/main.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \

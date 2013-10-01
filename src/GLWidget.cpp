@@ -42,7 +42,7 @@ GLWidget::paintGL()
     
     gl::color( Color( 1, 0, 0 ) );
     
-    gl::drawLine( Vec2f(0, 0), Vec2f(200, 200));
+    _map->draw();
     
     glPopMatrix();
 }

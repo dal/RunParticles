@@ -24,7 +24,10 @@ Map::update()
 void
 Map::draw()
 {
-    
+    const vector::iterator i;
+    for (i = _layers.begin(); i != _layers.end(); i++) {
+        // TODO *i.draw(viewctx);
+    }
 }
 
 bool

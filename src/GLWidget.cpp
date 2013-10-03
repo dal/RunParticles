@@ -7,6 +7,7 @@
 //
 
 #include "GLWidget.h"
+#include "LineLayer.h"
 
 #include "cinder/gl/gl.h"
 
@@ -18,6 +19,8 @@ GLWidget::GLWidget(QWidget *parent)
     _mapView.setCurrentCam(_camera);
     _timeCtx = TimeCtx();
     _map = new Map(&_timeCtx);
+    _map->addLayer(new LineLayer());
+    _mapView.recenter(
 }
 
 void

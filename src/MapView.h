@@ -12,6 +12,7 @@
 
 #include "cinder/Vector.h"
 #include "cinder/Camera.h"
+#include "Types.h"
 
 using namespace cinder;
 
@@ -32,6 +33,7 @@ public:
     const CameraOrtho& getCamera() const;
     void setCurrentCam( const CameraOrtho &aCurrentCam );
     void zoom( const float );
+    void recenter(const MapPoint &position);
         
 private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };

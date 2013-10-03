@@ -5,6 +5,7 @@
 
 class LineLayer : public Layer
 {
+public:
     LineLayer();
     
     virtual ~LineLayer();

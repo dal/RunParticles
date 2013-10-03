@@ -122,3 +122,28 @@ void MapView::zoom( const float amount )
 {
     
 }
+
+void
+MapView::recenter(const MapPoint &position)
+{
+    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
+    // *left, *top, *right, *bottom, *near, *far
+    mCurrentCam.getFrustum(&oldLeft,
+                           &oldTop,
+                           &oldRight,
+                           &oldBottom,
+                           &oldNear,
+                           &oldFar);
+    float width = (oldRight - oldLeft) * 0.5;
+    float height = (oldTop - oldBotton) * 0.5;
+    float newLeft = position.x - width;
+    float newRight = position.x + width;
+    float newTop = position.y + height;
+    float newBotton = position.y - width;
+    mCurrentCam.setOrtho(newLeft,
+                         newTop,
+                         newRight,
+                         newBottom,
+                         -1,
+                         1);
+}

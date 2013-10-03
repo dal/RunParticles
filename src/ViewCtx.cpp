@@ -48,14 +48,14 @@ ViewCtx::~ViewCtx()
     
 }
 
-const LonLat
+LonLat
 ViewCtx::getUpperLeft()
 {
     return _upperLeft;
 }
 
 MapPoint
-ViewCtx::toProjection(const LonLat &lonLat)
+ViewCtx::toProjection(const LonLat &lonLat) const
 {
     MapPoint projected;
     projected.x = _lonToX(lonLat.lon);
@@ -64,7 +64,7 @@ ViewCtx::toProjection(const LonLat &lonLat)
 }
 
 LonLat
-ViewCtx::fromProjection(const MapPoint &point)
+ViewCtx::fromProjection(const MapPoint &point) const
 {
     LonLat coord;
     coord.lon = _xToLon(point.x);

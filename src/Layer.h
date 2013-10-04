@@ -10,6 +10,7 @@
 #define RunParticles_Layer_h
 
 #include "ViewCtx.h"
+#include "Types.h"
 
 // Represents a single map layer
 
@@ -17,11 +18,11 @@ class Layer
 {
 public:
     
-    Layer();
+    Layer() {};
     
-    virtual ~Layer();
+    virtual ~Layer() {};
     
-    virtual void draw(const ViewCtx&) = 0;
+    virtual void draw(const ViewCtx*, const TimeCtx*) = 0;
     
 };
 

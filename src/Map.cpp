@@ -12,7 +12,7 @@
 Map::Map(TimeCtx *timeCtx)
 : _timeCtx(timeCtx)
 {
-    
+    _viewCtx = new ViewCtx();
 }
 
 void
@@ -24,14 +24,14 @@ Map::update()
 void
 Map::draw()
 {
-    const vector::iterator i;
+    std::vector<Layer*>::iterator i;
     for (i = _layers.begin(); i != _layers.end(); i++) {
-        // TODO *i.draw(viewctx);
+        (*i)->draw(_viewCtx, _timeCtx);
     }
 }
 
 bool
-Map::addLayer(const Layer *layer)
+Map::addLayer(Layer *layer)
 {
     _layers.push_back(layer);
     return true;

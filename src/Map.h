@@ -25,13 +25,17 @@ public:
     
     void draw();
     
-    bool addLayer(const Layer*);
+    bool addLayer(Layer*);
+    
+    ViewCtx* getViewCtx() const { return _viewCtx; }
     
 private:
     
-    std::vector<const Layer*> _layers;
+    std::vector<Layer*> _layers;
     
     TimeCtx *_timeCtx;
+    
+    ViewCtx *_viewCtx;
     
 };
 

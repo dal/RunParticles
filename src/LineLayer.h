@@ -2,6 +2,7 @@
 #define __LINE_LAYER_H__
 
 #include "Layer.h"
+#include "Types.h"
 
 class LineLayer : public Layer
 {
@@ -10,7 +11,7 @@ public:
     
     virtual ~LineLayer();
     
-    virtual void draw(const ViewCtx&);
+    virtual void draw(const ViewCtx*, const TimeCtx*);
 };
 
 #endif;

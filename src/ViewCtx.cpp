@@ -48,27 +48,17 @@ ViewCtx::~ViewCtx()
     
 }
 
-LonLat
-ViewCtx::getUpperLeft()
-{
-    return _upperLeft;
-}
-
 MapPoint
 ViewCtx::toProjection(const LonLat &lonLat) const
 {
-    MapPoint projected;
-    projected.x = _lonToX(lonLat.lon);
-    projected.y = _latToYSph(lonLat.lat);
+    MapPoint projected(_lonToX(lonLat.lon), _latToYSph(lonLat.lat));
     return projected;
 }
 
 LonLat
 ViewCtx::fromProjection(const MapPoint &point) const
 {
-    LonLat coord;
-    coord.lon = _xToLon(point.x);
-    coord.lat = _yToLatSph(point.y);
+    LonLat coord(_xToLon(point.x), _yToLatSph(point.y));
     return coord;
 }
 

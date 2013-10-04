@@ -12,6 +12,7 @@
 
 struct LonLat
 {
+    LonLat()  {};
     LonLat(double x_, double y_) : lon(x_), lat(y_) {};
     double lon;
     double lat;
@@ -19,6 +20,7 @@ struct LonLat
 
 struct MapPoint
 {
+    MapPoint() {};
     MapPoint(double x_, double y_) : x(x_), y(y_) {};
     double x;
     double y;

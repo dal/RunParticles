@@ -33,7 +33,6 @@ public:
     const TimeCtx* getTimeCtx() const;
 
 protected:
-    LonLat _upperLeft;
     
     const std::string _projection;
     

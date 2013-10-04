@@ -20,7 +20,8 @@ GLWidget::GLWidget(QWidget *parent)
     _timeCtx = TimeCtx();
     _map = new Map(&_timeCtx);
     _map->addLayer(new LineLayer());
-    _mapView.recenter(
+    MapPoint ctr = _map->getViewCtx()->toProjection(LonLat(37.81155, 122.26667));
+    _mapView.recenter(ctr);
 }
 
 void

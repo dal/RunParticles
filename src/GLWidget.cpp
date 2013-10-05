@@ -15,13 +15,20 @@ GLWidget::GLWidget(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
     timer.start();
-    _camera = CameraOrtho(0.0f, width(), height(), 0.0f, -1, 1);
+    _map = new Map(&_timeCtx);
+    // For now center the camera on Oakland
+    MapPoint r = _map->getViewCtx()->toProjection(LatLon(37.81155, 122.2));
+    MapPoint l = _map->getViewCtx()->toProjection(LatLon(37.81155, 122.3));
+    float viewheight = (l.x - r.x) * ((float)height() / (float)width());
+    _camera = CameraOrtho(l.x,
+                          r.x,
+                          r.y - viewheight*0.5,
+                          r.y + viewheight*0.5,
+                          -1,
+                          1);
     _mapView.setCurrentCam(_camera);
     _timeCtx = TimeCtx();
-    _map = new Map(&_timeCtx);
     _map->addLayer(new LineLayer());
-    MapPoint ctr = _map->getViewCtx()->toProjection(LonLat(37.81155, 122.26667));
-    _mapView.recenter(ctr);
 }
 
 void
@@ -33,6 +40,7 @@ GLWidget::initializeGL()
 void
 GLWidget::paintGL()
 {
+    _camera = _mapView.getCamera();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glPushMatrix();

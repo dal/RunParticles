@@ -10,10 +10,10 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-struct LonLat
+struct LatLon
 {
-    LonLat()  {};
-    LonLat(double x_, double y_) : lon(x_), lat(y_) {};
+    LatLon()  {};
+    LatLon(double lat_, double lon_) : lon(lon_), lat(lat_) {};
     double lon;
     double lat;
 };

@@ -16,7 +16,7 @@
 
 struct TrackPoint
 {
-    LonLat pos;
+    LatLon pos;
     unsigned int time;
 };
 

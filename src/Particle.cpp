@@ -9,7 +9,7 @@
 
 #include "Particle.h"
 
-Particle::Particle(const LonLat &mloc ) :
+Particle::Particle(const LatLon &mloc ) :
     loc(mloc)
 {
     

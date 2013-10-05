@@ -20,9 +20,9 @@ using namespace ci;
 class Particle
 {
 public:
-    LonLat loc;
+    LatLon loc;
     
-    Particle(const LonLat&);
+    Particle(const LatLon&);
     
     void update();
     

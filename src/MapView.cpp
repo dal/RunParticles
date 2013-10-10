@@ -120,7 +120,7 @@ void MapView::setCurrentCam( const CameraOrtho &aCurrentCam )
 
 void MapView::zoom( const float amount )
 {
-    
+    // TODO
 }
 
 void
@@ -147,3 +147,4 @@ MapView::recenter(const MapPoint &position)
                          -1,
                          1);
 }
+

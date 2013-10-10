@@ -17,24 +17,30 @@
 
 #define PI 3.141592653589793238
 
-double _xToLon(const double x)
+double
+_xToLon(const double x)
 {
-    return (RAD_TO_DEG * (x / MERCATOR_R_MAJ));
+    return x * RAD_TO_DEG / 111319.49079327357;
 }
 
-double _yToLatSph(const double y)
+double
+_yToLatSph(const double y)
 {
-    return (180./PI * (2 * atan(exp(y*PI/180.)) - PI/2));
+    return (1.5707963267948966 -
+            (2.0 * atan(exp((-1.0 * y) / 6378137.0)))) * RAD_TO_DEG;
 }
 
-double _lonToX(const double lon)
+double
+_lonToX(const double lon)
 {
-    return (MERCATOR_R_MAJ*DEG_TO_RAD*lon);
+    return lon * DEG_TO_RAD * 111319.49079327357;
 }
 
-double _latToYSph(const double lat)
+double
+_latToYSph(const double lat)
 {
-    return (180./PI * log(tan(PI/4+lat*(PI/180.)/2)));
+    double a = lat * DEG_TO_RAD;
+    return 3189068.5 * log((1.0 + sin(a*PI/180.)) / (1.0 - sin(a*PI/180.)));
 }
 
 ViewCtx::ViewCtx()

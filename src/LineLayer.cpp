@@ -18,10 +18,10 @@ LineLayer::~LineLayer()
 void 
 LineLayer::draw(const ViewCtx *ctx, const TimeCtx*)
 {
-    LatLon a(37.81155, 122.26667);
-    LatLon b(37.81941, 122.29423);
-    LatLon c(37.87309, 122.30556);
-    LatLon d(37.87099, 122.25105);
+    LatLon a(37.81155, -122.26667);
+    LatLon b(37.81941, -122.29423);
+    LatLon c(37.87309, -122.30556);
+    LatLon d(37.87099, -122.25105);
     
     MapPoint ma = ctx->toProjection(a);
     MapPoint mb = ctx->toProjection(b);

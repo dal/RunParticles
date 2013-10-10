@@ -17,9 +17,9 @@ GLWidget::GLWidget(QWidget *parent)
     timer.start();
     _map = new Map(&_timeCtx);
     // For now center the camera on Oakland
-    MapPoint r = _map->getViewCtx()->toProjection(LatLon(37.81155, 122.2));
-    MapPoint l = _map->getViewCtx()->toProjection(LatLon(37.81155, 122.3));
-    float viewheight = (l.x - r.x) * ((float)height() / (float)width());
+    MapPoint r = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.2));
+    MapPoint l = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.3));
+    float viewheight = (r.x - l.x) * ((float)height() / (float)width());
     _camera = CameraOrtho(l.x,
                           r.x,
                           r.y - viewheight*0.5,
@@ -96,20 +96,24 @@ GLWidget::resizeGL(int width, int height)
 void
 GLWidget::mousePressEvent(QMouseEvent *event)
 {
-    lastPos = event->pos();
+    QPoint eventXy = QPoint(event->x(), event->y());
+    MapPoint newPoint = screenPointToMapPoint(eventXy);
+    lastPos = newPoint;
 }
 
 void
 GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    int dx = event->x() - lastPos.x();
-    int dy = event->y() - lastPos.y();
+    QPoint eventXy = QPoint(event->x(), event->y());
+    MapPoint newPoint = screenPointToMapPoint(eventXy);
+    int dx = newPoint.x;// - lastPos.x;
+    int dy = newPoint.y;// - lastPos.y;
     
     _mapView.mouseDrag(Vec2i(dx, dy),
                        bool(event->buttons() & Qt::LeftButton),
                        bool(event->buttons() & Qt::MiddleButton),
                        bool(event->buttons() & Qt::RightButton));
-    _camera = _mapView.getCamera();
+    updateGL();
 }
 
 void
@@ -123,4 +127,20 @@ GLWidget::update()
 {
     _timeCtx.update(timer.elapsed());
     _map->update();
+}
+
+MapPoint
+GLWidget::screenPointToMapPoint(const QPoint &pt)
+{
+    float left, top, right, bottom, near, far;
+    // *left, *top, *right, *bottom, *near, *far
+    _camera.getFrustum(&left,
+                       &top,
+                       &right,
+                       &bottom,
+                       &near,
+                       &far);
+    float xPixelsToMeters = (right - left) / (float)width();
+    float yPixelsToMeters = (top - bottom) / (float)height();
+    return MapPoint(left+pt.x()*xPixelsToMeters, top+pt.y()*yPixelsToMeters);
 }

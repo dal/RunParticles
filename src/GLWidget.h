@@ -47,13 +47,15 @@ public:
     
     void update();
     
+    MapPoint screenPointToMapPoint(const QPoint &pt);
+    
 protected:
     
     qint64 _currentSeconds;
     
     CameraOrtho _camera;
     
-    QPoint lastPos;
+    MapPoint lastPos;
     
     MapView _mapView;
     

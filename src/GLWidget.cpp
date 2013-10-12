@@ -14,6 +14,7 @@
 GLWidget::GLWidget(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
+    setMouseTracking(true);
     timer.start();
     _map = new Map(&_timeCtx);
     // For now center the camera on Oakland
@@ -96,24 +97,25 @@ GLWidget::resizeGL(int width, int height)
 void
 GLWidget::mousePressEvent(QMouseEvent *event)
 {
-    QPoint eventXy = QPoint(event->x(), event->y());
-    MapPoint newPoint = screenPointToMapPoint(eventXy);
-    lastPos = newPoint;
+    event->accept();
 }
 
 void
 GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    QPoint eventXy = QPoint(event->x(), event->y());
-    MapPoint newPoint = screenPointToMapPoint(eventXy);
-    int dx = newPoint.x;// - lastPos.x;
-    int dy = newPoint.y;// - lastPos.y;
-    
-    _mapView.mouseDrag(Vec2i(dx, dy),
-                       bool(event->buttons() & Qt::LeftButton),
-                       bool(event->buttons() & Qt::MiddleButton),
-                       bool(event->buttons() & Qt::RightButton));
-    updateGL();
+    QPoint eventXy = QPoint(event->x(), height() - event->y());
+    if (event->buttons() != Qt::NoButton) {
+        _inDrag = true;
+        QPoint delta = eventXy - _lastPos;
+        MapPoint mapDelta = screenPointToMapPoint(delta);
+        _mapView.mouseDrag(Vec2i(-mapDelta.x, -mapDelta.y),
+                           bool(event->buttons() & Qt::LeftButton),
+                           bool(event->buttons() & Qt::MiddleButton),
+                           bool(event->buttons() & Qt::RightButton));
+        updateGL();
+    }
+    _lastPos = eventXy;
+    event->accept();
 }
 
 void
@@ -142,5 +144,5 @@ GLWidget::screenPointToMapPoint(const QPoint &pt)
                        &far);
     float xPixelsToMeters = (right - left) / (float)width();
     float yPixelsToMeters = (top - bottom) / (float)height();
-    return MapPoint(left+pt.x()*xPixelsToMeters, top+pt.y()*yPixelsToMeters);
+    return MapPoint(pt.x()*xPixelsToMeters, pt.y()*yPixelsToMeters);
 }

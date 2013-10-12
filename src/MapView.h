@@ -20,8 +20,6 @@ class MapView {
 public:
     MapView();
     MapView( const CameraOrtho&);
-        
-    void mouseDown(const Vec2i &mousePos);
     
     void mouseWheel(const int);
     
@@ -37,9 +35,8 @@ public:
         
 private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };
-        
-    Vec2i		mInitialMousePos;
-    CameraOrtho	mCurrentCam, mInitialCam;
+    
+    CameraOrtho	mCurrentCam;
     int			mLastAction;
 };
 

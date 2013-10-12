@@ -55,7 +55,9 @@ protected:
     
     CameraOrtho _camera;
     
-    MapPoint lastPos;
+    QPoint _lastPos;
+    
+    bool _inDrag;
     
     MapView _mapView;
     

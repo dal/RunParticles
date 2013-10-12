@@ -20,20 +20,12 @@
 
 MapView::MapView() 
 { 
-    mInitialCam = mCurrentCam = CameraOrtho(); 
+    mCurrentCam = CameraOrtho();
 }
 
 MapView::MapView( const CameraOrtho &aInitialCam ) 
 { 
-    mInitialCam = mCurrentCam = aInitialCam; 
-}
-
-void 
-MapView::mouseDown( const Vec2i &mousePos )
-{
-    mInitialMousePos = mousePos;
-    mInitialCam = mCurrentCam;
-    mLastAction = ACTION_NONE;
+    mCurrentCam = aInitialCam;
 }
 
 void MapView::mouseWheel(const int delta)
@@ -50,7 +42,7 @@ void MapView::mouseWheel(const int delta)
     
 }
 
-void MapView::mouseDrag(const Vec2i &mousePos, 
+void MapView::mouseDrag(const Vec2i &mouseDelta,
                         bool leftDown, 
                         bool middleDown, 
                         bool rightDown)
@@ -64,15 +56,7 @@ void MapView::mouseDrag(const Vec2i &mousePos,
         return;
     }
     
-    if( action != mLastAction ) {
-        mInitialCam = mCurrentCam;
-        mInitialMousePos = mousePos;
-    }
-    
-    mLastAction = action;
-    
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
-    // *left, *top, *right, *bottom, *near, *far
     mCurrentCam.getFrustum(&oldLeft, 
                            &oldTop, 
                            &oldRight, 
@@ -81,11 +65,9 @@ void MapView::mouseDrag(const Vec2i &mousePos,
                            &oldFar);
     
     if( action == ACTION_ZOOM ) { // zooming
-        int mouseDelta = ( mousePos.x - mInitialMousePos.x ) + 
-                         ( mousePos.y - mInitialMousePos.y );
         float size = (oldLeft - oldRight + oldTop - oldBottom);
         if (size == 0) size = 1.0;
-        float diff = mouseDelta / size / 2.0;
+        float diff = (mouseDelta.x + mouseDelta.y) / size / 2.0;
         
         mCurrentCam.setOrtho(oldLeft*diff, 
                              oldRight*diff, 
@@ -95,17 +77,16 @@ void MapView::mouseDrag(const Vec2i &mousePos,
                              1);
     }
     else if( action == ACTION_PAN ) { // panning
-        float deltaX = ( mInitialMousePos.x - mousePos.x );
-        float deltaY = ( mInitialMousePos.y - mousePos.y );
         // left, float right, float bottom, float top
-        mCurrentCam.setOrtho(oldLeft+deltaX, 
-                             oldRight+deltaX, 
-                             oldBottom+deltaY, 
-                             oldTop+deltaY, 
+        mCurrentCam.setOrtho(oldLeft+mouseDelta.x,
+                             oldRight+mouseDelta.x,
+                             oldBottom+mouseDelta.y,
+                             oldTop+mouseDelta.y,
                              -1, 
                              1);
+        fprintf(stderr, "%f %f\n", oldLeft, oldTop);
+        fprintf(stderr, "%d %d\n", mouseDelta.x, mouseDelta.y);
     }
-    mInitialMousePos = mousePos;
 }
     
 const CameraOrtho& MapView::getCamera() const 

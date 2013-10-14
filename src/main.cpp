@@ -8,14 +8,18 @@
 
 #include <QApplication>
 #include "GLWidget.h"
+#include "MainWindow.h"
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     
-    GLWidget *widget = new GLWidget();
+    GLWidget *glwidget = new GLWidget();
     
-    widget->show();
+    MainWindow *main = new MainWindow(glwidget);
+    
+    glwidget->show();
+    main->show();
     
     app.exec();
 }

@@ -25,7 +25,7 @@ class GLWidget : public QGLWidget
 {
     
 public:
-    GLWidget(QWidget *parent=0);
+    GLWidget(Map *map, QWidget *parent=0);
     
     virtual ~GLWidget();
     
@@ -47,7 +47,11 @@ public:
     
     void update();
     
+    MapPoint screenPointToRelativeMapPoint(const QPoint &pt);
+    
     MapPoint screenPointToMapPoint(const QPoint &pt);
+    
+    Map* getMap() const;
     
 protected:
     
@@ -63,7 +67,7 @@ protected:
     
     Map *_map;
     
-    TimeCtx _timeCtx;
+    TimeCtx *_timeCtx;
     
     QElapsedTimer timer;
 

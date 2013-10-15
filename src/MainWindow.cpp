@@ -1,8 +1,12 @@
 #include "MainWindow.h"
+#include "TcxHandler.h"
 
 #include <QGridLayout>
 #include <QMenu>
+#include <QMessageBox>
 #include <QWidget>
+#include <QXmlInputSource>
+#include <QXmlSimpleReader>
 
 MainWindow::MainWindow(GLWidget *glWidget,
                        QWidget * parent,
@@ -30,6 +34,27 @@ MainWindow::MainWindow(GLWidget *glWidget,
     QMenu *_fileMenu = _menuBar->addMenu("File");
     _openLayerAction = new QAction("Open Layer. . .", ctr);
     _fileMenu->addAction(_openLayerAction);
+}
+
+void
+MainWindow::loadTcxFile(QFile *tcxFile)
+{
+    QList<Track*> tracks;
+    TcxHandler *handler = new TcxHandler(&tracks);
+    QXmlSimpleReader *reader = new QXmlSimpleReader();
+    reader->setContentHandler(handler);
+    reader->setErrorHandler(handler);
+    
+    QString msg = QString("File '%1' does not exist").arg(tcxFile->fileName());
+    
+    if (!tcxFile->exists()) {
+        QMessageBox::critical(this, msg, msg);
+    }
+    
+    QXmlInputSource *source = new QXmlInputSource(tcxFile);
+    
+    reader->parse(source, true /*incremental*/);
+    while (reader->parseContinue()) { };
 }
 
 MainWindow::~MainWindow()

@@ -10,16 +10,18 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <QObject>
+
 #include "Layer.h"
 #include "TimeCtx.h"
 #include "ViewCtx.h"
 
 #include <vector>
 
-class Map 
+class Map : public QObject
 {
 public:
-    Map(TimeCtx*);
+    Map(QObject *parent=0);
     
     void update();
     
@@ -28,6 +30,8 @@ public:
     bool addLayer(Layer*);
     
     ViewCtx* getViewCtx() const { return _viewCtx; }
+    
+    TimeCtx* getTimeCtx() const { return _timeCtx; }
     
 private:
     

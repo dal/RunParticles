@@ -9,10 +9,12 @@
 
 #include "Map.h"
 
-Map::Map(TimeCtx *timeCtx)
-: _timeCtx(timeCtx)
+Map::Map(QObject *parent)
+: QObject(parent),
+_timeCtx(new TimeCtx()),
+_viewCtx(new ViewCtx())
 {
-    _viewCtx = new ViewCtx();
+    
 }
 
 void

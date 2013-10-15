@@ -9,12 +9,15 @@
 #include <QApplication>
 #include "GLWidget.h"
 #include "MainWindow.h"
+#include "Map.h"
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     
-    GLWidget *glwidget = new GLWidget();
+    Map *map = new Map();
+    
+    GLWidget *glwidget = new GLWidget(map);
     
     MainWindow *main = new MainWindow(glwidget);
     

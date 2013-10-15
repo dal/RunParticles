@@ -11,12 +11,12 @@
 
 #include "cinder/gl/gl.h"
 
-GLWidget::GLWidget(QWidget *parent)
+GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
     setMouseTracking(true);
     timer.start();
-    _map = new Map(&_timeCtx);
+    _map = map;
     // For now center the camera on Oakland
     MapPoint r = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.2));
     MapPoint l = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.3));
@@ -28,7 +28,7 @@ GLWidget::GLWidget(QWidget *parent)
                           -1,
                           1);
     _mapView.setCurrentCam(_camera);
-    _timeCtx = TimeCtx();
+    _timeCtx = _map->getTimeCtx();
     _map->addLayer(new LineLayer());
 }
 
@@ -107,7 +107,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() != Qt::NoButton) {
         _inDrag = true;
         QPoint delta = eventXy - _lastPos;
-        MapPoint mapDelta = screenPointToMapPoint(delta);
+        MapPoint mapDelta = screenPointToRelativeMapPoint(delta);
         _mapView.mouseDrag(Vec2i(-mapDelta.x, -mapDelta.y),
                            bool(event->buttons() & Qt::LeftButton),
                            bool(event->buttons() & Qt::MiddleButton),
@@ -127,8 +127,24 @@ GLWidget::wheelEvent(QWheelEvent *event)
 void
 GLWidget::update()
 {
-    _timeCtx.update(timer.elapsed());
+    _timeCtx->update(timer.elapsed());
     _map->update();
+}
+
+MapPoint
+GLWidget::screenPointToRelativeMapPoint(const QPoint &pt)
+{
+    float left, top, right, bottom, near, far;
+    // *left, *top, *right, *bottom, *near, *far
+    _camera.getFrustum(&left,
+                       &top,
+                       &right,
+                       &bottom,
+                       &near,
+                       &far);
+    float xPixelsToMeters = (right - left) / (float)width();
+    float yPixelsToMeters = (top - bottom) / (float)height();
+    return MapPoint(pt.x()*xPixelsToMeters, pt.y()*yPixelsToMeters);
 }
 
 MapPoint
@@ -144,5 +160,12 @@ GLWidget::screenPointToMapPoint(const QPoint &pt)
                        &far);
     float xPixelsToMeters = (right - left) / (float)width();
     float yPixelsToMeters = (top - bottom) / (float)height();
-    return MapPoint(pt.x()*xPixelsToMeters, pt.y()*yPixelsToMeters);
+    return MapPoint(left + pt.x()*xPixelsToMeters,
+                    bottom + pt.y()*yPixelsToMeters);
+}
+
+Map*
+GLWidget::getMap() const
+{
+    return _map;
 }

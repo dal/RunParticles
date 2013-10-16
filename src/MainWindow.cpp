@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "TcxHandler.h"
 
+#include <QFileDialog>
 #include <QGridLayout>
 #include <QMenu>
 #include <QMessageBox>
@@ -34,6 +35,13 @@ MainWindow::MainWindow(GLWidget *glWidget,
     QMenu *_fileMenu = _menuBar->addMenu("File");
     _openLayerAction = new QAction("Open Layer. . .", ctr);
     _fileMenu->addAction(_openLayerAction);
+    connect(_openLayerAction, SIGNAL(triggered(bool)),
+            this, SLOT(slotLoadFile()));
+}
+
+MainWindow::~MainWindow()
+{
+    // empty
 }
 
 void
@@ -57,8 +65,12 @@ MainWindow::loadTcxFile(QFile *tcxFile)
     while (reader->parseContinue()) { };
 }
 
-MainWindow::~MainWindow()
+void
+MainWindow::slotLoadFile()
 {
-    // empty
+    QString path = QFileDialog::getOpenFileName(this, "Select tcx file");
+    if (!path.isEmpty()) {
+        QFile *tcxFile = new QFile(path);
+        loadTcxFile(tcxFile);
+    }
 }
-

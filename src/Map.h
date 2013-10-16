@@ -20,6 +20,8 @@
 
 class Map : public QObject
 {
+    Q_OBJECT
+    
 public:
     Map(QObject *parent=0);
     

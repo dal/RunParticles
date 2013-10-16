@@ -66,6 +66,22 @@
 					);
 			};
 		};
+		9401B8B47AE9AA5B09E67B54 = {
+			isa = PBXFileReference;
+			name = "MainWindow.cpp";
+			path = "../src/MainWindow.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		56203036AD790066DC5AC5D5 = {
+			fileRef = "9401B8B47AE9AA5B09E67B54";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		733527686FDCD63BEC7B5251 = {
 			isa = PBXFileReference;
 			name = "Map.cpp";
@@ -178,6 +194,54 @@
 					);
 			};
 		};
+		1B676BCE814D278338617BB7 = {
+			isa = PBXFileReference;
+			name = "moc_GLWidget.cpp";
+			path = "moc_GLWidget.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		46EC2FFE3CF896C7F01CC623 = {
+			fileRef = "1B676BCE814D278338617BB7";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		26827F2FC4DC4FBB23DE8287 = {
+			isa = PBXFileReference;
+			name = "moc_MainWindow.cpp";
+			path = "moc_MainWindow.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		A4582233947FB7FB159573BB = {
+			fileRef = "26827F2FC4DC4FBB23DE8287";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		A80D9B274C4631DFF5DE9F09 = {
+			isa = PBXFileReference;
+			name = "moc_Map.cpp";
+			path = "moc_Map.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		88CA52E89813A0BB940BCB52 = {
+			fileRef = "A80D9B274C4631DFF5DE9F09";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		71B064E2E08701E9869193DB = {
 			isa = PBXFileReference;
 			name = "GLWidget.h";
@@ -196,6 +260,13 @@
 			isa = PBXFileReference;
 			name = "LineLayer.h";
 			path = "../src/LineLayer.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		B0CCE35A63C66BA6A9CF3B65 = {
+			isa = PBXFileReference;
+			name = "MainWindow.h";
+			path = "../src/MainWindow.h";
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
@@ -284,6 +355,7 @@
 				"71B064E2E08701E9869193DB",
 				"290B40E1081732F53E2489DE",
 				"C46B1811911A37B80DF320B6",
+				"B0CCE35A63C66BA6A9CF3B65",
 				"245A1835322098C52B654A17",
 				"515A8F63771690694B8EE115",
 				"3AAB450F0F6E472F72DF56AC",
@@ -310,6 +382,7 @@
 				"8FD2780091D775D5CCEBBD38",
 				"34EA36EC0999F4312FDB0223",
 				"A98C72B30428A8FB182A3E06",
+				"9401B8B47AE9AA5B09E67B54",
 				"733527686FDCD63BEC7B5251",
 				"C4D8568B4D2A69A1D7A4D3DA",
 				"A5BC167F73B880D5A253771B",
@@ -337,6 +410,16 @@
 			refType = 4;
 			sourceTree = "<Group>";
 		};
+		46E892BBB6BB6952967E0561 = {
+			isa = PBXGroup;
+			children = (
+				"1B676BCE814D278338617BB7",
+				"26827F2FC4DC4FBB23DE8287",
+				"A80D9B274C4631DFF5DE9F09");
+			name = "Temporary Sources";
+			refType = 4;
+			sourceTree = "<Group>";
+		};
 		A0A52A2ADF7A1E2A99738674 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -345,26 +428,34 @@
 				"70C64B0C4DF679A983BD58E8",
 				"CF8195F36426CE61F6B73A21",
 				"0906DF28750D0609E141693F",
+				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
 				"B569D4432D7909CABEEB100E",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
 				"6BB9FD530195BBCE77D6D89F",
-				"0174E42383F8EA419215C9BE");
+				"0174E42383F8EA419215C9BE",
+				"46EC2FFE3CF896C7F01CC623",
+				"A4582233947FB7FB159573BB",
+				"88CA52E89813A0BB940BCB52");
 			isa = PBXShellScriptBuildPhase;
 			name = "Qt Preprocessors";
 			neededFileNames = (
 				"70C64B0C4DF679A983BD58E8",
 				"CF8195F36426CE61F6B73A21",
 				"0906DF28750D0609E141693F",
+				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
 				"B569D4432D7909CABEEB100E",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
 				"6BB9FD530195BBCE77D6D89F",
-				"0174E42383F8EA419215C9BE");
+				"0174E42383F8EA419215C9BE",
+				"46EC2FFE3CF896C7F01CC623",
+				"A4582233947FB7FB159573BB",
+				"88CA52E89813A0BB940BCB52");
 			shellPath = "/bin/sh";
 			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_preprocess.mak\'";
 		};
@@ -374,13 +465,17 @@
 				"70C64B0C4DF679A983BD58E8",
 				"CF8195F36426CE61F6B73A21",
 				"0906DF28750D0609E141693F",
+				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
 				"B569D4432D7909CABEEB100E",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
 				"6BB9FD530195BBCE77D6D89F",
-				"0174E42383F8EA419215C9BE");
+				"0174E42383F8EA419215C9BE",
+				"46EC2FFE3CF896C7F01CC623",
+				"A4582233947FB7FB159573BB",
+				"88CA52E89813A0BB940BCB52");
 			isa = PBXSourcesBuildPhase;
 			name = "Build Sources";
 		};
@@ -815,6 +910,7 @@
 		05596AB53D8D521C69802C27 = {
 			children = (
 				"FB61758D0F0FDA4BA867C3D5",
+				"46E892BBB6BB6952967E0561",
 				"883D7615C4D2DE3FA1218F12",
 				"7CABE3C80E79AD2B307756D2",
 				"ED1E82605DD74B483AF3C982");

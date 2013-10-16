@@ -24,6 +24,8 @@
 class GLWidget : public QGLWidget
 {
     
+    Q_OBJECT
+    
 public:
     GLWidget(Map *map, QWidget *parent=0);
     

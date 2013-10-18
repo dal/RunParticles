@@ -43,6 +43,10 @@ private:
     
     ViewCtx *_viewCtx;
     
+signals:
+    
+    void layerAdded();
+    
 };
 
 

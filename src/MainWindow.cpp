@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "TcxHandler.h"
+#include "TrackLAyer.h"
 
 #include <QFileDialog>
 #include <QGridLayout>
@@ -63,6 +64,11 @@ MainWindow::loadTcxFile(QFile *tcxFile)
     
     reader->parse(source, true /*incremental*/);
     while (reader->parseContinue()) { };
+    Track *thisTrack;
+    foreach(thisTrack, tracks) {
+        TrackLayer *thisLayer = new TrackLayer(thisTrack);
+        _glWidget->getMap()->addLayer(thisLayer);
+    }
 }
 
 void

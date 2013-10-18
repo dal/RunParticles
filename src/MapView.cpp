@@ -84,8 +84,6 @@ void MapView::mouseDrag(const Vec2i &mouseDelta,
                              oldTop+mouseDelta.y,
                              -1, 
                              1);
-        fprintf(stderr, "%f %f\n", oldLeft, oldTop);
-        fprintf(stderr, "%d %d\n", mouseDelta.x, mouseDelta.y);
     }
 }
     

@@ -36,5 +36,6 @@ bool
 Map::addLayer(Layer *layer)
 {
     _layers.push_back(layer);
+    emit(layerAdded());
     return true;
 }

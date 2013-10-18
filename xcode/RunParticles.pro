@@ -105,6 +105,7 @@ HEADERS = ../src/GLWidget.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
           ../src/Track.h \
+          ../src/TrackLayer.h \
           ../src/Types.h \
           ../src/ViewCtx.h \
 
@@ -118,5 +119,6 @@ SOURCES = ../src/GLWidget.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
           ../src/Track.cpp \
+          ../src/TrackLayer.cpp \
           ../src/ViewCtx.cpp
 QT += opengl xml

@@ -30,6 +30,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _mapView.setCurrentCam(_camera);
     _timeCtx = _map->getTimeCtx();
     _map->addLayer(new LineLayer());
+    connect(_map, SIGNAL(layerAdded()), this, SLOT(updateGL));
 }
 
 void

@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include "GLWidget.h"
 #include <QAction>
+#include <QLineEdit>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QComboBox>
+#include <QSlider>
 
 class MainWindow : public QMainWindow
 {
@@ -18,15 +20,23 @@ public:
     
     void loadTcxFile(QFile *tcxFile);
     
+protected:
+    void _layout(QWidget*);
+    
 public slots:
     void slotLoadFile();
+    
+    void slotPlaybackRateChanged(const QString &newRate);
     
 protected:
     QMenuBar *_menuBar;
     GLWidget *_glWidget;
-    QPushButton *_forwardButton, *_backButton;
+    QPushButton *_rewindButton, *_forwardButton, *_pauseButton, *_backButton;
+    QSlider *_slider;
+    QLineEdit *_currentTimeLineEdit;
     QComboBox *_playSpeedCombo;
-    QAction *_openLayerAction;
+    QAction *_openLayerAction, *_forwardAction, *_backAction, *_rewindAction,
+            *_pauseAction;
 };
 
 #endif

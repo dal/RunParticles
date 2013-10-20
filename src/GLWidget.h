@@ -13,6 +13,7 @@
 #include <QGLWidget>
 #include <QMouseEvent>
 #include <QSize>
+#include <QTimer>
 #include <iostream>
 
 #include "cinder/Camera.h"
@@ -20,6 +21,11 @@
 #include "Map.h"
 #include "MapView.h"
 #include "TimeCtx.h"
+
+enum PlayMode {
+    Play_Pause,
+    Play_Forward
+};
 
 class GLWidget : public QGLWidget
 {
@@ -47,15 +53,29 @@ public:
     
     void wheelEvent(QWheelEvent *event);
     
-    void update();
-    
     MapPoint screenPointToRelativeMapPoint(const QPoint &pt);
     
     MapPoint screenPointToMapPoint(const QPoint &pt);
     
     Map* getMap() const;
     
+public slots:
+    
+    void update();
+
+    void slotPlay();
+    
+    void slotReverse();
+    
+    void slotPause();
+    
+    void slotRewind();
+    
+    void setPlaybackRate(double rate);
+    
 protected:
+    
+    PlayMode _playMode;
     
     qint64 _currentSeconds;
     
@@ -71,7 +91,9 @@ protected:
     
     TimeCtx *_timeCtx;
     
-    QElapsedTimer timer;
+    QElapsedTimer elapsedTimer;
+    
+    QTimer *timer;
 
 };
 

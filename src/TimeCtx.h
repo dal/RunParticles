@@ -29,11 +29,15 @@ public:
     
     double getMapSeconds() const;
     
+    void setMapSeconds(double);
+    
 protected:
     
     double _playbackRate;
     
     double _mapSeconds;
+    
+    double _lastTime;
     
 };
 

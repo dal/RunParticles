@@ -9,7 +9,8 @@
 #include "TimeCtx.h"
 
 TimeCtx::TimeCtx()
-: _playbackRate(30.0)
+: _playbackRate(1.0),
+_lastTime(0.)
 {
     
 }
@@ -34,7 +35,7 @@ TimeCtx::getPlaybackRate() const
 double
 TimeCtx::update(double elapsed)
 {
-    _mapSeconds += _playbackRate * elapsed;
+    _mapSeconds += _playbackRate * (elapsed / 1000.);
     return _mapSeconds;
 }
 
@@ -42,4 +43,10 @@ double
 TimeCtx::getMapSeconds() const
 {
     return _mapSeconds;
+}
+
+void
+TimeCtx::setMapSeconds(double mapSeconds)
+{
+    _mapSeconds = mapSeconds;
 }

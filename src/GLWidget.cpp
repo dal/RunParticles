@@ -7,15 +7,16 @@
 //
 
 #include "GLWidget.h"
-#include "LineLayer.h"
 
 #include "cinder/gl/gl.h"
 
 GLWidget::GLWidget(Map *map, QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
+    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
+    _playMode(Play_Pause),
+    timer(new QTimer(this))
 {
     setMouseTracking(true);
-    timer.start();
+    elapsedTimer.start();
     _map = map;
     // For now center the camera on Oakland
     MapPoint r = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.2));
@@ -29,8 +30,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
                           1);
     _mapView.setCurrentCam(_camera);
     _timeCtx = _map->getTimeCtx();
-    _map->addLayer(new LineLayer());
-    connect(_map, SIGNAL(layerAdded()), this, SLOT(updateGL));
+    connect(_map, SIGNAL(layerAdded()), this, SLOT(updateGL()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 void
@@ -128,8 +129,10 @@ GLWidget::wheelEvent(QWheelEvent *event)
 void
 GLWidget::update()
 {
-    _timeCtx->update(timer.elapsed());
+    if (_playMode == Play_Forward && elapsedTimer.isValid())
+        _timeCtx->update(elapsedTimer.restart());
     _map->update();
+    updateGL();
 }
 
 MapPoint
@@ -170,3 +173,40 @@ GLWidget::getMap() const
 {
     return _map;
 }
+
+void
+GLWidget::slotPlay()
+{
+    _playMode = Play_Forward;
+    elapsedTimer.restart();
+    timer->start();
+}
+
+void
+GLWidget::slotPause()
+{
+    _playMode = Play_Pause;
+    elapsedTimer.invalidate();
+    timer->stop();
+}
+
+void
+GLWidget::slotReverse()
+{
+    _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
+}
+
+void
+GLWidget::slotRewind()
+{
+    _timeCtx->setMapSeconds(0.);
+    elapsedTimer.restart();
+    update();
+}
+
+void
+GLWidget::setPlaybackRate(double rate)
+{
+    _timeCtx->setPlaybackRate(rate);
+}
+

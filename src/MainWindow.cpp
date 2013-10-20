@@ -19,11 +19,10 @@ MainWindow::MainWindow(GLWidget *glWidget,
 {
     QWidget *ctr = new QWidget(this);
     setCentralWidget(ctr);
-    QGridLayout *_layout = new QGridLayout(ctr);
+    _rewindButton = new QPushButton("<<", ctr);
     _backButton = new QPushButton("<", ctr);
-    _layout->addWidget(_backButton, 0, 0);
+    _pauseButton = new QPushButton("x",ctr);
     _forwardButton = new QPushButton(">", ctr);
-    _layout->addWidget(_forwardButton, 0, 1);
     _playSpeedCombo = new QComboBox(ctr);
     _playSpeedCombo->addItem("1x");
     _playSpeedCombo->addItem("2x");
@@ -32,17 +31,61 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _playSpeedCombo->addItem("16x");
     _playSpeedCombo->addItem("32x");
     _playSpeedCombo->addItem("64x");
-    _layout->addWidget(_playSpeedCombo, 0, 2);
+    _slider = new QSlider(Qt::Horizontal, ctr);
+    _currentTimeLineEdit = new QLineEdit(ctr);
+    _currentTimeLineEdit->setReadOnly(true);
+    _currentTimeLineEdit->setText("0");
+    _currentTimeLineEdit->setAlignment(Qt::AlignRight);
+    _layout(ctr);
     QMenu *_fileMenu = _menuBar->addMenu("File");
-    _openLayerAction = new QAction("Open Layer. . .", ctr);
+    _openLayerAction = new QAction("Open Layer. . .", this);
+    _forwardAction = new QAction("Play", this);
+    _backAction = new QAction("Reverse", this);
+    _rewindAction = new QAction("Rewind", this);
+    _pauseAction = new QAction("Pause", this);
     _fileMenu->addAction(_openLayerAction);
     connect(_openLayerAction, SIGNAL(triggered(bool)),
             this, SLOT(slotLoadFile()));
+    connect(_forwardButton, SIGNAL(clicked(bool)),
+            _forwardAction, SLOT(trigger()));
+    connect(_backButton, SIGNAL(clicked(bool)),
+            _backAction, SLOT(trigger()));
+    connect(_pauseButton, SIGNAL(clicked(bool)),
+            _pauseAction, SLOT(trigger()));
+    connect(_rewindButton, SIGNAL(clicked(bool)),
+            _rewindAction, SLOT(trigger()));
+    connect(_playSpeedCombo, SIGNAL(activated(const QString&)),
+            this, SLOT(slotPlaybackRateChanged(const QString&)));
+    
+    connect(_forwardAction, SIGNAL(triggered()),
+            _glWidget, SLOT(slotPlay()));
+    connect(_backAction, SIGNAL(triggered()),
+            _glWidget, SLOT(slotReverse()));
+    connect(_pauseAction, SIGNAL(triggered()),
+            _glWidget, SLOT(slotPause()));
+    connect(_rewindAction, SIGNAL(triggered()),
+            _glWidget, SLOT(slotRewind()));
+    
+    // DEBUG
+    loadTcxFile(new QFile("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx"));
 }
 
 MainWindow::~MainWindow()
 {
     // empty
+}
+
+void
+MainWindow::_layout(QWidget *ctr)
+{
+    QGridLayout *_layout = new QGridLayout(ctr);
+    _layout->addWidget(_rewindButton, 0, 0);
+    _layout->addWidget(_backButton, 0, 1);
+    _layout->addWidget(_pauseButton, 0, 2);
+    _layout->addWidget(_forwardButton, 0, 3);
+    _layout->addWidget(_playSpeedCombo, 0, 4);
+    _layout->addWidget(_slider, 1, 0, 1, 4);
+    _layout->addWidget(_currentTimeLineEdit, 1, 4);
 }
 
 void
@@ -79,4 +122,16 @@ MainWindow::slotLoadFile()
         QFile *tcxFile = new QFile(path);
         loadTcxFile(tcxFile);
     }
+}
+
+void
+MainWindow::slotPlaybackRateChanged(const QString &newRate)
+{
+    QString rate(newRate);
+    if (rate.endsWith("x"))
+        rate.chop(1);
+    bool ok = false;
+    double theRate = rate.toDouble(&ok);
+    if (ok)
+        _glWidget->setPlaybackRate(theRate);
 }

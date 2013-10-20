@@ -13,6 +13,8 @@ public:
     virtual ~TrackLayer();
     
     virtual void draw(const ViewCtx*, const TimeCtx*);
+    
+    void boundingBox(double &left, double &top, double &right, double &bottom);
 protected:
     
     const Track *_track;

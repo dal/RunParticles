@@ -13,7 +13,8 @@
 #define RAD_TO_DEG	57.29577951308232
 #define DEG_TO_RAD	.0174532925199432958
 
-#define MERCATOR_R_MAJ 6378137.0
+#define MERCATOR_R_MAJ 63781370.
+#define HALF_R_MAJ 31890685.
 
 #define PI 3.141592653589793238
 
@@ -27,20 +28,20 @@ double
 _yToLatSph(const double y)
 {
     return (1.5707963267948966 -
-            (2.0 * atan(exp((-1.0 * y) / 6378137.0)))) * RAD_TO_DEG;
+            (2.0 * atan(exp((-1.0 * y) / MERCATOR_R_MAJ)))) * RAD_TO_DEG;
 }
 
 double
 _lonToX(const double lon)
 {
-    return lon * DEG_TO_RAD * 111319.49079327357;
+    return lon * DEG_TO_RAD * 1113194.9079327357;
 }
 
 double
 _latToYSph(const double lat)
 {
     double a = lat * DEG_TO_RAD;
-    return 3189068.5 * log((1.0 + sin(a*PI/180.)) / (1.0 - sin(a*PI/180.)));
+    return HALF_R_MAJ * log((1.0 + sin(a*PI/180.)) / (1.0 - sin(a*PI/180.)));
 }
 
 ViewCtx::ViewCtx()

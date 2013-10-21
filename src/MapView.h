@@ -23,7 +23,7 @@ public:
     
     void mouseWheel(const int);
     
-    void mouseDrag(const Vec2i &mousePos, 
+    void mouseDrag(const Vec2f &mousePos,
                    bool leftDown, 
                    bool middleDown, 
                    bool rightDown );
@@ -37,7 +37,6 @@ private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };
     
     CameraOrtho	mCurrentCam;
-    int			mLastAction;
 };
 
 #endif

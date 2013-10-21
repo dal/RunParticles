@@ -36,7 +36,7 @@ TrackLayer::draw(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     TrackPoint lastTrkPt;
     int startTime = 0;
     gl::color( Color( 1, 0, 0 ) );
-    for(size_t i=0; i < _track->points.count(); i++) {
+    for(ulong i=0; i < _track->points.count(); i++) {
         pt = _track->points[i];
         MapPoint thisMapPt = viewCtx->toProjection(pt.pos);
         if (i == 0 || (pt.time - startTime) < timeCtx->getMapSeconds()) {
@@ -49,7 +49,8 @@ TrackLayer::draw(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
             lastMapPt = thisMapPt;
             lastTrkPt = pt;
         } else {
-            double elapsed = timeCtx->getMapSeconds() - double(lastTrkPt.time);
+            double elapsed = timeCtx->getMapSeconds()
+                             - double(lastTrkPt.time - startTime);
             int trkElapsed = pt.time - lastTrkPt.time;
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
             if (f > 0.0) {
@@ -57,10 +58,10 @@ TrackLayer::draw(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
                 gl::drawLine( Vec2f(lastMapPt.x, lastMapPt.y),
                               Vec2f(finalPt.x, finalPt.y) );
                 gl::color( Color( 1, 1, 1 ) );
-                gl::drawSolidCircle( Vec2f( finalPt.x, finalPt.y ), 1.0f );
+                gl::drawSolidCircle( Vec2f( finalPt.x, finalPt.y ), 1.0 );
             } else {
                 gl::color( Color( 1, 1, 1 ) );
-                gl::drawSolidCircle( Vec2f( thisMapPt.x, thisMapPt.y ), 1.0f );
+                gl::drawSolidCircle( Vec2f( thisMapPt.x, thisMapPt.y ), 1.0 );
             }
             break;
         }

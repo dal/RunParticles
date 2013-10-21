@@ -30,19 +30,10 @@ MapView::MapView( const CameraOrtho &aInitialCam )
 
 void MapView::mouseWheel(const int delta)
 {
-    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
-    // *left, *top, *right, *bottom, *near, *far
-    mCurrentCam.getFrustum(&oldLeft, 
-                           &oldTop, 
-                           &oldRight, 
-                           &oldBottom, 
-                           &oldNear, 
-                           &oldFar);
-    // TODO
-    
+    zoom(delta);
 }
 
-void MapView::mouseDrag(const Vec2i &mouseDelta,
+void MapView::mouseDrag(const Vec2f &mouseDelta,
                         bool leftDown, 
                         bool middleDown, 
                         bool rightDown)
@@ -99,7 +90,26 @@ void MapView::setCurrentCam( const CameraOrtho &aCurrentCam )
 
 void MapView::zoom( const float amount )
 {
-    // TODO
+    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
+    mCurrentCam.getFrustum(&oldLeft,
+                           &oldTop,
+                           &oldRight,
+                           &oldBottom,
+                           &oldNear,
+                           &oldFar);
+    float size = (amount == 0) ? 1.0 : amount;
+    float width = (oldRight - oldLeft);
+    float height = (oldTop - oldBottom);
+    float hsize = width * size / 50.;
+    float vsize = height * size / 50.;
+    if (hsize > 0.5 * width)
+        return;
+    mCurrentCam.setOrtho(oldLeft+hsize,
+                         oldRight-hsize,
+                         oldBottom+vsize,
+                         oldTop-vsize,
+                         -1,
+                         1);
 }
 
 void

@@ -110,7 +110,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
         _inDrag = true;
         QPoint delta = eventXy - _lastPos;
         MapPoint mapDelta = screenPointToRelativeMapPoint(delta);
-        _mapView.mouseDrag(Vec2i(-mapDelta.x, -mapDelta.y),
+        _mapView.mouseDrag(Vec2f(-mapDelta.x, -mapDelta.y),
                            bool(event->buttons() & Qt::LeftButton),
                            bool(event->buttons() & Qt::MiddleButton),
                            bool(event->buttons() & Qt::RightButton));
@@ -124,6 +124,7 @@ void
 GLWidget::wheelEvent(QWheelEvent *event)
 {
     _mapView.mouseWheel(event->delta());
+    updateGL();
 }
 
 void
@@ -177,6 +178,8 @@ GLWidget::getMap() const
 void
 GLWidget::slotPlay()
 {
+    if (_timeCtx->getPlaybackRate() <= 0)
+        _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
     _playMode = Play_Forward;
     elapsedTimer.restart();
     timer->start();
@@ -193,7 +196,10 @@ GLWidget::slotPause()
 void
 GLWidget::slotReverse()
 {
-    _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
+    if (_timeCtx->getPlaybackRate() >= 0)
+        _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
+    elapsedTimer.restart();
+    timer->start();
 }
 
 void

@@ -9,6 +9,7 @@
 #include "GLWidget.h"
 
 #include "cinder/gl/gl.h"
+#include "cinder/Vector.h"
 
 GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
@@ -19,8 +20,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     elapsedTimer.start();
     _map = map;
     // For now center the camera on Oakland
-    MapPoint r = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.2));
-    MapPoint l = _map->getViewCtx()->toProjection(LatLon(37.81155, -122.3));
+    MapPoint r = _map->getViewCtx()->toProjection(LonLat(-122.2, 37.81155));
+    MapPoint l = _map->getViewCtx()->toProjection(LonLat(-122.3, 37.81155));
     float viewheight = (r.x - l.x) * ((float)height() / (float)width());
     _camera = CameraOrtho(l.x,
                           r.x,

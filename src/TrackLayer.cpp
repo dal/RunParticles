@@ -80,14 +80,14 @@ TrackLayer::boundingBox(double &left,
     bottom = 90.;
     TrackPoint pt;
     foreach(pt, _track->points) {
-        if (pt.pos.lon > right)
-            right = pt.pos.lon;
-        if (pt.pos.lon < left)
-            left = pt.pos.lon;
-        if (pt.pos.lat > top)
-            top = pt.pos.lat;
-        if (pt.pos.lat < bottom)
-            bottom = pt.pos.lat;
+        if (pt.pos.x > right)
+            right = pt.pos.x;
+        if (pt.pos.x < left)
+            left = pt.pos.x;
+        if (pt.pos.y > top)
+            top = pt.pos.y;
+        if (pt.pos.y < bottom)
+            bottom = pt.pos.y;
     }
 }
 

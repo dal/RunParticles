@@ -24,11 +24,9 @@ public:
     
     virtual ~ViewCtx();
     
-    LatLon getUpperLeft() const;
+    MapPoint toProjection(const LonLat&) const;
     
-    MapPoint toProjection(const LatLon&) const;
-    
-    LatLon fromProjection(const MapPoint&) const;
+    LonLat fromProjection(const MapPoint&) const;
     
     const TimeCtx* getTimeCtx() const;
 

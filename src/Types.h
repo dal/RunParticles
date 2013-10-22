@@ -14,8 +14,11 @@
 
 using namespace cinder;
 
-struct LatLon : public Vec2d
+class LonLat : public Vec2d
 {
+public:
+    LonLat() : Vec2d(0., 0.) { };
+    LonLat(double x, double y) : Vec2d(x, y) { };
     double lon() const { return x; };
     double lat() const { return y; };
 };

@@ -97,11 +97,9 @@ TEMPLATE = app
 
 HEADERS = ../src/GLWidget.h \
           ../src/Layer.h \
-          ../src/LineLayer.h \
           ../src/MainWindow.h \
           ../src/Map.h \
           ../src/MapView.h \
-          ../src/Particle.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
           ../src/Track.h \
@@ -110,12 +108,10 @@ HEADERS = ../src/GLWidget.h \
           ../src/ViewCtx.h \
 
 SOURCES = ../src/GLWidget.cpp \
-          ../src/LineLayer.cpp \
           ../src/main.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \
-          ../src/Particle.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
           ../src/Track.cpp \

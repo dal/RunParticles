@@ -16,14 +16,19 @@
 
 struct TrackPoint
 {
-    LatLon pos;
+    LonLat pos;
     unsigned int time;
 };
 
+typedef QList<TrackPoint> Path;
+
 struct Track
 {
+    static Path DouglasPeucker(const Path &input,
+                               double epsilon = 1.0);
     QString sport;
     QList<TrackPoint> points;
 };
+
 
 #endif

@@ -102,14 +102,14 @@ TcxHandler::characters ( const QString & ch )
 {
     bool ok = false;
     if (_inLatitudeDegrees) {
-        _currentPoint->pos.lat = ch.toDouble(&ok);
+        _currentPoint->pos.y = ch.toDouble(&ok);
         if (ok) {
             _foundLat = true;
         } else {
             qWarning("Invalid latitude: %s", ch.toAscii().constData());
         }
     } else if (_inLongitudeDegrees) {
-        _currentPoint->pos.lon = ch.toDouble(&ok);
+        _currentPoint->pos.x = ch.toDouble(&ok);
         if (ok) {
             _foundLon = true;
         } else {

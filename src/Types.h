@@ -10,20 +10,16 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-struct LatLon
+#include "cinder/Vector.h"
+
+using namespace cinder;
+
+struct LatLon : public Vec2d
 {
-    LatLon()  {};
-    LatLon(double lat_, double lon_) : lon(lon_), lat(lat_) {};
-    double lon;
-    double lat;
+    double lon() const { return x; };
+    double lat() const { return y; };
 };
 
-struct MapPoint
-{
-    MapPoint() {};
-    MapPoint(double x_, double y_) : x(x_), y(y_) {};
-    double x;
-    double y;
-};
+typedef Vec2d MapPoint;
 
 #endif

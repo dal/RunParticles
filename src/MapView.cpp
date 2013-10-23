@@ -18,9 +18,10 @@
  *
  */
 
-MapView::MapView() 
+MapView::MapView() :
+    mCurrentCam(CameraOrtho())
 { 
-    mCurrentCam = CameraOrtho();
+    
 }
 
 MapView::MapView( const CameraOrtho &aInitialCam ) 
@@ -77,18 +78,43 @@ void MapView::mouseDrag(const Vec2f &mouseDelta,
                              1);
     }
 }
-    
-const CameraOrtho& MapView::getCamera() const 
+
+void
+MapView::resize(int oldWidth, int oldHeight, int newWidth, int newHeight)
+{
+    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
+    mCurrentCam.getFrustum(&oldLeft,
+                           &oldTop,
+                           &oldRight,
+                           &oldBottom,
+                           &oldNear,
+                           &oldFar);
+    float mapWidth = (oldRight - oldLeft);
+    float mapHeight = (oldTop - oldBottom);
+    float hOffset = mapWidth*(float(newWidth)/float(oldWidth)) - mapWidth;
+    float vOffset = mapHeight*(float(newHeight)/float(oldHeight)) - mapHeight;
+    mCurrentCam.setOrtho(oldLeft,
+                         oldRight+hOffset,
+                         oldBottom-vOffset,
+                         oldTop,
+                         -1,
+                         1);
+}
+
+const CameraOrtho&
+MapView::getCamera() const
 { 
     return mCurrentCam; 
 }
 
-void MapView::setCurrentCam( const CameraOrtho &aCurrentCam ) 
+void
+MapView::setCurrentCam( const CameraOrtho &aCurrentCam )
 { 
     mCurrentCam = aCurrentCam; 
 }
 
-void MapView::zoom( const float amount )
+void
+MapView::zoom( const float amount )
 {
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
     mCurrentCam.getFrustum(&oldLeft,
@@ -135,5 +161,17 @@ MapView::recenter(const MapPoint &position)
                          newBottom,
                          -1,
                          1);
+}
+
+void
+MapView::getFrustum(float &left, float &top, float &right, float &bottom) const
+{
+    float near, far;
+    mCurrentCam.getFrustum(&left,
+                           &top,
+                           &right,
+                           &bottom,
+                           &near,
+                           &far);
 }
 

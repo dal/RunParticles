@@ -45,7 +45,10 @@ _latToYSph(const double lat)
 }
 
 ViewCtx::ViewCtx()
-    : _projection("EPSG:3875")
+    : _projection("EPSG:3875"),
+      _resolution(1.),
+      _width(0),
+      _height(0)
 {
     
 }
@@ -74,3 +77,21 @@ ViewCtx::getTimeCtx() const
 {
     return _timeCtx;
 }
+
+double
+ViewCtx::getResolution() const
+{
+    return _resolution;
+}
+
+void
+ViewCtx::setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
+                     int width, int height)
+{
+    _upperLeft = upperLeft;
+    _lowerRight = lowerRight;
+    _width = width;
+    _height = height;
+    _resolution = (width != 0) ? abs(lowerRight.x - upperLeft.x) / width : 1.0;
+}
+

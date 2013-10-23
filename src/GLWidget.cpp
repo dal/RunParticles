@@ -31,6 +31,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
                           1);
     _mapView.setCurrentCam(_camera);
     _timeCtx = _map->getTimeCtx();
+    _updateViewCtx();
     connect(_map, SIGNAL(layerAdded()), this, SLOT(updateGL()));
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
@@ -83,18 +84,10 @@ GLWidget::sizeHint() const
 void
 GLWidget::resizeGL(int width, int height)
 {
-    int side = qMin(width, height);
-    glViewport((width - side) / 2, (height - side) / 2, side, side);
-    
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-#ifdef QT_OPENGL_ES_1
-    glOrthof(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
-#else
-    glOrtho(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
-#endif
-    glMatrixMode(GL_MODELVIEW);
-
+    int oldWidth = _map->getViewCtx()->getViewportWidth();
+    int oldHeight = _map->getViewCtx()->getViewportHeight();
+    _mapView.resize(oldWidth, oldHeight, width, height);
+    _updateViewCtx();
 }
 
 void
@@ -115,6 +108,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
                            bool(event->buttons() & Qt::LeftButton),
                            bool(event->buttons() & Qt::MiddleButton),
                            bool(event->buttons() & Qt::RightButton));
+        _updateViewCtx();
         updateGL();
     }
     _lastPos = eventXy;
@@ -215,5 +209,16 @@ void
 GLWidget::setPlaybackRate(double rate)
 {
     _timeCtx->setPlaybackRate(rate);
+}
+
+void
+GLWidget::_updateViewCtx()
+{
+    float left, top, right, bottom;
+    _mapView.getFrustum(left, top, right, bottom);
+    _map->getViewCtx()->setViewport(MapPoint(left, top),
+                                    MapPoint(right, bottom),
+                                    width(),
+                                    height());
 }
 

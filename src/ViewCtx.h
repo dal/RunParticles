@@ -29,12 +29,27 @@ public:
     LonLat fromProjection(const MapPoint&) const;
     
     const TimeCtx* getTimeCtx() const;
+    
+    double getResolution() const;
+    
+    void setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
+                     int width, int height);
+    
+    int getViewportWidth() const { return _width; }
+    
+    int getViewportHeight() const { return _height; }
 
 protected:
     
     const std::string _projection;
     
     TimeCtx *_timeCtx;
+    
+    MapPoint _upperLeft, _lowerRight;
+    
+    int _width, _height;
+    
+    double _resolution;
     
 };
 

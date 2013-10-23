@@ -75,6 +75,8 @@ public slots:
     
 protected:
     
+    void _updateViewCtx();
+    
     PlayMode _playMode;
     
     qint64 _currentSeconds;

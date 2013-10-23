@@ -27,11 +27,13 @@ public:
                    bool leftDown, 
                    bool middleDown, 
                    bool rightDown );
+    void resize(int oldWidth, int oldHieght, int newWidth, int newHeight);
         
     const CameraOrtho& getCamera() const;
     void setCurrentCam( const CameraOrtho &aCurrentCam );
     void zoom( const float );
     void recenter(const MapPoint &position);
+    void getFrustum(float &left, float &top, float &right, float &bottom) const;
         
 private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };

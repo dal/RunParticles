@@ -53,6 +53,8 @@ public:
     
     void wheelEvent(QWheelEvent *event);
     
+    void keyPressEvent(QKeyEvent *event);
+    
     MapPoint screenPointToRelativeMapPoint(const QPoint &pt);
     
     MapPoint screenPointToMapPoint(const QPoint &pt);
@@ -100,6 +102,8 @@ protected:
     QElapsedTimer elapsedTimer;
     
     QTimer *timer;
+    
+    bool _fullScreen;
 
 };
 

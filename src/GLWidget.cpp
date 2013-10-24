@@ -14,7 +14,8 @@
 GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
     _playMode(PlayMode_Pause),
-    timer(new QTimer(this))
+    timer(new QTimer(this)),
+    _fullScreen(false)
 {
     setMouseTracking(true);
     elapsedTimer.start();
@@ -121,6 +122,23 @@ GLWidget::wheelEvent(QWheelEvent *event)
 {
     _mapView.mouseWheel(event->delta());
     updateGL();
+}
+
+void
+GLWidget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_F
+        && event->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier))
+    {
+        if (_fullScreen) {
+            _fullScreen = false;
+            this->showNormal();
+        } else {
+            _fullScreen = true;
+            this->showFullScreen();
+        }
+    }
+    QGLWidget::keyPressEvent(event);
 }
 
 void

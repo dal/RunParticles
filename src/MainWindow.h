@@ -28,6 +28,8 @@ public slots:
     
     void slotPlaybackRateChanged(const QString &newRate);
     
+    void slotTimeChanged(double mapSeconds);
+    
 protected:
     QMenuBar *_menuBar;
     GLWidget *_glWidget;

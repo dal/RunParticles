@@ -13,7 +13,7 @@
 
 GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
-    _playMode(Play_Pause),
+    _playMode(PlayMode_Pause),
     timer(new QTimer(this))
 {
     setMouseTracking(true);
@@ -88,6 +88,7 @@ GLWidget::resizeGL(int width, int height)
     int oldHeight = _map->getViewCtx()->getViewportHeight();
     _mapView.resize(oldWidth, oldHeight, width, height);
     _updateViewCtx();
+    glViewport (0, 0, (GLdouble) width, (GLdouble) height);
 }
 
 void
@@ -125,10 +126,11 @@ GLWidget::wheelEvent(QWheelEvent *event)
 void
 GLWidget::update()
 {
-    if (_playMode == Play_Forward && elapsedTimer.isValid())
+    if (_playMode == PlayMode_Play && elapsedTimer.isValid())
         _timeCtx->update(elapsedTimer.restart());
     _map->update();
     updateGL();
+    emit signalTimeChanged(_timeCtx->getMapSeconds());
 }
 
 MapPoint
@@ -175,7 +177,7 @@ GLWidget::slotPlay()
 {
     if (_timeCtx->getPlaybackRate() <= 0)
         _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
-    _playMode = Play_Forward;
+    _playMode = PlayMode_Play;
     elapsedTimer.restart();
     timer->start();
 }
@@ -183,7 +185,7 @@ GLWidget::slotPlay()
 void
 GLWidget::slotPause()
 {
-    _playMode = Play_Pause;
+    _playMode = PlayMode_Pause;
     elapsedTimer.invalidate();
     timer->stop();
 }
@@ -191,6 +193,7 @@ GLWidget::slotPause()
 void
 GLWidget::slotReverse()
 {
+    _playMode = PlayMode_Play;
     if (_timeCtx->getPlaybackRate() >= 0)
         _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
     elapsedTimer.restart();

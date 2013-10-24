@@ -23,8 +23,8 @@
 #include "TimeCtx.h"
 
 enum PlayMode {
-    Play_Pause,
-    Play_Forward
+    PlayMode_Pause,
+    PlayMode_Play
 };
 
 class GLWidget : public QGLWidget
@@ -72,6 +72,10 @@ public slots:
     void slotRewind();
     
     void setPlaybackRate(double rate);
+    
+signals:
+    
+    void signalTimeChanged(double);
     
 protected:
     

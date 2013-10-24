@@ -66,6 +66,9 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_rewindAction, SIGNAL(triggered()),
             _glWidget, SLOT(slotRewind()));
     
+    connect(_glWidget, SIGNAL(signalTimeChanged(double)),
+            this, SLOT(slotTimeChanged(double)));
+    
     // DEBUG
     loadTcxFile(new QFile("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx"));
 }
@@ -136,4 +139,18 @@ MainWindow::slotPlaybackRateChanged(const QString &newRate)
     double theRate = rate.toDouble(&ok);
     if (ok)
         _glWidget->setPlaybackRate(theRate);
+}
+
+void
+MainWindow::slotTimeChanged(double mapSeconds)
+{
+    int hours = mapSeconds / 3600;
+    int modhrs = int(mapSeconds) % 3600;
+    int mins = modhrs / 60;
+    int secs = modhrs % 60;
+    QChar zero('0');
+    QString time = QString("%1hr%2m%3s").arg(hours)
+                                        .arg(mins, 2, 10, zero)
+                                        .arg(secs, 2, 10, zero);
+    _currentTimeLineEdit->setText(time);
 }

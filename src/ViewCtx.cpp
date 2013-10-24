@@ -72,12 +72,6 @@ ViewCtx::fromProjection(const MapPoint &point) const
     return coord;
 }
 
-const TimeCtx*
-ViewCtx::getTimeCtx() const
-{
-    return _timeCtx;
-}
-
 double
 ViewCtx::getResolution() const
 {

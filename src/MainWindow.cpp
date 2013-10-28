@@ -71,6 +71,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_glWidget->getMap(), SIGNAL(signalLayerAdded()),
             this, SLOT(slotLayerAdded()));
     
+    slotTimeChanged(0);
     // DEBUG
     loadTcxFile(new QFile("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx"));
 }
@@ -91,6 +92,8 @@ MainWindow::_layout(QWidget *ctr)
     _layout->addWidget(_playSpeedCombo, 0, 4);
     _layout->addWidget(_slider, 1, 0, 1, 4);
     _layout->addWidget(_currentTimeLineEdit, 1, 4);
+    for (int i=0; i < _layout->columnCount(); i++)
+        _layout->setColumnStretch(i, 1);
 }
 
 void

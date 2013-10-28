@@ -18,6 +18,22 @@
 			shellPath = "/bin/sh";
 			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_makeqmake.mak\'";
 		};
+		DC77C3CA9F4AF2C083664DFA = {
+			isa = PBXFileReference;
+			name = "BoundingBox.cpp";
+			path = "../src/BoundingBox.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		53DA425F130799FB1BBFDFBC = {
+			fileRef = "DC77C3CA9F4AF2C083664DFA";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		8FD2780091D775D5CCEBBD38 = {
 			isa = PBXFileReference;
 			name = "GLWidget.cpp";
@@ -98,6 +114,22 @@
 					);
 			};
 		};
+		EEE94BFDC979A9C2CC51670C = {
+			isa = PBXFileReference;
+			name = "PathUtil.cpp";
+			path = "../src/PathUtil.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		E8A25AFE742A79553F82D374 = {
+			fileRef = "EEE94BFDC979A9C2CC51670C";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		27E989ABCC1E6197D3D6CD1C = {
 			isa = PBXFileReference;
 			name = "TcxHandler.cpp";
@@ -124,22 +156,6 @@
 		};
 		1230654D328A74C345289118 = {
 			fileRef = "726E02FD0D4EDA7EA5B45E24";
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					);
-			};
-		};
-		29278738EB18506880D7B954 = {
-			isa = PBXFileReference;
-			name = "Track.cpp";
-			path = "../src/Track.cpp";
-			refType = 4;
-			sourceTree = "SOURCE_ROOT";
-			lastKnownFileType = "sourcecode.cpp.cpp";
-		};
-		6BB9FD530195BBCE77D6D89F = {
-			fileRef = "29278738EB18506880D7B954";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -226,6 +242,13 @@
 					);
 			};
 		};
+		E60E6079B88A7F643403FDA7 = {
+			isa = PBXFileReference;
+			name = "BoundingBox.h";
+			path = "../src/BoundingBox.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		71B064E2E08701E9869193DB = {
 			isa = PBXFileReference;
 			name = "GLWidget.h";
@@ -261,6 +284,13 @@
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
+		E318F0B2E1AC39334963B530 = {
+			isa = PBXFileReference;
+			name = "PathUtil.h";
+			path = "../src/PathUtil.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		550BE91A02005D84E4EBE786 = {
 			isa = PBXFileReference;
 			name = "TcxHandler.h";
@@ -272,13 +302,6 @@
 			isa = PBXFileReference;
 			name = "TimeCtx.h";
 			path = "../src/TimeCtx.h";
-			refType = 4;
-			sourceTree = "SOURCE_ROOT";
-		};
-		5037C8859D1552EEA8810EF1 = {
-			isa = PBXFileReference;
-			name = "Track.h";
-			path = "../src/Track.h";
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
@@ -329,14 +352,15 @@
 		90EA38E2E04640FD4C27618C = {
 			isa = PBXGroup;
 			children = (
+				"E60E6079B88A7F643403FDA7",
 				"71B064E2E08701E9869193DB",
 				"290B40E1081732F53E2489DE",
 				"B0CCE35A63C66BA6A9CF3B65",
 				"245A1835322098C52B654A17",
 				"515A8F63771690694B8EE115",
+				"E318F0B2E1AC39334963B530",
 				"550BE91A02005D84E4EBE786",
 				"43DE819D1B00A6317CA6C03E",
-				"5037C8859D1552EEA8810EF1",
 				"AE1BE578C104B6B834C14C39",
 				"716387C61E131D3E3F611C22",
 				"FD3FE89C76DAE4123EDD7EC3");
@@ -355,14 +379,15 @@
 		58044B046310C858CE5E1612 = {
 			isa = PBXGroup;
 			children = (
+				"DC77C3CA9F4AF2C083664DFA",
 				"8FD2780091D775D5CCEBBD38",
 				"A98C72B30428A8FB182A3E06",
 				"9401B8B47AE9AA5B09E67B54",
 				"733527686FDCD63BEC7B5251",
 				"C4D8568B4D2A69A1D7A4D3DA",
+				"EEE94BFDC979A9C2CC51670C",
 				"27E989ABCC1E6197D3D6CD1C",
 				"726E02FD0D4EDA7EA5B45E24",
-				"29278738EB18506880D7B954",
 				"688CEAC26C4FB3F3406FFC9B",
 				"A8164F2E335227ACC408437B");
 			name = "src";
@@ -400,14 +425,15 @@
 			files = (
 				);
 			generatedFileNames = (
+				"53DA425F130799FB1BBFDFBC",
 				"70C64B0C4DF679A983BD58E8",
 				"0906DF28750D0609E141693F",
 				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
+				"E8A25AFE742A79553F82D374",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
-				"6BB9FD530195BBCE77D6D89F",
 				"264088B4E9D456989552A133",
 				"0174E42383F8EA419215C9BE",
 				"46EC2FFE3CF896C7F01CC623",
@@ -416,14 +442,15 @@
 			isa = PBXShellScriptBuildPhase;
 			name = "Qt Preprocessors";
 			neededFileNames = (
+				"53DA425F130799FB1BBFDFBC",
 				"70C64B0C4DF679A983BD58E8",
 				"0906DF28750D0609E141693F",
 				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
+				"E8A25AFE742A79553F82D374",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
-				"6BB9FD530195BBCE77D6D89F",
 				"264088B4E9D456989552A133",
 				"0174E42383F8EA419215C9BE",
 				"46EC2FFE3CF896C7F01CC623",
@@ -435,14 +462,15 @@
 		C29B8785722055ED95EF7B57 = {
 			buildActionMask = 2147483647;
 			files = (
+				"53DA425F130799FB1BBFDFBC",
 				"70C64B0C4DF679A983BD58E8",
 				"0906DF28750D0609E141693F",
 				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
+				"E8A25AFE742A79553F82D374",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
-				"6BB9FD530195BBCE77D6D89F",
 				"264088B4E9D456989552A133",
 				"0174E42383F8EA419215C9BE",
 				"46EC2FFE3CF896C7F01CC623",

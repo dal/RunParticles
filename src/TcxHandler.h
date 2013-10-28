@@ -8,7 +8,7 @@
 #include <QXmlAttributes>
 #include <vector>
 
-#include "Track.h"
+#include "Types.h"
 
 using namespace std;
 

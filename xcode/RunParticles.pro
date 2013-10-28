@@ -95,26 +95,28 @@ CONFIG += qt
 
 TEMPLATE = app
 
-HEADERS = ../src/GLWidget.h \
+HEADERS = ../src/BoundingBox.h \
+          ../src/GLWidget.h \
           ../src/Layer.h \
           ../src/MainWindow.h \
           ../src/Map.h \
           ../src/MapView.h \
+          ../src/PathUtil.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
-          ../src/Track.h \
           ../src/TrackLayer.h \
           ../src/Types.h \
           ../src/ViewCtx.h \
 
-SOURCES = ../src/GLWidget.cpp \
+SOURCES = ../src/BoundingBox.cpp \
+          ../src/GLWidget.cpp \
           ../src/main.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \
+          ../src/PathUtil.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
-          ../src/Track.cpp \
           ../src/TrackLayer.cpp \
           ../src/ViewCtx.cpp
 QT += opengl xml

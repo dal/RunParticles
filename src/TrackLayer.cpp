@@ -1,6 +1,6 @@
-
-
 #include "TrackLayer.h"
+
+#include "PathUtil.h"
 #include "Types.h"
 
 #include "cinder/gl/gl.h"
@@ -8,9 +8,12 @@
 using namespace cinder;
 
 TrackLayer::TrackLayer(const Track *track) :
-_track(track)
+_track(track),
+_duration(0)
 {
-    // do nothing
+    int numPts = track->points.count();
+    if (numPts > 1)
+        _duration = track->points[numPts-1].time - track->points[0].time;
 }
 
 TrackLayer::~TrackLayer() 
@@ -28,66 +31,105 @@ MapPoint lerp(const MapPoint& a, const MapPoint& b, double f)
     return MapPoint(lerp(a.x, b.x, f), lerp(a.y, b.y, f));
 }
 
-void 
-TrackLayer::draw(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
+unsigned int
+TrackLayer::duration() const
 {
-    TrackPoint pt;
-    MapPoint lastMapPt;
-    TrackPoint lastTrkPt;
+    return _duration;
+}
+
+void
+TrackLayer::project(const ViewCtx* viewCtx)
+{
+    // Project the track into the hi-res path and compute the bounding box
     int startTime = 0;
-    gl::color( Color( 1, 0, 0 ) );
-    for(ulong i=0; i < _track->points.count(); i++) {
-        pt = _track->points[i];
-        MapPoint thisMapPt = viewCtx->toProjection(pt.pos);
-        if (i == 0 || (pt.time - startTime) < timeCtx->getMapSeconds()) {
+    for(int i=0; i < _track->points.count(); i++) {
+        TrackPoint pt = _track->points[i];
+        if (i == 0)
+            startTime = pt.time;
+        PathPoint newPt;
+        newPt.pos = viewCtx->toProjection(pt.pos);
+        newPt.time = pt.time - startTime;
+        _path_hi.push_back(newPt);
+        _bounds += newPt.pos;
+    }
+    
+    // Make the medium res path
+    _path_med = PathUtil::DouglasPeucker(_path_hi, 4.0);
+    
+    // Make the low res path
+    _path_lo = PathUtil::DouglasPeucker(_path_hi, 1.0);
+}
+
+void
+TrackLayer::draw(uint pass, const ViewCtx *viewCtx, const TimeCtx *timeCtx)
+{
+    switch (pass) {
+        case 0:
+            _drawPath(viewCtx, timeCtx);
+            break;
+        case 1:
+            _drawParticle(viewCtx);
+            break;
+    };
+}
+
+void
+TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
+{
+    // Choose which path to display
+    Path *currentPath = &_path_hi;
+    double res = viewCtx->getResolution();
+    if (res >= 5.0 < 12.0)
+        currentPath = &_path_med;
+    if (res >= 12.0)
+        currentPath = &_path_lo;
+    
+    if (_track->sport != "Running")
+        gl::color( Color( 0.3, 0.3, 1 ) );
+    else
+        gl::color( Color( 1, 0, 0 ) );
+    
+    PathPoint lastPathPt;
+    MapPoint lastMapPt;
+    for(int i=0; i < currentPath->count(); i++) {
+        PathPoint pt = (*currentPath)[i];
+        MapPoint thisMapPt = pt.pos;
+        if (i == 0 || pt.time < timeCtx->getMapSeconds()) {
             if (i > 0) {
                 gl::drawLine( Vec2f(lastMapPt.x, lastMapPt.y),
-                              Vec2f(thisMapPt.x, thisMapPt.y));
-            } else {
-                startTime = pt.time;
+                             Vec2f(thisMapPt.x, thisMapPt.y));
             }
             lastMapPt = thisMapPt;
-            lastTrkPt = pt;
+            lastPathPt = pt;
         } else {
-            double elapsed = timeCtx->getMapSeconds()
-                             - double(lastTrkPt.time - startTime);
-            int trkElapsed = pt.time - lastTrkPt.time;
+            double elapsed = timeCtx->getMapSeconds() -
+                             double(lastPathPt.time);
+            int trkElapsed = pt.time - lastPathPt.time;
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
             if (f > 0.0) {
                 MapPoint finalPt = lerp(lastMapPt, thisMapPt, f);
                 gl::drawLine( Vec2f(lastMapPt.x, lastMapPt.y),
-                              Vec2f(finalPt.x, finalPt.y) );
-                gl::color( Color( 1, 1, 1 ) );
-                gl::drawSolidCircle( Vec2f( finalPt.x, finalPt.y ), 1.0 );
+                             Vec2f(finalPt.x, finalPt.y) );
+                _particlePos = finalPt;
             } else {
-                gl::color( Color( 1, 1, 1 ) );
-                gl::drawSolidCircle( Vec2f( thisMapPt.x, thisMapPt.y ), 1.0 );
+                _particlePos = thisMapPt;
             }
             break;
         }
     }
 }
-
+            
 void
-TrackLayer::boundingBox(double &left,
-                         double &top,
-                         double &right,
-                         double &bottom)
+TrackLayer::_drawParticle(const ViewCtx *viewCtx) const
 {
-    left = 180.;
-    top = -90.;
-    right = -180.;
-    bottom = 90.;
-    TrackPoint pt;
-    foreach(pt, _track->points) {
-        if (pt.pos.x > right)
-            right = pt.pos.x;
-        if (pt.pos.x < left)
-            left = pt.pos.x;
-        if (pt.pos.y > top)
-            top = pt.pos.y;
-        if (pt.pos.y < bottom)
-            bottom = pt.pos.y;
-    }
+    gl::color( Color( 1, 1, 1 ) );
+    float radius = viewCtx->getResolution() * 2.0;
+    gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
+}
+
+BoundingBox
+TrackLayer::boundingBox() const
+{
+    return _bounds;
 }
 

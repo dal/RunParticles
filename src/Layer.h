@@ -9,6 +9,7 @@
 #ifndef RunParticles_Layer_h
 #define RunParticles_Layer_h
 
+#include "BoundingBox.h"
 #include "ViewCtx.h"
 #include "Types.h"
 
@@ -22,7 +23,15 @@ public:
     
     virtual ~Layer() {};
     
-    virtual void draw(const ViewCtx*, const TimeCtx*) = 0;
+    virtual unsigned int passes() const { return 1; }
+    
+    virtual unsigned int duration() const { return 0; }
+    
+    virtual void project(const ViewCtx*) = 0;
+    
+    virtual void draw(uint pass, const ViewCtx*, const TimeCtx*) = 0;
+    
+    virtual BoundingBox boundingBox() const = 0;
     
 };
 

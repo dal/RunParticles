@@ -12,7 +12,9 @@
 Map::Map(QObject *parent)
 : QObject(parent),
 _timeCtx(new TimeCtx()),
-_viewCtx(new ViewCtx())
+_viewCtx(new ViewCtx()),
+_numPasses(1),
+_duration(0)
 {
     
 }
@@ -26,9 +28,11 @@ Map::update()
 void
 Map::draw()
 {
-    std::vector<Layer*>::iterator i;
-    for (i = _layers.begin(); i != _layers.end(); i++) {
-        (*i)->draw(_viewCtx, _timeCtx);
+    std::vector<Layer*>::iterator it;
+    for (uint pass=0; pass < _numPasses; pass++){
+        for (it = _layers.begin(); it != _layers.end(); it++) {
+            (*it)->draw(pass, _viewCtx, _timeCtx);
+        }
     }
 }
 
@@ -36,6 +40,11 @@ bool
 Map::addLayer(Layer *layer)
 {
     _layers.push_back(layer);
+    // give the layer an opportunity to reproject
+    layer->project(_viewCtx);
+    unsigned int layerPasses = layer->passes();
+    _numPasses = (layerPasses > _numPasses) ? layerPasses : _numPasses;
+    _duration = (layer->duration() > _duration) ? layer->duration() : _duration;
     emit(layerAdded());
     return true;
 }

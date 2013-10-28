@@ -2,7 +2,8 @@
 #define __TRACKLAYER_H__
 
 #include "Layer.h"
-#include "Track.h"
+
+#include "BoundingBox.h"
 #include "Types.h"
 
 class TrackLayer : public Layer
@@ -12,12 +13,30 @@ public:
     
     virtual ~TrackLayer();
     
-    virtual void draw(const ViewCtx*, const TimeCtx*);
+    unsigned int passes() const { return 2; };
     
-    void boundingBox(double &left, double &top, double &right, double &bottom);
+    unsigned int duration() const;
+    
+    void project(const ViewCtx*);
+    
+    virtual void draw(uint pass, const ViewCtx*, const TimeCtx*);
+    
+    BoundingBox boundingBox() const;
 protected:
     
+    void _drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx);
+    
+    void _drawParticle(const ViewCtx *viewCtx) const;
+    
     const Track *_track;
+    
+    Path _path_hi, _path_med, _path_lo;
+    
+    BoundingBox _bounds;
+    
+    unsigned int _duration;
+    
+    MapPoint _particlePos;
 };
 
 #endif;

@@ -112,8 +112,6 @@ MainWindow::loadTcxFile(QFile *tcxFile)
     while (reader->parseContinue()) { };
     Track *thisTrack;
     foreach(thisTrack, tracks) {
-        Path optimized = Track::DouglasPeucker(thisTrack->points, 0.00001);
-        thisTrack->points = optimized;
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
         _glWidget->getMap()->addLayer(thisLayer);
     }

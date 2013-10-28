@@ -12,6 +12,9 @@
 
 #include "cinder/Vector.h"
 
+#include <QList>
+#include <QString>
+
 using namespace cinder;
 
 class LonLat : public Vec2d
@@ -24,5 +27,25 @@ public:
 };
 
 typedef Vec2d MapPoint;
+
+struct TrackPoint
+{
+    LonLat pos;
+    unsigned int time;
+};
+
+struct Track
+{
+    QString sport;
+    QList<TrackPoint> points;
+};
+
+struct PathPoint
+{
+    MapPoint pos;
+    unsigned int time;
+};
+
+typedef QList<PathPoint> Path;
 
 #endif

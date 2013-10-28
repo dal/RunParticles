@@ -86,6 +86,7 @@ ViewCtx::setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
     _lowerRight = lowerRight;
     _width = width;
     _height = height;
-    _resolution = (width != 0) ? abs(lowerRight.x - upperLeft.x) / width : 1.0;
+    _resolution = (width != 0) ? abs(lowerRight.x - upperLeft.x) / double(width)
+                               : 1.0;
 }
 

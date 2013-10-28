@@ -121,6 +121,7 @@ void
 GLWidget::wheelEvent(QWheelEvent *event)
 {
     _mapView.mouseWheel(event->delta());
+    _updateViewCtx();
     updateGL();
 }
 

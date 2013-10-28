@@ -35,6 +35,8 @@ public:
     
     TimeCtx* getTimeCtx() const { return _timeCtx; }
     
+    int getDuration() const { return _duration; }
+    
 private:
     
     std::vector<Layer*> _layers;
@@ -42,6 +44,10 @@ private:
     TimeCtx *_timeCtx;
     
     ViewCtx *_viewCtx;
+    
+    unsigned int _numPasses;
+    
+    unsigned int _duration;
     
 signals:
     

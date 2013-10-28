@@ -89,7 +89,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     // Choose which path to display
     Path *currentPath = &_path_hi;
     double res = viewCtx->getResolution();
-    if (res >= 5.0 && res < 12.0)
+    if (res >= 3.0 && res < 12.0)
         currentPath = &_path_med;
     else if (res >= 12.0)
         currentPath = &_path_lo;
@@ -111,6 +111,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
             }
             lastMapPt = thisMapPt;
             lastPathPt = pt;
+            _particlePos = thisMapPt;
         } else {
             double elapsed = timeCtx->getMapSeconds() -
                              double(lastPathPt.time);

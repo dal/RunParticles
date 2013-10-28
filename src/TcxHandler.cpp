@@ -74,21 +74,18 @@ TcxHandler::startElement(const QString & namespaceURI,
         _currentPoint = new TrackPoint();
     } else if (localName == "Time") {
         if (_currentPoint) {
-            qDebug("In time");
             _inTime = true;
         }
     } else if (localName == "Position") {
         _depth += 1;
     } else if (localName == "LatitudeDegrees") {
         if (_currentPoint) {
-            qDebug("In latitude");
             _inLatitudeDegrees = true;
         } else {
             qWarning("Found LatitudeDegrees outside TrackPoint");
         }
     } else if (localName == "LongitudeDegrees") {
         if (_currentPoint) {
-            qDebug("In longitude");
             _inLongitudeDegrees = true;
         } else {
             qWarning("Found LongitudeDegrees outside TrackPoint");

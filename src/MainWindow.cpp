@@ -68,6 +68,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     
     connect(_glWidget, SIGNAL(signalTimeChanged(double)),
             this, SLOT(slotTimeChanged(double)));
+    connect(_glWidget->getMap(), SIGNAL(signalLayerAdded()),
+            this, SLOT(slotLayerAdded()));
     
     // DEBUG
     loadTcxFile(new QFile("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx"));
@@ -151,4 +153,12 @@ MainWindow::slotTimeChanged(double mapSeconds)
                                         .arg(mins, 2, 10, zero)
                                         .arg(secs, 2, 10, zero);
     _currentTimeLineEdit->setText(time);
+    _slider->setSliderPosition(int(mapSeconds));
+}
+
+void
+MainWindow::slotLayerAdded()
+{
+    int dur = _glWidget->getMap()->getDuration();
+    _slider->setMaximum(dur);
 }

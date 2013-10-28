@@ -21,6 +21,9 @@ TrackLayer::~TrackLayer()
     // do nothing
 }
 
+/*
+ * Linear interpolate between a and b by the fractional f.
+ */
 double lerp(double a, double b, double f)
 {
     return a + f * (b - a);
@@ -53,16 +56,23 @@ TrackLayer::project(const ViewCtx* viewCtx)
         _bounds += newPt.pos;
     }
     
+    qDebug("hi: %d points", _path_hi.count());
+    
     // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi, 4.0);
+    _path_med = PathUtil::DouglasPeucker(_path_hi, 0.001);
+    qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_hi, 1.0);
+    _path_lo = PathUtil::DouglasPeucker(_path_med, 0.0001);
+    qDebug("lo: %d points", _path_lo.count());
 }
 
 void
 TrackLayer::draw(uint pass, const ViewCtx *viewCtx, const TimeCtx *timeCtx)
 {
+    if (!_bounds.overlaps(viewCtx->getBoundingBox()))
+        return;
+        
     switch (pass) {
         case 0:
             _drawPath(viewCtx, timeCtx);
@@ -79,9 +89,9 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     // Choose which path to display
     Path *currentPath = &_path_hi;
     double res = viewCtx->getResolution();
-    if (res >= 5.0 < 12.0)
+    if (res >= 5.0 && res < 12.0)
         currentPath = &_path_med;
-    if (res >= 12.0)
+    else if (res >= 12.0)
         currentPath = &_path_lo;
     
     if (_track->sport != "Running")
@@ -124,11 +134,13 @@ TrackLayer::_drawParticle(const ViewCtx *viewCtx) const
 {
     gl::color( Color( 1, 1, 1 ) );
     float radius = viewCtx->getResolution() * 2.0;
+    if (radius < 2.0)
+        radius = 2.0;
     gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
 }
 
 BoundingBox
-TrackLayer::boundingBox() const
+TrackLayer::getBoundingBox() const
 {
     return _bounds;
 }

@@ -25,8 +25,6 @@ class Map : public QObject
 public:
     Map(QObject *parent=0);
     
-    void update();
-    
     void draw();
     
     bool addLayer(Layer*);
@@ -51,7 +49,7 @@ private:
     
 signals:
     
-    void layerAdded();
+    void signalLayerAdded();
     
 };
 

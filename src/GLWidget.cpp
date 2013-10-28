@@ -33,7 +33,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _mapView.setCurrentCam(_camera);
     _timeCtx = _map->getTimeCtx();
     _updateViewCtx();
-    connect(_map, SIGNAL(layerAdded()), this, SLOT(updateGL()));
+    connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
@@ -147,7 +147,6 @@ GLWidget::update()
 {
     if (_playMode == PlayMode_Play && elapsedTimer.isValid())
         _timeCtx->update(elapsedTimer.restart());
-    _map->update();
     updateGL();
     emit signalTimeChanged(_timeCtx->getMapSeconds());
 }

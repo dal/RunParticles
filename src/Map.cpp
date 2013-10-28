@@ -20,12 +20,6 @@ _duration(0)
 }
 
 void
-Map::update()
-{
-    // TODO
-}
-
-void
 Map::draw()
 {
     std::vector<Layer*>::iterator it;
@@ -42,9 +36,8 @@ Map::addLayer(Layer *layer)
     _layers.push_back(layer);
     // give the layer an opportunity to reproject
     layer->project(_viewCtx);
-    unsigned int layerPasses = layer->passes();
-    _numPasses = (layerPasses > _numPasses) ? layerPasses : _numPasses;
+    _numPasses = (layer->passes() > _numPasses) ? layer->passes() : _numPasses;
     _duration = (layer->duration() > _duration) ? layer->duration() : _duration;
-    emit(layerAdded());
+    emit(signalLayerAdded());
     return true;
 }

@@ -31,7 +31,7 @@ public:
     
     virtual void draw(uint pass, const ViewCtx*, const TimeCtx*) = 0;
     
-    virtual BoundingBox boundingBox() const = 0;
+    virtual BoundingBox getBoundingBox() const = 0;
     
 };
 

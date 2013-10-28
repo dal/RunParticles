@@ -12,6 +12,7 @@
 
 #include "Types.h"
 
+#include "BoundingBox.h"
 #include "TimeCtx.h"
 
 #include <string>
@@ -29,6 +30,8 @@ public:
     LonLat fromProjection(const MapPoint&) const;
     
     double getResolution() const;
+    
+    BoundingBox getBoundingBox() const;
     
     void setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
                      int width, int height);

@@ -21,7 +21,7 @@ public:
     
     virtual void draw(uint pass, const ViewCtx*, const TimeCtx*);
     
-    BoundingBox boundingBox() const;
+    BoundingBox getBoundingBox() const;
 protected:
     
     void _drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx);

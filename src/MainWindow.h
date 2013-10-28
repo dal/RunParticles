@@ -30,6 +30,8 @@ public slots:
     
     void slotTimeChanged(double mapSeconds);
     
+    void slotLayerAdded();
+    
 protected:
     QMenuBar *_menuBar;
     GLWidget *_glWidget;

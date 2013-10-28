@@ -21,7 +21,7 @@
 double
 _xToLon(const double x)
 {
-    return x * RAD_TO_DEG / 111319.49079327357;
+    return x * RAD_TO_DEG / 1113194.9079327357;
 }
 
 double
@@ -46,9 +46,9 @@ _latToYSph(const double lat)
 
 ViewCtx::ViewCtx()
     : _projection("EPSG:3875"),
-      _resolution(1.),
       _width(0),
-      _height(0)
+      _height(0),
+      _resolution(1.)
 {
     
 }
@@ -88,5 +88,11 @@ ViewCtx::setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
     _height = height;
     _resolution = (width != 0) ? abs(lowerRight.x - upperLeft.x) / double(width)
                                : 1.0;
+}
+
+BoundingBox
+ViewCtx::getBoundingBox() const
+{
+    return BoundingBox(_upperLeft, _lowerRight);
 }
 

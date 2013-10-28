@@ -126,8 +126,10 @@ MapView::zoom( const float amount )
     float size = (amount == 0) ? 1.0 : amount;
     float width = (oldRight - oldLeft);
     float height = (oldTop - oldBottom);
-    float hsize = width * size / 50.;
-    float vsize = height * size / 50.;
+    if ((amount > 0 && width <= 10.0) || (amount < 0 && width >= 3.2e6))
+        return;
+    float hsize = width * size * 0.002;
+    float vsize = height * size * 0.002;
     if (hsize > 0.5 * width)
         return;
     mCurrentCam.setOrtho(oldLeft+hsize,

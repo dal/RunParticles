@@ -74,6 +74,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     slotTimeChanged(0);
     // DEBUG
     loadTcxFile(new QFile("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx"));
+    loadTcxFile(new QFile("/Users/dal/Documents/gps/exports/all2012.tcx"));
 }
 
 MainWindow::~MainWindow()

@@ -59,11 +59,11 @@ TrackLayer::project(const ViewCtx* viewCtx)
     qDebug("hi: %d points", _path_hi.count());
     
     // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi, 0.001);
+    _path_med = PathUtil::DouglasPeucker(_path_hi, 16.0);
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, 0.0001);
+    _path_lo = PathUtil::DouglasPeucker(_path_med, 4.0);
     qDebug("lo: %d points", _path_lo.count());
 }
 
@@ -99,34 +99,36 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     else
         gl::color( Color( 1, 0, 0 ) );
     
-    PathPoint lastPathPt;
-    MapPoint lastMapPt;
+    PathPoint *lastPathPt;
+    MapPoint *lastMapPt;
+    bool inbounds = false;
     for(int i=0; i < currentPath->count(); i++) {
-        PathPoint pt = (*currentPath)[i];
-        MapPoint thisMapPt = pt.pos;
-        if (i == 0 || pt.time < timeCtx->getMapSeconds()) {
-            if (i > 0) {
-                gl::drawLine( Vec2f(lastMapPt.x, lastMapPt.y),
-                             Vec2f(thisMapPt.x, thisMapPt.y));
+        PathPoint *pt = &(*currentPath)[i];
+        MapPoint *thisMapPt = &(pt->pos);
+        if (i == 0 || pt->time < timeCtx->getMapSeconds()) {
+            if (i > 0 && inbounds) {
+                gl::drawLine( Vec2f(lastMapPt->x, lastMapPt->y),
+                             Vec2f(thisMapPt->x, thisMapPt->y));
             }
             lastMapPt = thisMapPt;
             lastPathPt = pt;
-            _particlePos = thisMapPt;
+            _particlePos = *thisMapPt;
         } else {
             double elapsed = timeCtx->getMapSeconds() -
-                             double(lastPathPt.time);
-            int trkElapsed = pt.time - lastPathPt.time;
+                             double(lastPathPt->time);
+            int trkElapsed = pt->time - lastPathPt->time;
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
-            if (f > 0.0) {
-                MapPoint finalPt = lerp(lastMapPt, thisMapPt, f);
-                gl::drawLine( Vec2f(lastMapPt.x, lastMapPt.y),
+            if (f > 0.0 && inbounds) {
+                MapPoint finalPt = lerp(*lastMapPt, *thisMapPt, f);
+                gl::drawLine( Vec2f(lastMapPt->x, lastMapPt->y),
                              Vec2f(finalPt.x, finalPt.y) );
                 _particlePos = finalPt;
             } else {
-                _particlePos = thisMapPt;
+                _particlePos = *thisMapPt;
             }
             break;
         }
+        inbounds = viewCtx->getBoundingBox().contains(*thisMapPt);
     }
 }
             

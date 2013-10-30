@@ -24,6 +24,12 @@ BoundingBox::overlaps(const BoundingBox& other) const
              && lowerRight.y <= other.upperLeft.y));
 }
 
+bool BoundingBox::contains(const MapPoint& pt) const
+{
+    return (pt.x >= upperLeft.x && pt.x <= lowerRight.x &&
+            pt.y >= lowerRight.y && pt.y <= upperLeft.y);
+}
+
 BoundingBox&
 BoundingBox::operator+=(const MapPoint pt)
 {

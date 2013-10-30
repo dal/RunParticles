@@ -13,6 +13,8 @@ struct BoundingBox
     
     bool overlaps(const BoundingBox& other) const;
     
+    bool contains(const MapPoint& pt) const;
+    
     BoundingBox& operator+=(const MapPoint pt);
     
     MapPoint upperLeft, lowerRight;

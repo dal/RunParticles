@@ -19,14 +19,17 @@
  */
 
 MapView::MapView() :
-    mCurrentCam(CameraOrtho())
+    mCurrentCam(CameraOrtho()),
+    _viewCtx(new ViewCtx())
 { 
     
 }
 
-MapView::MapView( const CameraOrtho &aInitialCam ) 
+MapView::MapView(CameraOrtho &aInitialCam, ViewCtx *viewCtx) :
+    mCurrentCam(aInitialCam),
+    _viewCtx(viewCtx)
 { 
-    mCurrentCam = aInitialCam;
+    
 }
 
 void MapView::mouseWheel(const int delta)
@@ -60,13 +63,7 @@ void MapView::mouseDrag(const Vec2f &mouseDelta,
         float size = (oldLeft - oldRight + oldTop - oldBottom);
         if (size == 0) size = 1.0;
         float diff = (mouseDelta.x + mouseDelta.y) / size / 2.0;
-        
-        mCurrentCam.setOrtho(oldLeft*diff, 
-                             oldRight*diff, 
-                             oldBottom*diff, 
-                             oldTop*diff, 
-                             -1, 
-                             1);
+        zoom(diff);
     }
     else if( action == ACTION_PAN ) { // panning
         // left, float right, float bottom, float top
@@ -108,13 +105,19 @@ MapView::getCamera() const
 }
 
 void
-MapView::setCurrentCam( const CameraOrtho &aCurrentCam )
+MapView::setCurrentCam( CameraOrtho &aCurrentCam )
 { 
     mCurrentCam = aCurrentCam; 
 }
 
 void
-MapView::zoom( const float amount )
+MapView::setViewCtx(ViewCtx *newViewCtx)
+{
+    _viewCtx = newViewCtx;
+}
+
+void
+MapView::zoom(const float amount)
 {
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
     mCurrentCam.getFrustum(&oldLeft,
@@ -123,19 +126,17 @@ MapView::zoom( const float amount )
                            &oldBottom,
                            &oldNear,
                            &oldFar);
-    float size = (amount == 0) ? 1.0 : amount;
-    float width = (oldRight - oldLeft);
-    float height = (oldTop - oldBottom);
-    if ((amount > 0 && width <= 10.0) || (amount < 0 && width >= 3.2e6))
-        return;
-    float hsize = width * size * 0.002;
-    float vsize = height * size * 0.002;
-    if (hsize > 0.5 * width)
-        return;
-    mCurrentCam.setOrtho(oldLeft+hsize,
-                         oldRight-hsize,
-                         oldBottom+vsize,
-                         oldTop-vsize,
+    float size = (amount == 0) ? 1.0 : 1.0 + amount * 0.002;
+    float width = fabsf(oldRight - oldLeft);
+    double aspect = double(_viewCtx->getViewportHeight()) /
+                    double(_viewCtx->getViewportWidth());
+    MapPoint ctr((oldLeft+oldRight)*0.5, (oldBottom+oldTop)*0.5);
+    float hsize = width * size * 0.5;
+    float vsize = hsize * aspect;
+    mCurrentCam.setOrtho(ctr.x - hsize,
+                         ctr.x + hsize,
+                         ctr.y - vsize,
+                         ctr.y + vsize,
                          -1,
                          1);
 }

@@ -31,6 +31,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
                           -1,
                           1);
     _mapView.setCurrentCam(_camera);
+    _mapView.setViewCtx(_map->getViewCtx());
     _timeCtx = _map->getTimeCtx();
     _updateViewCtx();
     connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
@@ -138,6 +139,8 @@ GLWidget::keyPressEvent(QKeyEvent *event)
             _fullScreen = true;
             this->showFullScreen();
         }
+    } else if (event->key() == Qt::Key_Space) {
+        slotTogglePlayPause();
     }
     QGLWidget::keyPressEvent(event);
 }
@@ -206,6 +209,15 @@ GLWidget::slotPause()
     _playMode = PlayMode_Pause;
     elapsedTimer.invalidate();
     timer->stop();
+}
+
+void
+GLWidget::slotTogglePlayPause()
+{
+    if (_playMode == PlayMode_Pause)
+        slotPlay();
+    else
+        slotPause();
 }
 
 void

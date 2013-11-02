@@ -13,13 +13,14 @@
 #include "cinder/Vector.h"
 #include "cinder/Camera.h"
 #include "Types.h"
+#include "ViewCtx.h"
 
 using namespace cinder;
 
 class MapView {
 public:
     MapView();
-    MapView( const CameraOrtho&);
+    MapView(CameraOrtho&, ViewCtx *viewCtx);
     
     void mouseWheel(const int);
     
@@ -30,7 +31,8 @@ public:
     void resize(int oldWidth, int oldHieght, int newWidth, int newHeight);
         
     const CameraOrtho& getCamera() const;
-    void setCurrentCam( const CameraOrtho &aCurrentCam );
+    void setCurrentCam( CameraOrtho &aCurrentCam );
+    void setViewCtx( ViewCtx *newViewCtx );
     void zoom( const float );
     void recenter(const MapPoint &position);
     void getFrustum(float &left, float &top, float &right, float &bottom) const;
@@ -39,6 +41,8 @@ private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };
     
     CameraOrtho	mCurrentCam;
+    
+    ViewCtx *_viewCtx;
 };
 
 #endif

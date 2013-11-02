@@ -101,12 +101,13 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     
     PathPoint *lastPathPt;
     MapPoint *lastMapPt;
-    bool inbounds = false;
+    bool lastInbounds = false;
     for(int i=0; i < currentPath->count(); i++) {
         PathPoint *pt = &(*currentPath)[i];
         MapPoint *thisMapPt = &(pt->pos);
+        bool inbounds = viewCtx->getBoundingBox().contains(*thisMapPt);
         if (i == 0 || pt->time < timeCtx->getMapSeconds()) {
-            if (i > 0 && inbounds) {
+            if (i > 0 && (inbounds || lastInbounds)) {
                 gl::drawLine( Vec2f(lastMapPt->x, lastMapPt->y),
                              Vec2f(thisMapPt->x, thisMapPt->y));
             }
@@ -118,7 +119,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
                              double(lastPathPt->time);
             int trkElapsed = pt->time - lastPathPt->time;
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
-            if (f > 0.0 && inbounds) {
+            if (f > 0.0 && (inbounds || lastInbounds)) {
                 MapPoint finalPt = lerp(*lastMapPt, *thisMapPt, f);
                 gl::drawLine( Vec2f(lastMapPt->x, lastMapPt->y),
                              Vec2f(finalPt.x, finalPt.y) );
@@ -128,7 +129,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
             }
             break;
         }
-        inbounds = viewCtx->getBoundingBox().contains(*thisMapPt);
+        lastInbounds = inbounds;
     }
 }
             

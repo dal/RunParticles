@@ -1,7 +1,7 @@
 /*
- *  Viewer.cpp
+ *  ViewCtx.cpp
  *  RunParticles
- *
+ * 
  *  Created by Doug Letterman on 1/31/13.
  *  Copyright 2013 Doug Letterman. All rights reserved.
  *
@@ -16,6 +16,10 @@
 #define MERCATOR_R_MAJ 6378137.0
 #define HALF_R_MAJ 3189068.5
 
+// scale the map domain down by this amount
+// this helps prevent floating point precision artifacts
+#define SCALE_MULT 0.1
+
 #define PI 3.141592653589793238
 
 double
@@ -27,21 +31,22 @@ _xToLon(const double x)
 double
 _yToLatSph(const double y)
 {
-    return (1.5707963267948966 -
-            (2.0 * atan(exp((-1.0 * y) / MERCATOR_R_MAJ)))) * RAD_TO_DEG;
+    return ((1.5707963267948966 -
+            (2.0 * atan(exp((-1.0 * y) / MERCATOR_R_MAJ)))) * RAD_TO_DEG)
+            / SCALE_MULT;
 }
 
 double
 _lonToX(const double lon)
 {
-    return lon * DEG_TO_RAD * MERCATOR_R_MAJ;
+    return SCALE_MULT * lon * DEG_TO_RAD * MERCATOR_R_MAJ;
 }
 
 double
 _latToYSph(const double lat)
 {
     double sina = sin(lat * DEG_TO_RAD);
-    return HALF_R_MAJ * log((1.0 + sina) / (1.0 - sina));
+    return SCALE_MULT * HALF_R_MAJ * log((1.0 + sina) / (1.0 - sina));
 }
 
 ViewCtx::ViewCtx()

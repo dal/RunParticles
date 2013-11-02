@@ -67,9 +67,11 @@ public slots:
 
     void slotPlay();
     
-    void slotReverse();
+    void slotTogglePlayPause();
     
     void slotPause();
+    
+    void slotReverse();
     
     void slotRewind();
     

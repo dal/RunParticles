@@ -1,6 +1,11 @@
 /*
- *  Viewer.h
+ *  ViewCtx.h
  *  RunParticles
+ *
+ *  Default View Context for RunParticles. Implements "WGS84 Web Mercator" 
+ *  projection, AKA EPSG:3857
+ * 
+ *  See: http://spatialreference.org/ref/sr-org/7483/
  *
  *  Created by Doug Letterman on 1/31/13.
  *  Copyright 2013 Doug Letterman. All rights reserved.

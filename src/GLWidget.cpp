@@ -123,6 +123,7 @@ GLWidget::wheelEvent(QWheelEvent *event)
 {
     _mapView.mouseWheel(event->delta());
     _updateViewCtx();
+    qDebug("resolution: %f", _map->getViewCtx()->getResolution());
     updateGL();
 }
 

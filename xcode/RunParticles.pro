@@ -97,6 +97,7 @@ TEMPLATE = app
 
 HEADERS = ../src/BoundingBox.h \
           ../src/GLWidget.h \
+          ../src/GpxHandler.h \
           ../src/Layer.h \
           ../src/MainWindow.h \
           ../src/Map.h \
@@ -104,12 +105,15 @@ HEADERS = ../src/BoundingBox.h \
           ../src/PathUtil.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
+          ../src/TrackFileReader.h \
           ../src/TrackLayer.h \
           ../src/Types.h \
           ../src/ViewCtx.h \
+          ../src/XmlHandler.h
 
 SOURCES = ../src/BoundingBox.cpp \
           ../src/GLWidget.cpp \
+          ../src/GpxHandler.cpp \
           ../src/main.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \
@@ -117,6 +121,8 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/PathUtil.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
+          ../src/TrackFileReader.cpp \
           ../src/TrackLayer.cpp \
-          ../src/ViewCtx.cpp
+          ../src/ViewCtx.cpp \
+          ../src/XmlHandler.cpp
 QT += opengl xml

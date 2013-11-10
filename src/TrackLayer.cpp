@@ -59,11 +59,11 @@ TrackLayer::project(const ViewCtx* viewCtx)
     qDebug("hi: %d points", _path_hi.count());
     
     // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi, 16.0);
+    _path_med = PathUtil::DouglasPeucker(_path_hi, 1.6);
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, 4.0);
+    _path_lo = PathUtil::DouglasPeucker(_path_med, 0.4);
     qDebug("lo: %d points", _path_lo.count());
 }
 
@@ -89,9 +89,9 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     // Choose which path to display
     Path *currentPath = &_path_hi;
     double res = viewCtx->getResolution();
-    if (res >= 3.0 && res < 12.0)
+    if (res >= 1.0 && res < 3.0)
         currentPath = &_path_med;
-    else if (res >= 12.0)
+    else if (res >= 3.0)
         currentPath = &_path_lo;
     
     if (_track->sport != "Running")

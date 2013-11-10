@@ -1,6 +1,5 @@
-
-#ifndef TCXHANDLER_H
-#define TCXHANDLER_H
+#ifndef GPXHANDLER_H
+#define GPXHANDLER_H
 
 #include <QString>
 #include <QList>
@@ -12,14 +11,14 @@
 
 using namespace std;
 
-class TcxHandler : public QXmlDefaultHandler
+class GpxHandler : public QXmlDefaultHandler
 {
-    
+
 public:
 
-    TcxHandler(QList<Track*>*);
+    GpxHandler(QList<Track*>*);
     
-    bool startDocument();
+       bool startDocument();
     bool characters(const QString & ch);
     bool startElement(const QString&, 
                       const QString&, 
@@ -51,7 +50,7 @@ protected:
     bool _foundTime;
     
     int _startTime;
-    
+
 };
 
 #endif

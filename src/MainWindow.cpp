@@ -1,14 +1,13 @@
 #include "MainWindow.h"
 #include "TcxHandler.h"
-#include "TrackLAyer.h"
+#include "TrackLayer.h"
+#include "TrackFileReader.h"
 
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QMenu>
 #include <QMessageBox>
 #include <QWidget>
-#include <QXmlInputSource>
-#include <QXmlSimpleReader>
 
 MainWindow::MainWindow(GLWidget *glWidget,
                        QWidget * parent,
@@ -73,8 +72,10 @@ MainWindow::MainWindow(GLWidget *glWidget,
     
     slotTimeChanged(0);
     // DEBUG
-    loadTcxFile(new QFile("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx"));
-    loadTcxFile(new QFile("/Users/dal/Documents/gps/exports/all2012.tcx"));
+    QString pathOne("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx");
+    loadTrackFile(pathOne);
+    QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
+    loadTrackFile(pathTwo);
 }
 
 MainWindow::~MainWindow()
@@ -98,24 +99,16 @@ MainWindow::_layout(QWidget *ctr)
 }
 
 void
-MainWindow::loadTcxFile(QFile *tcxFile)
+MainWindow::loadTrackFile(const QString &path)
 {
     QList<Track*> tracks;
-    TcxHandler *handler = new TcxHandler(&tracks);
-    QXmlSimpleReader *reader = new QXmlSimpleReader();
-    reader->setContentHandler(handler);
-    reader->setErrorHandler(handler);
-    
-    QString msg = QString("File '%1' does not exist").arg(tcxFile->fileName());
-    
-    if (!tcxFile->exists()) {
-        QMessageBox::critical(this, msg, msg);
+    char* whyNot = (char*)malloc(256);
+    TrackFileReader reader;
+    bool success = reader.read(path, &tracks, &whyNot);
+    if (!success) {
+        QMessageBox::critical(this, "Could not load file", whyNot);
+        return;
     }
-    
-    QXmlInputSource *source = new QXmlInputSource(tcxFile);
-    
-    reader->parse(source, true /*incremental*/);
-    while (reader->parseContinue()) { };
     Track *thisTrack;
     foreach(thisTrack, tracks) {
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
@@ -128,8 +121,7 @@ MainWindow::slotLoadFile()
 {
     QString path = QFileDialog::getOpenFileName(this, "Select tcx file");
     if (!path.isEmpty()) {
-        QFile *tcxFile = new QFile(path);
-        loadTcxFile(tcxFile);
+        loadTrackFile(path);
     }
 }
 

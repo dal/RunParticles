@@ -13,8 +13,6 @@ _tracks(tracks),
 _currentTrack(NULL),
 _depth(0),
 _inTime(false),
-_inLatitudeDegrees(false),
-_inLongitudeDegrees(false),
 _foundLat(false),
 _foundLon(false),
 _foundTime(false)
@@ -27,8 +25,6 @@ GpxHandler::startDocument()
 {
     _depth = 0;
     _inTime = false;
-    _inLatitudeDegrees = false;
-    _inLongitudeDegrees = false;
     _foundLat = false;
     _foundLon = false;
     return true;
@@ -40,56 +36,49 @@ GpxHandler::startElement(const QString & namespaceURI,
                       const QString & qName, 
                       const QXmlAttributes & atts )
 {
+    qDebug("Start: %s", localName.toAscii().constData());
     if (localName == "trk") {
         if (_depth != 0) {
             qWarning("Nested tracks!");
         }
-        /*
-        int sportIdx = atts.index(QString(""), "Sport");
-        if (sportIdx != -1) {
-            QString mysport = atts.value(sportIdx);
-            _currentTrack = new Track();
-            _currentTrack->sport = mysport;
-            _tracks->append(_currentTrack);
-        } else {
-            qWarning("Could not determine activity type");
-        }
-        */
+        _currentTrack = new Track();
+        _tracks->append(_currentTrack);
+        // TODO: "name" characters
     } else if (localName == "trkseg") {
         _depth += 1;
-        // TODO get StartTme
-        if (_startTime == 0) {
-            int stIdx = atts.index(QString(""), "StartTime");
-            if (stIdx != -1) {
-                // startTime in format "2012-02-25T18:53:52Z"
-                const char* cStartTime = atts.value(stIdx).toAscii().constData();
-                _startTime = parseGpxTime(cStartTime);
-            }
-        }
-    } else if (localName == "Track") {
-        _depth += 1;
-    } else if (localName == "Trackpoint") {
+    } else if (localName == "trkpt") {
         _depth += 1;
         _foundLat = false;
         _foundLon = false;
         _currentPoint = new TrackPoint();
-    } else if (localName == "Time") {
+        bool ok = false;
+        int latIdx = atts.index(QString(""), "lat");
+        if (latIdx != -1) {
+            QString lat = atts.value(latIdx);
+            _currentPoint->pos.y = lat.toDouble(&ok);
+            if (ok) {
+                _foundLat = true;
+            } else {
+                qWarning("Invalid trk element latitude: '%s'", 
+                         lat.toAscii().constData());
+            }
+        }
+        int lonIdx = atts.index(QString(""), "lon");
+        if (lonIdx != -1) {
+            QString lon = atts.value(lonIdx);
+            _currentPoint->pos.x = lon.toDouble(&ok);
+            if (ok) {
+                _foundLon = true;
+            } else {
+                qWarning("Invalid trk element longitude: '%s'", 
+                         lon.toAscii().constData());
+            }
+        } else {
+            qWarning("trk element was missing a valid longitude");
+        }
+    } else if (localName == "time") {
         if (_currentPoint) {
             _inTime = true;
-        }
-    } else if (localName == "Position") {
-        _depth += 1;
-    } else if (localName == "LatitudeDegrees") {
-        if (_currentPoint) {
-            _inLatitudeDegrees = true;
-        } else {
-            qWarning("Found LatitudeDegrees outside TrackPoint");
-        }
-    } else if (localName == "LongitudeDegrees") {
-        if (_currentPoint) {
-            _inLongitudeDegrees = true;
-        } else {
-            qWarning("Found LongitudeDegrees outside TrackPoint");
         }
     }
     return true;
@@ -98,22 +87,7 @@ GpxHandler::startElement(const QString & namespaceURI,
 bool 
 GpxHandler::characters ( const QString & ch )
 {
-    bool ok = false;
-    if (_inLatitudeDegrees) {
-        _currentPoint->pos.y = ch.toDouble(&ok);
-        if (ok) {
-            _foundLat = true;
-        } else {
-            qWarning("Invalid latitude: %s", ch.toAscii().constData());
-        }
-    } else if (_inLongitudeDegrees) {
-        _currentPoint->pos.x = ch.toDouble(&ok);
-        if (ok) {
-            _foundLon = true;
-        } else {
-            qWarning("Invalid longitude: %s", ch.toAscii().constData());
-        }
-    } else if (_inTime && _currentPoint) {
+    if (_inTime && _currentPoint) {
         _currentPoint->time = parseGpxTime(ch.toAscii().constData());
         _foundTime = true;
     }
@@ -125,16 +99,14 @@ GpxHandler::endElement(const QString &,
                     const QString & localName, 
                     const QString &)
 {
-    if (localName == "Activity") {
+    if (localName == "trk") {
         if (_currentTrack != NULL) {
             _currentTrack = NULL;
         }
         _depth -= 1;
-    } else if (localName == "Lap") {
+    } else if (localName == "trkseg") {
         _depth -= 1;
-    } else if (localName == "Track") {
-        _depth -= 1;
-    } else if (localName == "Trackpoint") {
+    } else if (localName == "trkpt") {
         _depth -= 1;
         if (_currentPoint && _foundLat && _foundLon && _foundTime) {
             if (_currentTrack) {
@@ -142,21 +114,9 @@ GpxHandler::endElement(const QString &,
             }
             _currentPoint = NULL;
         }
-    } else if (localName == "Position") {
-        _depth -= 1;
-        if (!_foundLat) {
-            qWarning("Position element was missing a valid latitude");
-        } else if (!_foundLon) {
-            qWarning("Position element was missing a valid longitude");
-        }
-    } else if (localName == "Time") {
+    } else if (localName == "time") {
         _inTime = false;
-    } else if (localName == "LatitudeDegrees") {
-        _inLatitudeDegrees = false;
-    } else if (localName == "LongitudeDegrees") {
-        _inLongitudeDegrees = false;
     }
-
     return true;
 }
 

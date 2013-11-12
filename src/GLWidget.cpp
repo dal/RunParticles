@@ -121,7 +121,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
 void
 GLWidget::wheelEvent(QWheelEvent *event)
 {
-    _mapView.mouseWheel(event->delta());
+    _mapView.mouseWheel(-event->delta());
     _updateViewCtx();
     qDebug("resolution: %f", _map->getViewCtx()->getResolution());
     updateGL();
@@ -140,8 +140,6 @@ GLWidget::keyPressEvent(QKeyEvent *event)
             _fullScreen = true;
             this->showFullScreen();
         }
-    } else if (event->key() == Qt::Key_Space) {
-        slotTogglePlayPause();
     }
     QGLWidget::keyPressEvent(event);
 }

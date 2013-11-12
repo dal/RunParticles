@@ -3,6 +3,8 @@
 #include "TrackLayer.h"
 #include "TrackFileReader.h"
 
+#include <QApplication>
+#include <QEventLoop>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QMenu>
@@ -37,7 +39,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _currentTimeLineEdit->setAlignment(Qt::AlignRight);
     _layout(ctr);
     QMenu *_fileMenu = _menuBar->addMenu("File");
-    _openLayerAction = new QAction("Open Layer. . .", this);
+    _openLayerAction = new QAction("&Open Layer. . .", this);
     _forwardAction = new QAction("Play", this);
     _backAction = new QAction("Reverse", this);
     _rewindAction = new QAction("Rewind", this);
@@ -69,6 +71,16 @@ MainWindow::MainWindow(GLWidget *glWidget,
             this, SLOT(slotTimeChanged(double)));
     connect(_glWidget->getMap(), SIGNAL(signalLayerAdded()),
             this, SLOT(slotLayerAdded()));
+    
+    // Application-wide shortcuts
+    _playPauseShortcut = new QShortcut(QKeySequence(Qt::Key_Space), this);
+    _playPauseShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_playPauseShortcut, SIGNAL(activated()),
+            _glWidget, SLOT(slotTogglePlayPause()));
+    _openLayerShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_O), this);
+    _openLayerShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_openLayerShortcut, SIGNAL(activated()),
+            _openLayerAction, SLOT(trigger()));
     
     slotTimeChanged(0);
     // DEBUG
@@ -119,8 +131,12 @@ MainWindow::loadTrackFile(const QString &path)
 void
 MainWindow::slotLoadFile()
 {
-    QString path = QFileDialog::getOpenFileName(this, "Select tcx file");
+    QString path = QFileDialog::getOpenFileName(this, 
+                                                "Select track file",
+                                                QString() /*dir*/, 
+                                                "Tracklogs (*.gpx *.tcx)");
     if (!path.isEmpty()) {
+        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
         loadTrackFile(path);
     }
 }

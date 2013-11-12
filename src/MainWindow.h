@@ -8,6 +8,7 @@
 #include <QMenuBar>
 #include <QPushButton>
 #include <QComboBox>
+#include <QShortcut>
 #include <QSlider>
 
 class MainWindow : public QMainWindow
@@ -41,6 +42,7 @@ protected:
     QComboBox *_playSpeedCombo;
     QAction *_openLayerAction, *_forwardAction, *_backAction, *_rewindAction,
             *_pauseAction;
+    QShortcut *_playPauseShortcut, *_openLayerShortcut;
 };
 
 #endif

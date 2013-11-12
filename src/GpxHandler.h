@@ -39,10 +39,6 @@ protected:
     
     bool _inTime;
     
-    bool _inLatitudeDegrees;
-    
-    bool _inLongitudeDegrees;
-    
     bool _foundLat;
     
     bool _foundLon;

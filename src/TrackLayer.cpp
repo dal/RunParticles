@@ -59,11 +59,11 @@ TrackLayer::project(const ViewCtx* viewCtx)
     qDebug("hi: %d points", _path_hi.count());
     
     // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi, 1.6);
+    _path_med = PathUtil::DouglasPeucker(_path_hi, 1.0);
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, 0.4);
+    _path_lo = PathUtil::DouglasPeucker(_path_med, 0.2);
     qDebug("lo: %d points", _path_lo.count());
 }
 

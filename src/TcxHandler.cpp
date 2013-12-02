@@ -1,12 +1,7 @@
 
 #include "TcxHandler.h"
-#include <time.h>
 
-int parseTime(const char* timeCStr) {
-    struct tm startTime;
-    strptime(timeCStr, "%Y-%m-%dT%H:%M:%SZ", &startTime);
-    return static_cast<int>(timegm(&startTime));
-};
+#include "Util.h"
 
 TcxHandler::TcxHandler(QList<Track*> *tracks) :
 QXmlDefaultHandler(),
@@ -14,6 +9,7 @@ _tracks(tracks),
 _currentTrack(NULL),
 _depth(0),
 _inTime(false),
+_inId(false),
 _inLatitudeDegrees(false),
 _inLongitudeDegrees(false),
 _foundLat(false),
@@ -28,6 +24,7 @@ TcxHandler::startDocument()
 {
     _depth = 0;
     _inTime = false;
+    _inId = false;
     _inLatitudeDegrees = false;
     _inLongitudeDegrees = false;
     _foundLat = false;
@@ -56,17 +53,10 @@ TcxHandler::startElement(const QString & namespaceURI,
         }
     } else if (localName == "Lap") {
         _depth += 1;
-        // TODO get StartTme
-        if (_startTime == 0) {
-            int stIdx = atts.index(QString(""), "StartTime");
-            if (stIdx != -1) {
-                // startTime in format "2012-02-25T18:53:52Z"
-                const char* cStartTime = atts.value(stIdx).toAscii().constData();
-                _startTime = parseTime(cStartTime);
-            }
-        }
     } else if (localName == "Track") {
         _depth += 1;
+    } else if (localName == "Id") {
+        _inId = true;
     } else if (localName == "Trackpoint") {
         _depth += 1;
         _foundLat = false;
@@ -113,8 +103,10 @@ TcxHandler::characters ( const QString & ch )
             qWarning("Invalid longitude: %s", ch.toAscii().constData());
         }
     } else if (_inTime && _currentPoint) {
-        _currentPoint->time = parseTime(ch.toAscii().constData());
+        _currentPoint->time = Util::parseTime(ch.toAscii().constData());
         _foundTime = true;
+    } else if (_inId && _currentTrack) {
+        _currentTrack->name = QString(ch);
     }
     return true;
 }
@@ -133,6 +125,8 @@ TcxHandler::endElement(const QString & namespaceURI,
         _depth -= 1;
     } else if (localName == "Track") {
         _depth -= 1;
+    } else if (localName == "Id") {
+        _inId = false;
     } else if (localName == "Trackpoint") {
         _depth -= 1;
         if (_currentPoint && _foundLat && _foundLon && _foundTime) {

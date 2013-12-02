@@ -38,19 +38,8 @@ protected:
     
     int _depth;
     
-    bool _inTime;
-    
-    bool _inLatitudeDegrees;
-    
-    bool _inLongitudeDegrees;
-    
-    bool _foundLat;
-    
-    bool _foundLon;
-    
-    bool _foundTime;
-    
-    int _startTime;
+    bool _inTime, _inId, _inLatitudeDegrees, _inLongitudeDegrees, _foundLat,
+        _foundLon, _foundTime;
     
 };
 

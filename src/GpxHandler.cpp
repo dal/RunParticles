@@ -1,11 +1,7 @@
 #include "GpxHandler.h"
 #include <time.h>
 
-int parseGpxTime(const char* timeCStr) {
-    struct tm startTime;
-    strptime(timeCStr, "%Y-%m-%dT%H:%M:%SZ", &startTime);
-    return static_cast<int>(timegm(&startTime));
-};
+#include "Util.h"
 
 GpxHandler::GpxHandler(QList<Track*> *tracks) :
 QXmlDefaultHandler(),
@@ -13,6 +9,7 @@ _tracks(tracks),
 _currentTrack(NULL),
 _depth(0),
 _inTime(false),
+_inName(false),
 _foundLat(false),
 _foundLon(false),
 _foundTime(false)
@@ -25,6 +22,7 @@ GpxHandler::startDocument()
 {
     _depth = 0;
     _inTime = false;
+    _inName = false;
     _foundLat = false;
     _foundLon = false;
     return true;
@@ -43,7 +41,8 @@ GpxHandler::startElement(const QString & namespaceURI,
         }
         _currentTrack = new Track();
         _tracks->append(_currentTrack);
-        // TODO: "name" characters
+    } else if (localName == "name") {
+        _inName = true;
     } else if (localName == "trkseg") {
         _depth += 1;
     } else if (localName == "trkpt") {
@@ -88,8 +87,10 @@ bool
 GpxHandler::characters ( const QString & ch )
 {
     if (_inTime && _currentPoint) {
-        _currentPoint->time = parseGpxTime(ch.toAscii().constData());
+        _currentPoint->time = Util::parseTime(ch.toAscii().constData());
         _foundTime = true;
+    } else if (_inName && _currentTrack) {
+        _currentTrack->name = QString(ch);
     }
     return true;
 }
@@ -104,6 +105,8 @@ GpxHandler::endElement(const QString &,
             _currentTrack = NULL;
         }
         _depth -= 1;
+    } else if (localName == "name") {
+        _inName = false;
     } else if (localName == "trkseg") {
         _depth -= 1;
     } else if (localName == "trkpt") {

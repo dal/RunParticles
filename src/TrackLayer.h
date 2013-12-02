@@ -6,12 +6,20 @@
 #include "BoundingBox.h"
 #include "Types.h"
 
+#include <QString>
+
 class TrackLayer : public Layer
 {
 public:
     TrackLayer(const Track *track);
     
     virtual ~TrackLayer();
+    
+    QString name() const;
+    
+    QString sport() const;
+    
+    QDateTime startTime() const;
     
     unsigned int passes() const { return 2; };
     
@@ -37,6 +45,10 @@ protected:
     unsigned int _duration;
     
     MapPoint _particlePos;
+    
+    QString _name;
+    
+    QDateTime _startTime;
 };
 
 #endif;

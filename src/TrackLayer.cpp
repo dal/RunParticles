@@ -12,6 +12,8 @@ _track(track),
 _duration(0)
 {
     int numPts = track->points.count();
+    if (numPts > 0)
+        _startTime = QDateTime::fromTime_t(track->points[0].time);
     if (numPts > 1)
         _duration = track->points[numPts-1].time - track->points[0].time;
 }
@@ -19,6 +21,24 @@ _duration(0)
 TrackLayer::~TrackLayer() 
 {
     // do nothing
+}
+
+QString
+TrackLayer::name() const
+{
+    return _name;
+}
+
+QString
+TrackLayer::sport() const
+{
+    return _track->sport;
+}
+
+QDateTime
+TrackLayer::startTime() const
+{
+    return _startTime;
 }
 
 /*

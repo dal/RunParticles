@@ -37,15 +37,7 @@ protected:
     
     int _depth;
     
-    bool _inTime;
-    
-    bool _foundLat;
-    
-    bool _foundLon;
-    
-    bool _foundTime;
-    
-    int _startTime;
+    bool _inTime, _inName, _foundLat, _foundLon, _foundTime;
 
 };
 

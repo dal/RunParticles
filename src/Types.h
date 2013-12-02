@@ -12,6 +12,7 @@
 
 #include "cinder/Vector.h"
 
+#include <QDateTime>
 #include <QList>
 #include <QString>
 
@@ -37,6 +38,7 @@ struct TrackPoint
 struct Track
 {
     QString sport;
+    QString name;
     QList<TrackPoint> points;
 };
 

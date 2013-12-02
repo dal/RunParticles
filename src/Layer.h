@@ -9,6 +9,9 @@
 #ifndef RunParticles_Layer_h
 #define RunParticles_Layer_h
 
+#include <QString>
+#include <QDateTime>
+
 #include "BoundingBox.h"
 #include "ViewCtx.h"
 #include "Types.h"
@@ -22,6 +25,12 @@ public:
     Layer() {};
     
     virtual ~Layer() {};
+    
+    virtual QString name() const = 0;
+    
+    virtual QString sport() const = 0;
+    
+    virtual QDateTime startTime() const = 0;
     
     virtual unsigned int passes() const { return 1; }
     

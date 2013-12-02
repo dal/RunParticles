@@ -2,7 +2,6 @@
 #define RUNPARTICLES_MAINWINDOW_H
 
 #include <QMainWindow>
-#include "GLWidget.h"
 #include <QAction>
 #include <QLineEdit>
 #include <QMenuBar>
@@ -10,6 +9,9 @@
 #include <QComboBox>
 #include <QShortcut>
 #include <QSlider>
+
+#include "GLWidget.h"
+#include "LayerListWidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -36,6 +38,7 @@ public slots:
 protected:
     QMenuBar *_menuBar;
     GLWidget *_glWidget;
+    LayerListWidget *_layerListWidget;
     QPushButton *_rewindButton, *_forwardButton, *_pauseButton, *_backButton;
     QSlider *_slider;
     QLineEdit *_currentTimeLineEdit;

@@ -89,6 +89,7 @@ QMAKE_MAC_XCODE_SETTINGS += XCODE_COMPILER_LIBRARY
 #CONFIG += x86
 #ARCHES -= x86_64
 ARCHES -= i386
+QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
 }
 
 CONFIG += qt
@@ -99,6 +100,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \
           ../src/Layer.h \
+          ../src/LayerListWidget.h \
           ../src/MainWindow.h \
           ../src/Map.h \
           ../src/MapView.h \
@@ -108,6 +110,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/TrackFileReader.h \
           ../src/TrackLayer.h \
           ../src/Types.h \
+          ../src/Util.h \
           ../src/ViewCtx.h \
           ../src/XmlHandler.h
 
@@ -115,6 +118,7 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \
           ../src/main.cpp \
+          ../src/LayerListWidget.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \
@@ -124,5 +128,6 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/TrackFileReader.cpp \
           ../src/TrackLayer.cpp \
           ../src/ViewCtx.cpp \
+          ../src/Util.cpp \
           ../src/XmlHandler.cpp
 QT += opengl xml

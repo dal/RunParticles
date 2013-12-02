@@ -1,7 +1,4 @@
 #include "MainWindow.h"
-#include "TcxHandler.h"
-#include "TrackLayer.h"
-#include "TrackFileReader.h"
 
 #include <QApplication>
 #include <QEventLoop>
@@ -11,12 +8,18 @@
 #include <QMessageBox>
 #include <QWidget>
 
+#include "TcxHandler.h"
+#include "TrackLayer.h"
+#include "TrackFileReader.h"
+#include "Util.h"
+
 MainWindow::MainWindow(GLWidget *glWidget,
                        QWidget * parent,
                        Qt::WindowFlags flags) :
     QMainWindow::QMainWindow(parent, flags),
     _menuBar(new QMenuBar(0)),
-    _glWidget(glWidget)
+    _glWidget(glWidget),
+    _layerListWidget(new LayerListWidget())
 {
     QWidget *ctr = new QWidget(this);
     setCentralWidget(ctr);
@@ -88,6 +91,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     loadTrackFile(pathOne);
     QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
     loadTrackFile(pathTwo);
+    _layerListWidget->show();
 }
 
 MainWindow::~MainWindow()
@@ -125,6 +129,7 @@ MainWindow::loadTrackFile(const QString &path)
     foreach(thisTrack, tracks) {
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
         _glWidget->getMap()->addLayer(thisLayer);
+        _layerListWidget->addLayer(thisLayer);
     }
 }
 
@@ -156,14 +161,7 @@ MainWindow::slotPlaybackRateChanged(const QString &newRate)
 void
 MainWindow::slotTimeChanged(double mapSeconds)
 {
-    int hours = mapSeconds / 3600;
-    int modhrs = int(mapSeconds) % 3600;
-    int mins = modhrs / 60;
-    int secs = modhrs % 60;
-    QChar zero('0');
-    QString time = QString("%1hr%2m%3s").arg(hours)
-                                        .arg(mins, 2, 10, zero)
-                                        .arg(secs, 2, 10, zero);
+    QString time = Util::secondsToString(mapSeconds);
     _currentTimeLineEdit->setText(time);
     _slider->setSliderPosition(int(mapSeconds));
 }

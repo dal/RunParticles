@@ -46,9 +46,7 @@ protected:
     
     MapPoint _particlePos;
     
-    QString _name;
-    
     QDateTime _startTime;
 };
 
-#endif;
+#endif

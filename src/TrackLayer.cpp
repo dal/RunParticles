@@ -26,7 +26,7 @@ TrackLayer::~TrackLayer()
 QString
 TrackLayer::name() const
 {
-    return _name;
+    return _track->name;
 }
 
 QString

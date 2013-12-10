@@ -85,13 +85,20 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_openLayerShortcut, SIGNAL(activated()),
             _openLayerAction, SLOT(trigger()));
     
+    connect(_layerListWidget, SIGNAL(signalLayersSelected(QList<unsigned int>)),
+            this, SLOT(slotLayerSelectionChanged(const QList<unsigned int>)));
+    
     slotTimeChanged(0);
+    _layerListWidget->show();
+    
     // DEBUG
     QString pathOne("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx");
     loadTrackFile(pathOne);
     QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
     loadTrackFile(pathTwo);
-    _layerListWidget->show();
+    QString pathThree("/Users/dal/Documents/gps/exports/2013_to1028.tcx");
+    loadTrackFile(pathThree);
+    
 }
 
 MainWindow::~MainWindow()
@@ -171,4 +178,10 @@ MainWindow::slotLayerAdded()
 {
     int dur = _glWidget->getMap()->getDuration();
     _slider->setMaximum(dur);
+}
+
+void
+MainWindow::slotLayerSelectionChanged(const QList<unsigned int> layerIds)
+{
+    
 }

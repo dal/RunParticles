@@ -118,6 +118,7 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \
           ../src/main.cpp \
+          ../src/Layer.cpp \
           ../src/LayerListWidget.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \

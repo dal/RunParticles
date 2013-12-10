@@ -17,6 +17,12 @@ struct BoundingBox
     
     BoundingBox& operator+=(const MapPoint pt);
     
+    double width() const;
+    
+    double height() const;
+    
+    MapPoint center() const;
+    
     MapPoint upperLeft, lowerRight;
 };
 

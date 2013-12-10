@@ -22,9 +22,11 @@ class Layer
 {
 public:
     
-    Layer() {};
+    Layer() : _id(Layer::getId()) {};
     
     virtual ~Layer() {};
+    
+    unsigned int id() { return _id; }
     
     virtual QString name() const = 0;
     
@@ -40,8 +42,15 @@ public:
     
     virtual void draw(uint pass, const ViewCtx*, const TimeCtx*) = 0;
     
+    // projected bounds
     virtual BoundingBox getBoundingBox() const = 0;
     
+protected:
+    static int getId() { return _gid++; }
+    
+    static unsigned int _gid;
+    
+    unsigned int _id;
 };
 
 #endif

@@ -18,7 +18,8 @@ enum LayerListColumns
 
 enum LayerListRoles
 {
-    LayerListNumericRole = Qt::UserRole,
+    LayerListLayerIdRole = Qt::UserRole,
+    LayerListNumericRole,
     LayerListDateTimeRole
 };
 
@@ -41,6 +42,13 @@ public:
     LayerListWidget(QWidget *parent=0);
     ~LayerListWidget();
     void addLayer(Layer *layer);
+    
+signals:
+    void signalLayersSelected(QList<unsigned int>);
+    
+protected slots:
+    void onSelectionChanged();
+    
 };
 
 #endif

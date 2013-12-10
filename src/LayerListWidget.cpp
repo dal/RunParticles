@@ -34,6 +34,8 @@ LayerListWidget::LayerListWidget(QWidget *parent)
                                         << "Sport" << "Start" << "Duration";
     setHeaderLabels(columns);
     setSortingEnabled(true);
+    connect(this, SIGNAL(itemSelectionChanged()),
+            this, SLOT(onSelectionChanged()));
 }
 
 LayerListWidget::~LayerListWidget()
@@ -52,8 +54,24 @@ LayerListWidget::addLayer(Layer *layer)
             << layer->startTime().toString(DATE_FMT) 
             << Util::secondsToString(layer->duration());
     LayerListWidgetItem *item = new LayerListWidgetItem(this, colData);
+    item->setData(LayerListColName, LayerListLayerIdRole,
+                  QVariant(layer->id()));
     item->setData(LayerListColStartTime, LayerListDateTimeRole,
                   QVariant(layer->startTime()));
     item->setData(LayerListColDuration, LayerListNumericRole,
                   QVariant(layer->duration()));
 }
+
+void
+LayerListWidget::onSelectionChanged()
+{
+    QList<unsigned int> selectedIds;
+    QList<QTreeWidgetItem *> items = selectedItems();
+    QTreeWidgetItem *thisItem;
+    foreach(thisItem, items) {
+        selectedIds.push_back(
+            thisItem->data(LayerListColName, LayerListLayerIdRole).toUInt());
+    }
+    emit signalLayersSelected(selectedIds);
+}
+

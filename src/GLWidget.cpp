@@ -193,6 +193,33 @@ GLWidget::getMap() const
 }
 
 void
+GLWidget::frameBoundingBox(const BoundingBox &bbox)
+{
+    MapPoint center = bbox.center();
+    if (bbox.width() > bbox.height()) {
+        double viewheight = bbox.width() * ((double)height() / (double)width());
+        _camera = CameraOrtho(bbox.upperLeft.x,
+                              bbox.lowerRight.x,
+                              center.y - viewheight * 0.5,
+                              center.y + viewheight * 0.5,
+                              -1,
+                              1);
+    } else {
+        float viewWidth = bbox.height() * ((double)width() / (double)height());
+        _camera = CameraOrtho(center.x - viewWidth * 0.5,
+                              center.x + viewWidth * 0.5,
+                              bbox.lowerRight.y,
+                              bbox.upperLeft.y,
+                              -1,
+                              1);
+    }
+    _mapView.setCurrentCam(_camera);
+    _mapView.setViewCtx(_map->getViewCtx());
+    _updateViewCtx();
+    updateGL();
+}
+
+void
 GLWidget::slotPlay()
 {
     if (_timeCtx->getPlaybackRate() <= 0)

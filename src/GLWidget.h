@@ -18,6 +18,7 @@
 
 #include "cinder/Camera.h"
 
+#include "BoundingBox.h"
 #include "Map.h"
 #include "MapView.h"
 #include "TimeCtx.h"
@@ -60,6 +61,8 @@ public:
     MapPoint screenPointToMapPoint(const QPoint &pt);
     
     Map* getMap() const;
+    
+    void frameBoundingBox(const BoundingBox &bbox);
     
 public slots:
     

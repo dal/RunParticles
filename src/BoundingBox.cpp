@@ -44,3 +44,22 @@ BoundingBox::operator+=(const MapPoint pt)
     return *this;
 }
 
+double
+BoundingBox::width() const
+{
+    return lowerRight.x - upperLeft.x;
+}
+
+double
+BoundingBox::height() const
+{
+    return upperLeft.y - lowerRight.y;
+}
+
+MapPoint
+BoundingBox::center() const
+{
+    return MapPoint((lowerRight.x - upperLeft.x) * 0.5,
+                    (upperLeft.y - lowerRight.y) * 0.5);
+}
+

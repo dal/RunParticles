@@ -47,6 +47,8 @@ protected:
     MapPoint _particlePos;
     
     QDateTime _startTime;
+    
+    float *_pathBuffer;
 };
 
 #endif

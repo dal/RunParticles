@@ -7,7 +7,7 @@
 
 using namespace cinder;
 
-TrackLayer::TrackLayer(const Track *track) :
+TrackLayer::TrackLayer(const Track *track) : Layer(),
 _track(track),
 _duration(0)
 {
@@ -16,11 +16,13 @@ _duration(0)
         _startTime = QDateTime::fromTime_t(track->points[0].time);
     if (numPts > 1)
         _duration = track->points[numPts-1].time - track->points[0].time;
+    _pathBuffer = (float*)malloc(sizeof(float)*4*numPts);
 }
 
 TrackLayer::~TrackLayer() 
 {
-    // do nothing
+    free(_pathBuffer);
+    _pathBuffer = NULL;
 }
 
 QString
@@ -121,6 +123,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     
     PathPoint *lastPathPt;
     MapPoint *lastMapPt;
+    int bufferIndex = 0;
     bool lastInbounds = false;
     for(int i=0; i < currentPath->count(); i++) {
         PathPoint *pt = &(*currentPath)[i];
@@ -128,8 +131,10 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
         bool inbounds = viewCtx->getBoundingBox().contains(*thisMapPt);
         if (i == 0 || pt->time < timeCtx->getMapSeconds()) {
             if (i > 0 && (inbounds || lastInbounds)) {
-                gl::drawLine( Vec2f(lastMapPt->x, lastMapPt->y),
-                             Vec2f(thisMapPt->x, thisMapPt->y));
+                _pathBuffer[bufferIndex++] = lastMapPt->x;
+                _pathBuffer[bufferIndex++] = lastMapPt->y;
+                _pathBuffer[bufferIndex++] = thisMapPt->x;
+                _pathBuffer[bufferIndex++] = thisMapPt->y;
             }
             lastMapPt = thisMapPt;
             lastPathPt = pt;
@@ -141,8 +146,10 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
             if (f > 0.0 && (inbounds || lastInbounds)) {
                 MapPoint finalPt = lerp(*lastMapPt, *thisMapPt, f);
-                gl::drawLine( Vec2f(lastMapPt->x, lastMapPt->y),
-                             Vec2f(finalPt.x, finalPt.y) );
+                _pathBuffer[bufferIndex++] = lastMapPt->x;
+                _pathBuffer[bufferIndex++] = lastMapPt->y;
+                _pathBuffer[bufferIndex++] = finalPt.x;
+                _pathBuffer[bufferIndex++] = finalPt.y;
                 _particlePos = finalPt;
             } else {
                 _particlePos = *thisMapPt;
@@ -151,8 +158,12 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
         }
         lastInbounds = inbounds;
     }
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glVertexPointer( 2, GL_FLOAT, 0, _pathBuffer );
+    glDrawArrays( GL_LINES, 0, bufferIndex );
+    glDisableClientState( GL_VERTEX_ARRAY );
 }
-            
+
 void
 TrackLayer::_drawParticle(const ViewCtx *viewCtx) const
 {

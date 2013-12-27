@@ -160,7 +160,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     }
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( 2, GL_FLOAT, 0, _pathBuffer );
-    glDrawArrays( GL_LINES, 0, bufferIndex );
+    glDrawArrays( GL_LINES, 0, bufferIndex/2 );
     glDisableClientState( GL_VERTEX_ARRAY );
 }
 

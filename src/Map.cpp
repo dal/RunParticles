@@ -34,6 +34,7 @@ bool
 Map::addLayer(Layer *layer)
 {
     _layers.push_back(layer);
+    _layerMap.insert(std::pair<LayerId, Layer*>(layer->id(), layer));
     // give the layer an opportunity to reproject
     layer->project(_viewCtx);
     _numPasses = (layer->passes() > _numPasses) ? layer->passes() : _numPasses;

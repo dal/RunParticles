@@ -5,7 +5,7 @@
 
 struct BoundingBox
 {
-    BoundingBox() { };
+    BoundingBox() : _valid(false) { };
     
     BoundingBox(MapPoint upperL, MapPoint lowerR);
     
@@ -17,6 +17,8 @@ struct BoundingBox
     
     BoundingBox& operator+=(const MapPoint pt);
     
+    BoundingBox& operator+=(const BoundingBox other);
+    
     double width() const;
     
     double height() const;
@@ -24,6 +26,9 @@ struct BoundingBox
     MapPoint center() const;
     
     MapPoint upperLeft, lowerRight;
+    
+protected:
+    bool _valid;
 };
 
 #endif

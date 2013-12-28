@@ -27,13 +27,18 @@ LayerListWidgetItem::operator<(const QTreeWidgetItem & other) const
 }
 
 LayerListWidget::LayerListWidget(QWidget *parent)
-    : QTreeWidget(parent)
+    : QTreeWidget(parent),
+    _frameLayerAction(new QAction("Frame Selected Layers", this))
 {
     setColumnCount(LayerListColCount);
     QStringList columns = QStringList() << "Visible" << "Name"
                                         << "Sport" << "Start" << "Duration";
     setHeaderLabels(columns);
     setSortingEnabled(true);
+    addAction(_frameLayerAction);
+    connect(_frameLayerAction, SIGNAL(triggered()),
+            this, SLOT(onFrameLayersSelected()));
+    setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(this, SIGNAL(itemSelectionChanged()),
             this, SLOT(onSelectionChanged()));
 }
@@ -62,16 +67,28 @@ LayerListWidget::addLayer(Layer *layer)
                   QVariant(layer->duration()));
 }
 
-void
-LayerListWidget::onSelectionChanged()
+QList<LayerId>
+LayerListWidget::selectedLayerIds() const
 {
     QList<unsigned int> selectedIds;
     QList<QTreeWidgetItem *> items = selectedItems();
     QTreeWidgetItem *thisItem;
     foreach(thisItem, items) {
         selectedIds.push_back(
-            thisItem->data(LayerListColName, LayerListLayerIdRole).toUInt());
+                              thisItem->data(LayerListColName, LayerListLayerIdRole).toUInt());
     }
-    emit signalLayersSelected(selectedIds);
+    return selectedIds;
+}
+
+void
+LayerListWidget::onSelectionChanged()
+{
+    emit signalLayersSelected(selectedLayerIds());
+}
+
+void
+LayerListWidget::onFrameLayersSelected()
+{
+    emit signalFrameLayers(selectedLayerIds());
 }
 

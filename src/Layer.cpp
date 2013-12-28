@@ -1,3 +1,3 @@
 #include "Layer.h"
 
-unsigned int Layer::_gid = 0;
+LayerId Layer::_gid = 0;

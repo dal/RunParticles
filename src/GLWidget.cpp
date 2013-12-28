@@ -271,6 +271,21 @@ GLWidget::setPlaybackRate(double rate)
 }
 
 void
+GLWidget::slotFrameLayers(QList<unsigned int>layerIds)
+{
+    if (layerIds.empty())
+        return;
+    BoundingBox bbox;
+    LayerId layerId;
+    foreach(layerId, layerIds)
+    {
+        Layer* layer = _map->getLayer(layerId);
+        bbox += layer->getBoundingBox();
+    }
+    frameBoundingBox(bbox);
+}
+
+void
 GLWidget::_updateViewCtx()
 {
     float left, top, right, bottom;

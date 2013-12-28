@@ -16,7 +16,10 @@
 #include "TimeCtx.h"
 #include "ViewCtx.h"
 
+#include <map>
 #include <vector>
+
+typedef std::map<LayerId, Layer*> LayerMap;
 
 class Map : public QObject
 {
@@ -35,9 +38,13 @@ public:
     
     int getDuration() const { return _duration; }
     
+    Layer* getLayer(const LayerId id) { return _layerMap[id]; }
+    
 private:
     
     std::vector<Layer*> _layers;
+    
+    LayerMap _layerMap;
     
     TimeCtx *_timeCtx;
     

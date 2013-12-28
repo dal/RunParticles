@@ -18,6 +18,8 @@
 
 // Represents a single map layer
 
+typedef unsigned int LayerId;
+
 class Layer
 {
 public:
@@ -26,7 +28,7 @@ public:
     
     virtual ~Layer() {};
     
-    unsigned int id() { return _id; }
+    LayerId id() { return _id; }
     
     virtual QString name() const = 0;
     
@@ -46,11 +48,11 @@ public:
     virtual BoundingBox getBoundingBox() const = 0;
     
 protected:
-    static int getId() { return _gid++; }
+    static LayerId getId() { return _gid++; }
     
-    static unsigned int _gid;
+    static LayerId _gid;
     
-    unsigned int _id;
+    LayerId _id;
 };
 
 #endif

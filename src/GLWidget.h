@@ -80,6 +80,8 @@ public slots:
     
     void setPlaybackRate(double rate);
     
+    void slotFrameLayers(QList<unsigned int>);
+    
 signals:
     
     void signalTimeChanged(double);

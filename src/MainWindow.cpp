@@ -85,8 +85,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_openLayerShortcut, SIGNAL(activated()),
             _openLayerAction, SLOT(trigger()));
     
-    connect(_layerListWidget, SIGNAL(signalLayersSelected(QList<unsigned int>)),
-            this, SLOT(slotLayerSelectionChanged(const QList<unsigned int>)));
+    connect(_layerListWidget, SIGNAL(signalFrameLayers(QList<unsigned int>)),
+            this, SLOT(slotFrameLayers(const QList<unsigned int>)));
     
     slotTimeChanged(0);
     _layerListWidget->show();
@@ -181,7 +181,7 @@ MainWindow::slotLayerAdded()
 }
 
 void
-MainWindow::slotLayerSelectionChanged(const QList<unsigned int> layerIds)
+MainWindow::slotFrameLayers(const QList<unsigned int> layerIds)
 {
-    
+    _glWidget->slotFrameLayers(layerIds);
 }

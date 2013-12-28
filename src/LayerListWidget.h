@@ -1,6 +1,7 @@
 #ifndef LAYERLISTWIDGET_H
 #define LAYERLISTWIDGET_H
 
+#include <QAction>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -42,12 +43,18 @@ public:
     LayerListWidget(QWidget *parent=0);
     ~LayerListWidget();
     void addLayer(Layer *layer);
+    QList<LayerId> selectedLayerIds() const;
     
 signals:
     void signalLayersSelected(QList<unsigned int>);
+    void signalFrameLayers(QList<unsigned int>);
     
 protected slots:
     void onSelectionChanged();
+    void onFrameLayersSelected();
+    
+protected:
+    QAction *_frameLayerAction;
     
 };
 

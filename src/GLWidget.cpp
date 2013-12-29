@@ -196,8 +196,10 @@ void
 GLWidget::frameBoundingBox(const BoundingBox &bbox)
 {
     MapPoint center = bbox.center();
-    if (bbox.width() > bbox.height()) {
-        double viewheight = bbox.width() * ((double)height() / (double)width());
+    double bboxRatio = bbox.height() / bbox.width();
+    double viewRatio = ((double)height() / (double)width());
+    if (bboxRatio < viewRatio) {
+        double viewheight = bbox.width() * viewRatio;
         _camera = CameraOrtho(bbox.upperLeft.x,
                               bbox.lowerRight.x,
                               center.y - viewheight * 0.5,
@@ -205,7 +207,7 @@ GLWidget::frameBoundingBox(const BoundingBox &bbox)
                               -1,
                               1);
     } else {
-        float viewWidth = bbox.height() * ((double)width() / (double)height());
+        float viewWidth = bbox.height() / viewRatio;
         _camera = CameraOrtho(center.x - viewWidth * 0.5,
                               center.x + viewWidth * 0.5,
                               bbox.lowerRight.y,

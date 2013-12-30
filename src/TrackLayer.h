@@ -11,6 +11,14 @@
 class TrackLayer : public Layer
 {
 public:
+    
+    enum TrackLayerPasses {
+        Pass_UnselectedPath,
+        Pass_SelectedPath,
+        Pass_Particle,
+        Pass_Count
+    };
+    
     static const Color RunColor, OtherColor, SelectedColor;
     
     TrackLayer(const Track *track);
@@ -23,7 +31,13 @@ public:
     
     QDateTime startTime() const;
     
-    unsigned int passes() const { return 2; };
+    /*
+     * TrackLayers require three passes: 
+     *  [3] Draws the track particle.
+     *  [2] Draws the path if it is selected
+     *  [1] Draws the path if it is not currently selected
+     */
+    unsigned int passes() const { return Pass_Count; };
     
     unsigned int duration() const;
     

@@ -97,12 +97,17 @@ TrackLayer::draw(uint pass, const ViewCtx *viewCtx, const TimeCtx *timeCtx)
 {
     if (!_bounds.overlaps(viewCtx->getBoundingBox()))
         return;
-        
+    bool selected = viewCtx->isSelected(id());
     switch (pass) {
-        case 0:
-            _drawPath(viewCtx, timeCtx);
+        case Pass_UnselectedPath:
+            if (!selected)
+                _drawPath(viewCtx, timeCtx);
             break;
-        case 1:
+        case Pass_SelectedPath:
+            if (selected)
+                _drawPath(viewCtx, timeCtx);
+            break;
+        case Pass_Particle:
             _drawParticle(viewCtx);
             break;
     };
@@ -179,6 +184,7 @@ TrackLayer::_drawParticle(const ViewCtx *viewCtx) const
     gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
     if (viewCtx->isSelected(id())) {
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*1.5);
+        gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*2.0);
     }
 }
 

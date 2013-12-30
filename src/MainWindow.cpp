@@ -23,10 +23,10 @@ MainWindow::MainWindow(GLWidget *glWidget,
 {
     QWidget *ctr = new QWidget(this);
     setCentralWidget(ctr);
-    _rewindButton = new QPushButton("<<", ctr);
-    _backButton = new QPushButton("<", ctr);
-    _pauseButton = new QPushButton("x",ctr);
-    _forwardButton = new QPushButton(">", ctr);
+    _rewindButton = new QPushButton(QString::fromUtf8("\u25C0\u25C0"), ctr);//<<
+    _backButton = new QPushButton(QString::fromUtf8("\u25C0"), ctr); // <
+    _pauseButton = new QPushButton(QString::fromUtf8("\u2588"),ctr); // [ ]
+    _forwardButton = new QPushButton(QString::fromUtf8("\u25BA"), ctr); // >
     _playSpeedCombo = new QComboBox(ctr);
     _playSpeedCombo->addItem("1x");
     _playSpeedCombo->addItem("2x");
@@ -102,7 +102,6 @@ MainWindow::MainWindow(GLWidget *glWidget,
     loadTrackFile(pathTwo);
     QString pathThree("/Users/dal/Documents/gps/exports/2013_to1028.tcx");
     loadTrackFile(pathThree);
-    
 }
 
 MainWindow::~MainWindow()

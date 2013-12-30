@@ -101,3 +101,9 @@ ViewCtx::getBoundingBox() const
     return BoundingBox(_upperLeft, _lowerRight);
 }
 
+bool
+ViewCtx::isSelected(const LayerId id) const
+{
+    return (selectedLayers.find(id) != selectedLayers.end());
+}
+

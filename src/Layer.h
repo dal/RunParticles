@@ -13,8 +13,10 @@
 #include <QDateTime>
 
 #include "BoundingBox.h"
-#include "ViewCtx.h"
 #include "Types.h"
+
+class ViewCtx;
+class TimeCtx;
 
 // Represents a single map layer
 
@@ -24,11 +26,11 @@ class Layer
 {
 public:
     
-    Layer() : _id(Layer::getId()) {};
+    Layer() : _id(Layer::getNextId()) {};
     
     virtual ~Layer() {};
     
-    LayerId id() { return _id; }
+    LayerId id() const { return _id; }
     
     virtual QString name() const = 0;
     
@@ -48,7 +50,7 @@ public:
     virtual BoundingBox getBoundingBox() const = 0;
     
 protected:
-    static LayerId getId() { return _gid++; }
+    static LayerId getNextId() { return _gid++; }
     
     static LayerId _gid;
     

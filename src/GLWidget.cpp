@@ -11,6 +11,8 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Vector.h"
 
+#include <set>
+
 GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
     _playMode(PlayMode_Pause),
@@ -273,7 +275,7 @@ GLWidget::setPlaybackRate(double rate)
 }
 
 void
-GLWidget::slotFrameLayers(QList<unsigned int>layerIds)
+GLWidget::slotFrameLayers(QList<LayerId> layerIds)
 {
     if (layerIds.empty())
         return;
@@ -285,6 +287,20 @@ GLWidget::slotFrameLayers(QList<unsigned int>layerIds)
         bbox += layer->getBoundingBox();
     }
     frameBoundingBox(bbox);
+}
+
+void
+GLWidget::slotSelectLayers(QList<LayerId> layerIds)
+{
+    std::set<LayerId> newSel;
+    LayerId layerId;
+    foreach(layerId, layerIds) {
+        newSel.insert(layerId);
+    }
+    if (newSel != _map->getViewCtx()->selectedLayers) {
+        _map->getViewCtx()->selectedLayers = newSel;
+        update();
+    }
 }
 
 void

@@ -35,7 +35,9 @@ public slots:
     
     void slotLayerAdded();
     
-    void slotFrameLayers(const QList<unsigned int> layerIds);
+    void slotFrameLayers(const QList<LayerId> layerIds);
+    
+    void slotLayerSelectionChanged(const QList<LayerId> layerIds);
     
 protected:
     QMenuBar *_menuBar;

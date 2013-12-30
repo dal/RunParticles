@@ -18,7 +18,7 @@ Util::secondsToString(int seconds)
     int mins = modhrs / 60;
     int secs = modhrs % 60;
     QChar zero('0');
-    if (hours > 1)
+    if (hours >= 1)
         return QString("%1hr%2m%3s").arg(hours)
                                     .arg(mins, 2, 10, zero)
                                     .arg(secs, 2, 10, zero);

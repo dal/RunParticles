@@ -46,8 +46,8 @@ public:
     QList<LayerId> selectedLayerIds() const;
     
 signals:
-    void signalLayersSelected(QList<unsigned int>);
-    void signalFrameLayers(QList<unsigned int>);
+    void signalLayerSelectionChanged(QList<LayerId>);
+    void signalFrameLayers(QList<LayerId>);
     
 protected slots:
     void onSelectionChanged();

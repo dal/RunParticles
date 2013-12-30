@@ -16,11 +16,13 @@
 #define VIEWCTX_H
 
 #include "Types.h"
+#include "Layer.h"
 
 #include "BoundingBox.h"
 #include "TimeCtx.h"
 
 #include <string>
+#include <set>
 
 class ViewCtx 
 {
@@ -44,6 +46,10 @@ public:
     int getViewportWidth() const { return _width; }
     
     int getViewportHeight() const { return _height; }
+    
+    bool isSelected(const LayerId id) const;
+    
+    std::set<LayerId> selectedLayers;
 
 protected:
     

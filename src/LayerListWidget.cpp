@@ -83,7 +83,7 @@ LayerListWidget::selectedLayerIds() const
 void
 LayerListWidget::onSelectionChanged()
 {
-    emit signalLayersSelected(selectedLayerIds());
+    emit signalLayerSelectionChanged(selectedLayerIds());
 }
 
 void

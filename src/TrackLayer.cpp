@@ -2,10 +2,13 @@
 
 #include "PathUtil.h"
 #include "Types.h"
-
-#include "cinder/gl/gl.h"
+#include "ViewCtx.h"
 
 using namespace cinder;
+
+const Color TrackLayer::RunColor = Color( 1, 0, 0 );
+const Color TrackLayer::OtherColor = Color( 0.3, 0.3, 1 );
+const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
 TrackLayer::TrackLayer(const Track *track) : Layer(),
 _track(track),
@@ -116,10 +119,12 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     else if (res >= 3.0)
         currentPath = &_path_lo;
     
-    if (_track->sport != "Running")
-        gl::color( Color( 0.3, 0.3, 1 ) );
+    if (viewCtx->isSelected(id()))
+        gl::color( SelectedColor );
+    else if (_track->sport == "Running")
+        gl::color( RunColor );
     else
-        gl::color( Color( 1, 0, 0 ) );
+        gl::color( OtherColor );
     
     PathPoint *lastPathPt;
     MapPoint *lastMapPt;
@@ -172,6 +177,9 @@ TrackLayer::_drawParticle(const ViewCtx *viewCtx) const
     if (radius < 2.0)
         radius = 2.0;
     gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
+    if (viewCtx->isSelected(id())) {
+        gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*1.5);
+    }
 }
 
 BoundingBox

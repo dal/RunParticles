@@ -1,16 +1,18 @@
 #ifndef __TRACKLAYER_H__
 #define __TRACKLAYER_H__
 
-#include "Layer.h"
-
 #include "BoundingBox.h"
+#include "Layer.h"
 #include "Types.h"
 
+#include "cinder/gl/gl.h"
 #include <QString>
 
 class TrackLayer : public Layer
 {
 public:
+    static const Color RunColor, OtherColor, SelectedColor;
+    
     TrackLayer(const Track *track);
     
     virtual ~TrackLayer();

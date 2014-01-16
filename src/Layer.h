@@ -26,7 +26,7 @@ class Layer
 {
 public:
     
-    Layer() : _id(Layer::getNextId()) {};
+    Layer() : _id(Layer::getNextId()), _visible(true) {};
     
     virtual ~Layer() {};
     
@@ -42,6 +42,10 @@ public:
     
     virtual unsigned int duration() const { return 0; }
     
+    virtual bool visible() const { return _visible; }
+    
+    virtual void setVisible(bool newVisible) { _visible = newVisible; };
+    
     virtual void project(const ViewCtx*) = 0;
     
     virtual void draw(uint pass, const ViewCtx*, const TimeCtx*) = 0;
@@ -55,6 +59,8 @@ protected:
     static LayerId _gid;
     
     LayerId _id;
+    
+    bool _visible;
 };
 
 #endif

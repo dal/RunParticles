@@ -91,16 +91,17 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_layerListWidget,
             SIGNAL(signalLayerSelectionChanged(QList<LayerId>)),
             this, SLOT(slotLayerSelectionChanged(const QList<LayerId>)));
+    connect(_layerListWidget,
+            SIGNAL(signalLayerVisibilityChanged(LayerId, bool)),
+            this, SLOT(slotLayerVisibilityChanged(LayerId, bool)));
     
     slotTimeChanged(0);
     _layerListWidget->show();
     
     // DEBUG
-    QString pathOne("/Users/dal/Dropbox/tmp/10-8-13 6-29-18 PM.tcx");
-    loadTrackFile(pathOne);
     QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
     loadTrackFile(pathTwo);
-    QString pathThree("/Users/dal/Documents/gps/exports/2013_to1028.tcx");
+    QString pathThree("/Users/dal/Documents/gps/exports/all2013.tcx");
     loadTrackFile(pathThree);
 }
 
@@ -193,4 +194,11 @@ void
 MainWindow::slotLayerSelectionChanged(const QList<unsigned int> layerIds)
 {
     _glWidget->slotSelectLayers(layerIds);
+}
+
+void
+MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
+{
+    Layer *layer = _glWidget->getMap()->getLayer(layerId);
+    layer->setVisible(visible);
 }

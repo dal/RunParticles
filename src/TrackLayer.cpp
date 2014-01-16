@@ -95,7 +95,7 @@ TrackLayer::project(const ViewCtx* viewCtx)
 void
 TrackLayer::draw(uint pass, const ViewCtx *viewCtx, const TimeCtx *timeCtx)
 {
-    if (!_bounds.overlaps(viewCtx->getBoundingBox()))
+    if (!visible() || !_bounds.overlaps(viewCtx->getBoundingBox()))
         return;
     bool selected = viewCtx->isSelected(id());
     switch (pass) {

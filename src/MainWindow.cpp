@@ -94,6 +94,9 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_layerListWidget,
             SIGNAL(signalLayerVisibilityChanged(LayerId, bool)),
             this, SLOT(slotLayerVisibilityChanged(LayerId, bool)));
+    connect(_layerListWidget,
+            SIGNAL(signalLockViewToLayer(LayerId)),
+            _glWidget, SLOT(slotLockViewToLayer(LayerId)));
     
     slotTimeChanged(0);
     _layerListWidget->show();

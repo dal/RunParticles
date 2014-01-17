@@ -46,6 +46,8 @@ public:
     virtual void draw(uint pass, const ViewCtx*, const TimeCtx*);
     
     BoundingBox getBoundingBox() const;
+    
+    MapPoint position() const;
 protected:
     
     void _drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx);

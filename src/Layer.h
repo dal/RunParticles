@@ -53,6 +53,8 @@ public:
     // projected bounds
     virtual BoundingBox getBoundingBox() const = 0;
     
+    virtual MapPoint position() const = 0;
+    
 protected:
     static LayerId getNextId() { return _gid++; }
     

@@ -157,11 +157,11 @@ MapView::recenter(const MapPoint &position)
     float newLeft = position.x - width;
     float newRight = position.x + width;
     float newTop = position.y + height;
-    float newBottom = position.y - width;
+    float newBottom = position.y - height;
     mCurrentCam.setOrtho(newLeft,
-                         newTop,
                          newRight,
                          newBottom,
+                         newTop,
                          -1,
                          1);
 }

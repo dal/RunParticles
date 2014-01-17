@@ -17,7 +17,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
     _playMode(PlayMode_Pause),
     timer(new QTimer(this)),
-    _fullScreen(false)
+    _fullScreen(false),
+    _lockToLayer(false)
 {
     setMouseTracking(true);
     elapsedTimer.start();
@@ -106,6 +107,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint eventXy = QPoint(event->x(), height() - event->y());
     if (event->buttons() != Qt::NoButton) {
+        slotUnlockView();
         _inDrag = true;
         QPoint delta = eventXy - _lastPos;
         MapPoint mapDelta = screenPointToRelativeMapPoint(delta);
@@ -151,6 +153,14 @@ GLWidget::update()
 {
     if (_playMode == PlayMode_Play && elapsedTimer.isValid())
         _timeCtx->update(elapsedTimer.restart());
+    
+    // If the view is locked to a layer, recenter
+    if (_lockToLayer) {
+        const Layer *myLayer = _map->getLayer(_lockedLayer);
+        _mapView.recenter(myLayer->position());
+        _updateViewCtx();
+    }
+        
     updateGL();
     emit signalTimeChanged(_timeCtx->getMapSeconds());
 }
@@ -301,6 +311,20 @@ GLWidget::slotSelectLayers(QList<LayerId> layerIds)
         _map->getViewCtx()->selectedLayers = newSel;
         update();
     }
+}
+
+void
+GLWidget::slotLockViewToLayer(LayerId layerId)
+{
+    _lockToLayer = true;
+    _lockedLayer = layerId;
+    update();
+}
+
+void
+GLWidget::slotUnlockView()
+{
+    _lockToLayer = false;
 }
 
 void

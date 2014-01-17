@@ -194,3 +194,8 @@ TrackLayer::getBoundingBox() const
     return _bounds;
 }
 
+MapPoint
+TrackLayer::position() const
+{
+    return _particlePos;
+}

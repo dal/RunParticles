@@ -84,6 +84,10 @@ public slots:
     
     void slotSelectLayers(QList<LayerId> layerIds);
     
+    void slotLockViewToLayer(LayerId layerId);
+    
+    void slotUnlockView();
+    
 signals:
     
     void signalTimeChanged(double);
@@ -113,6 +117,10 @@ protected:
     QTimer *timer;
     
     bool _fullScreen;
+    
+    bool _lockToLayer;
+    
+    LayerId _lockedLayer;
 
 };
 

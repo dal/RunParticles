@@ -42,7 +42,8 @@ LayerListWidgetItem::operator<(const QTreeWidgetItem & other) const
 
 LayerListWidget::LayerListWidget(QWidget *parent)
     : QTreeWidget(parent),
-    _frameLayerAction(new QAction("Frame Selected Layers", this))
+    _frameLayerAction(new QAction("Frame selected layers", this)),
+    _lockViewAction(new QAction("Lock View to layer", this))
 {
     setColumnCount(ColumnCount);
     QStringList columns = QStringList() << "Visible" << "Name"
@@ -50,8 +51,11 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     setHeaderLabels(columns);
     setSortingEnabled(true);
     addAction(_frameLayerAction);
+    addAction(_lockViewAction);
     connect(_frameLayerAction, SIGNAL(triggered()),
             this, SLOT(onFrameLayersSelected()));
+    connect(_lockViewAction, SIGNAL(triggered()),
+            this, SLOT(onLockViewSelected()));
     setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(this, SIGNAL(itemSelectionChanged()),
             this, SLOT(onSelectionChanged()));
@@ -112,5 +116,13 @@ void
 LayerListWidget::onFrameLayersSelected()
 {
     emit signalFrameLayers(selectedLayerIds());
+}
+
+void
+LayerListWidget::onLockViewSelected()
+{
+    QList<LayerId> layerIds = selectedLayerIds();
+    if (!layerIds.empty())
+        emit signalLockViewToLayer(layerIds.last());
 }
 

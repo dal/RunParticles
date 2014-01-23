@@ -38,6 +38,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _timeCtx = _map->getTimeCtx();
     _updateViewCtx();
     connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
+    connect(_map, SIGNAL(signalLayerClicked(LayerId)),
+            this, SLOT(slotLayerSelected(LayerId)));
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
@@ -99,6 +101,18 @@ GLWidget::resizeGL(int width, int height)
 void
 GLWidget::mousePressEvent(QMouseEvent *event)
 {
+    _in_mouseClick = true;
+    _lastDownPos = event->pos();
+    event->accept();
+}
+
+void
+GLWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (_in_mouseClick && event->pos() == _lastDownPos) {
+        _in_mouseClick = false;
+        _onMouseClicked(QPoint(_lastDownPos.x(), height() - _lastDownPos.y()));
+    }
     event->accept();
 }
 
@@ -127,7 +141,6 @@ GLWidget::wheelEvent(QWheelEvent *event)
 {
     _mapView.mouseWheel(-event->delta());
     _updateViewCtx();
-    qDebug("resolution: %f", _map->getViewCtx()->getResolution());
     updateGL();
 }
 
@@ -336,5 +349,23 @@ GLWidget::_updateViewCtx()
                                     MapPoint(right, bottom),
                                     width(),
                                     height());
+}
+
+void
+GLWidget::_onMouseClicked(QPoint pos)
+{
+    MapPoint clickPoint = screenPointToMapPoint(pos);
+    if (!_map->onMapClicked(clickPoint)) {
+        QList<LayerId> layers;
+        emit(signalLayersSelected(layers));
+    }
+}
+
+void
+GLWidget::slotLayerSelected(LayerId layerId)
+{
+    QList<LayerId> layers;
+    layers << layerId;
+    emit(signalLayersSelected(layers));
 }
 

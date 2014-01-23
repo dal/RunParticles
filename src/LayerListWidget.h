@@ -52,8 +52,11 @@ public:
 signals:
     void signalLayerSelectionChanged(QList<LayerId>);
     void signalFrameLayers(QList<LayerId>);
-    void signalLayerVisibilityChanged(LayerId layerId, bool visible);
-    void signalLockViewToLayer(LayerId layerId);
+    void signalLayerVisibilityChanged(LayerId, bool);
+    void signalLockViewToLayer(LayerId);
+    
+public slots:
+    void slotSetSelectedLayers(QList<LayerId> layerIds);
     
 protected slots:
     void onSelectionChanged();

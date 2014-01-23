@@ -50,6 +50,8 @@ public:
     
     void mousePressEvent(QMouseEvent *event);
     
+    void mouseReleaseEvent(QMouseEvent *event);
+    
     void mouseMoveEvent(QMouseEvent *event);
     
     void wheelEvent(QWheelEvent *event);
@@ -88,13 +90,21 @@ public slots:
     
     void slotUnlockView();
     
+    void slotLayerSelected(LayerId layerId);
+    
 signals:
     
     void signalTimeChanged(double);
     
+    void signalLayerClicked(LayerId);
+    
+    void signalLayersSelected(QList<LayerId>);
+    
 protected:
     
     void _updateViewCtx();
+    
+    void _onMouseClicked(QPoint pos);
     
     PlayMode _playMode;
     
@@ -102,7 +112,7 @@ protected:
     
     CameraOrtho _camera;
     
-    QPoint _lastPos;
+    QPoint _lastPos, _lastDownPos;
     
     bool _inDrag;
     
@@ -119,6 +129,8 @@ protected:
     bool _fullScreen;
     
     bool _lockToLayer;
+    
+    bool _in_mouseClick;
     
     LayerId _lockedLayer;
 

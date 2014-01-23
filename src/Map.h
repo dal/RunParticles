@@ -19,6 +19,8 @@
 #include <map>
 #include <vector>
 
+#define SELECTION_TOLERANCE_PIXELS 5.0
+
 typedef std::map<LayerId, Layer*> LayerMap;
 
 class Map : public QObject
@@ -40,6 +42,10 @@ public:
     
     Layer* getLayer(const LayerId id) { return _layerMap[id]; }
     
+public slots:
+    
+    bool onMapClicked(const MapPoint &pt) const;
+    
 private:
     
     std::vector<Layer*> _layers;
@@ -57,6 +63,8 @@ private:
 signals:
     
     void signalLayerAdded();
+    
+    void signalLayerClicked(LayerId) const;
     
 };
 

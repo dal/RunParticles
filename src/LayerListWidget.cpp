@@ -59,6 +59,8 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     setContextMenuPolicy(Qt::ActionsContextMenu);
     connect(this, SIGNAL(itemSelectionChanged()),
             this, SLOT(onSelectionChanged()));
+    sortByColumn(ColumnStartTime, Qt::AscendingOrder);
+    resizeColumnToContents(ColumnVisible);
 }
 
 LayerListWidget::~LayerListWidget()
@@ -103,6 +105,19 @@ LayerListWidget::itemChecked(LayerListWidgetItem *which, int column)
         LayerId layerId = which->data(LayerIdRole, ColumnName).toUInt();
         emit signalLayerVisibilityChanged(layerId,
                                       which->checkState(column) == Qt::Checked);
+    }
+}
+
+void
+LayerListWidget::slotSetSelectedLayers(QList<LayerId> layerIds)
+{
+    clearSelection();
+    QTreeWidgetItem *root = invisibleRootItem();
+    for (int i = 0; i < root->childCount(); i++) {
+        QTreeWidgetItem *item = root->child(i);
+        LayerId thisLayerId = item->data(ColumnName, LayerIdRole).toUInt();
+        if (layerIds.contains(thisLayerId))
+            setCurrentItem(item);
     }
 }
 

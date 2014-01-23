@@ -74,6 +74,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
             this, SLOT(slotTimeChanged(double)));
     connect(_glWidget->getMap(), SIGNAL(signalLayerAdded()),
             this, SLOT(slotLayerAdded()));
+    connect(_glWidget, SIGNAL(signalLayersSelected(QList<LayerId>)),
+            _layerListWidget, SLOT(slotSetSelectedLayers(QList<LayerId>)));
     
     // Application-wide shortcuts
     _playPauseShortcut = new QShortcut(QKeySequence(Qt::Key_Space), this);

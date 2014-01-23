@@ -42,3 +42,18 @@ Map::addLayer(Layer *layer)
     emit(signalLayerAdded());
     return true;
 }
+
+bool
+Map::onMapClicked(const MapPoint &pt) const
+{
+    double dist = _viewCtx->getResolution() * _viewCtx->getResolution()
+                  * SELECTION_TOLERANCE_PIXELS;
+    std::vector<Layer*>::const_iterator it;
+    for (it = _layers.begin(); it != _layers.end(); it++) {
+        if (pt.distanceSquared((*it)->position()) < dist) {
+            emit(signalLayerClicked((*it)->id()));
+            return true;
+        }
+    }
+    return false;
+}

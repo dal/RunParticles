@@ -23,17 +23,23 @@
 #include "MapView.h"
 #include "TimeCtx.h"
 
-enum PlayMode {
-    PlayMode_Pause,
-    PlayMode_Play
-};
-
 class GLWidget : public QGLWidget
 {
-    
+
     Q_OBJECT
     
+    enum {
+        Refresh_Interval = 15
+    };
+    
 public:
+    
+    enum PlayMode {
+        PlayMode_Pause,
+        PlayMode_Play
+    };
+
+    
     GLWidget(Map *map, QWidget *parent=0);
     
     virtual ~GLWidget();

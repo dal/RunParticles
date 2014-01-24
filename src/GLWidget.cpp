@@ -41,6 +41,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
             this, SLOT(slotLayerSelected(LayerId)));
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->setInterval(Refresh_Interval);
 }
 
 void

@@ -6,6 +6,7 @@
 GpxHandler::GpxHandler(QList<Track*> *tracks) :
 QXmlDefaultHandler(),
 _tracks(tracks),
+_currentPoint(NULL),
 _currentTrack(NULL),
 _depth(0),
 _inTime(false),

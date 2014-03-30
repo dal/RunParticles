@@ -12,6 +12,10 @@ public:
         pixelsPerTile = 256
     };
     
+    enum {
+        numZoomLevels = 20
+    };
+    
     OsmLayer();
     
     virtual ~OsmLayer();
@@ -40,6 +44,8 @@ protected:
     unsigned int _currentZoom;
     
     double _lastResolution;
+    
+    float _resolutions[numZoomLevels];
     
 };
 

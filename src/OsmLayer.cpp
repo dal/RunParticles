@@ -38,9 +38,11 @@ OsmLayer::startTime() const
 void
 OsmLayer::project(const Projection &projection)
 {
-    _worldTopLeft = projection.toProjection(LonLat(MAXLAT, -MAXLON));
-    _worldLowerRight = projection.toProjection(LonLat(-MAXLAT, MAXLON));
+    _worldTopLeft = projection.toProjection(LonLat(-MAXLON, MAXLAT));
+    _worldLowerRight = projection.toProjection(LonLat(MAXLON, -MAXLAT));
     _worldSize = _worldTopLeft.y - _worldLowerRight.y;
+    for (int i = 0; i < numZoomLevels; i++)
+        _resolutions[i] = (_worldSize / (1 << i)) / pixelsPerTile;
 }
 
 void
@@ -69,10 +71,7 @@ uint
 OsmLayer::_getZoomLevel(double resolution) const
 {
     uint i;
-    double _zoomRes = -1;
-    for (i = 0; i < 20 && resolution > _zoomRes; i++) {
-        _zoomRes = (_worldSize / (1 << i)) / pixelsPerTile;
-    }
+    for (i = 0; i < numZoomLevels && resolution < _resolutions[i]; i++) {}
     return i;
 }
 

@@ -13,6 +13,7 @@
 #include <QDateTime>
 
 #include "BoundingBox.h"
+#include "Projection.h"
 #include "Types.h"
 
 class ViewCtx;
@@ -46,14 +47,16 @@ public:
     
     virtual void setVisible(bool newVisible) { _visible = newVisible; };
     
-    virtual void project(const ViewCtx*) = 0;
+    virtual void project(const Projection&) = 0;
     
-    virtual void draw(uint pass, const ViewCtx*, const TimeCtx*) = 0;
+    virtual void draw(uint pass, const ViewCtx&, const TimeCtx&) = 0;
     
     // projected bounds
     virtual BoundingBox getBoundingBox() const = 0;
     
     virtual MapPoint position() const = 0;
+    
+    virtual bool ephemeral() const;
     
 protected:
     static LayerId getNextId() { return _gid++; }

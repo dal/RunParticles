@@ -32,10 +32,6 @@ public:
     
     virtual ~ViewCtx();
     
-    MapPoint toProjection(const LonLat&) const;
-    
-    LonLat fromProjection(const MapPoint&) const;
-    
     double getResolution() const;
     
     BoundingBox getBoundingBox() const;
@@ -52,8 +48,6 @@ public:
     std::set<LayerId> selectedLayers;
 
 protected:
-    
-    const std::string _projection;
     
     MapPoint _upperLeft, _lowerRight;
     

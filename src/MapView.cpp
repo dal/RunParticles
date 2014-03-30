@@ -19,15 +19,13 @@
  */
 
 MapView::MapView() :
-    mCurrentCam(CameraOrtho()),
-    _viewCtx(new ViewCtx())
+    mCurrentCam(CameraOrtho())
 { 
     
 }
 
-MapView::MapView(CameraOrtho &aInitialCam, ViewCtx *viewCtx) :
-    mCurrentCam(aInitialCam),
-    _viewCtx(viewCtx)
+MapView::MapView(CameraOrtho &aInitialCam) :
+    mCurrentCam(aInitialCam)
 { 
     
 }
@@ -111,12 +109,6 @@ MapView::setCurrentCam( CameraOrtho &aCurrentCam )
 }
 
 void
-MapView::setViewCtx(ViewCtx *newViewCtx)
-{
-    _viewCtx = newViewCtx;
-}
-
-void
 MapView::zoom(const float amount)
 {
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
@@ -128,8 +120,8 @@ MapView::zoom(const float amount)
                            &oldFar);
     float size = (amount == 0) ? 1.0 : 1.0 + amount * 0.002;
     float width = fabsf(oldRight - oldLeft);
-    double aspect = double(_viewCtx->getViewportHeight()) /
-                    double(_viewCtx->getViewportWidth());
+    float height = fabsf(oldTop - oldBottom);
+    double aspect = height / width;
     MapPoint ctr((oldLeft+oldRight)*0.5, (oldBottom+oldTop)*0.5);
     float hsize = width * size * 0.5;
     float vsize = hsize * aspect;

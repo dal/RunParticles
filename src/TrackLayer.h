@@ -41,18 +41,20 @@ public:
     
     unsigned int duration() const;
     
-    void project(const ViewCtx*);
+    void project(const Projection&);
     
-    virtual void draw(uint pass, const ViewCtx*, const TimeCtx*);
+    virtual void draw(uint pass, const ViewCtx&, const TimeCtx&);
     
     BoundingBox getBoundingBox() const;
     
     MapPoint position() const;
+    
+    bool ephemeral() const;
 protected:
     
-    void _drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx);
+    void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
     
-    void _drawParticle(const ViewCtx *viewCtx) const;
+    void _drawParticle(const ViewCtx &viewCtx) const;
     
     const Track *_track;
     

@@ -13,6 +13,7 @@
 #include <QObject>
 
 #include "Layer.h"
+#include "Projection.h"
 #include "TimeCtx.h"
 #include "ViewCtx.h"
 
@@ -21,7 +22,11 @@
 
 #define SELECTION_TOLERANCE_PIXELS 5.0
 
-typedef std::map<LayerId, Layer*> LayerMap;
+typedef std::shared_ptr<Layer> LayerPtr;
+
+typedef std::vector<LayerPtr> LayerPtrList;
+
+typedef std::map<LayerId, LayerPtr> LayerMap;
 
 class Map : public QObject
 {
@@ -30,31 +35,27 @@ class Map : public QObject
 public:
     Map(QObject *parent=0);
     
-    void draw();
+    void draw(const ViewCtx&, const TimeCtx&);
     
     bool addLayer(Layer*);
     
-    ViewCtx* getViewCtx() const { return _viewCtx; }
-    
-    TimeCtx* getTimeCtx() const { return _timeCtx; }
-    
     int getDuration() const { return _duration; }
     
-    Layer* getLayer(const LayerId id) { return _layerMap[id]; }
+    Layer* getLayer(const LayerId id) { return _layerMap[id].get(); }
+    
+    const Projection getProjection() const { return _projection; }
     
 public slots:
     
-    bool onMapClicked(const MapPoint &pt) const;
+    bool onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const;
     
 private:
     
-    std::vector<Layer*> _layers;
+    const Projection _projection;
+    
+    LayerPtrList _layers;
     
     LayerMap _layerMap;
-    
-    TimeCtx *_timeCtx;
-    
-    ViewCtx *_viewCtx;
     
     unsigned int _numPasses;
     

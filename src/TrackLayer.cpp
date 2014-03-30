@@ -66,7 +66,7 @@ TrackLayer::duration() const
 }
 
 void
-TrackLayer::project(const ViewCtx* viewCtx)
+TrackLayer::project(const Projection &projection)
 {
     // Project the track into the hi-res path and compute the bounding box
     int startTime = 0;
@@ -75,7 +75,7 @@ TrackLayer::project(const ViewCtx* viewCtx)
         if (i == 0)
             startTime = pt.time;
         PathPoint newPt;
-        newPt.pos = viewCtx->toProjection(pt.pos);
+        newPt.pos = projection.toProjection(pt.pos);
         newPt.time = pt.time - startTime;
         _path_hi.push_back(newPt);
         _bounds += newPt.pos;
@@ -93,11 +93,11 @@ TrackLayer::project(const ViewCtx* viewCtx)
 }
 
 void
-TrackLayer::draw(uint pass, const ViewCtx *viewCtx, const TimeCtx *timeCtx)
+TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
-    if (!visible() || !_bounds.overlaps(viewCtx->getBoundingBox()))
+    if (!visible() || !_bounds.overlaps(viewCtx.getBoundingBox()))
         return;
-    bool selected = viewCtx->isSelected(id());
+    bool selected = viewCtx.isSelected(id());
     switch (pass) {
         case Pass_UnselectedPath:
             if (!selected)
@@ -114,17 +114,17 @@ TrackLayer::draw(uint pass, const ViewCtx *viewCtx, const TimeCtx *timeCtx)
 }
 
 void
-TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
+TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
     // Choose which path to display
     Path *currentPath = &_path_hi;
-    double res = viewCtx->getResolution();
+    double res = viewCtx.getResolution();
     if (res >= 1.0 && res < 3.0)
         currentPath = &_path_med;
     else if (res >= 3.0)
         currentPath = &_path_lo;
     
-    if (viewCtx->isSelected(id()))
+    if (viewCtx.isSelected(id()))
         gl::color( SelectedColor );
     else if (_track->sport == "Running")
         gl::color( RunColor );
@@ -138,8 +138,8 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
     for(int i=0; i < currentPath->count(); i++) {
         PathPoint *pt = &(*currentPath)[i];
         MapPoint *thisMapPt = &(pt->pos);
-        bool inbounds = viewCtx->getBoundingBox().contains(*thisMapPt);
-        if (i == 0 || pt->time < timeCtx->getMapSeconds()) {
+        bool inbounds = viewCtx.getBoundingBox().contains(*thisMapPt);
+        if (i == 0 || pt->time < timeCtx.getMapSeconds()) {
             if (i > 0 && (inbounds || lastInbounds)) {
                 _pathBuffer[bufferIndex++] = lastMapPt->x;
                 _pathBuffer[bufferIndex++] = lastMapPt->y;
@@ -150,7 +150,7 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
             lastPathPt = pt;
             _particlePos = *thisMapPt;
         } else {
-            double elapsed = timeCtx->getMapSeconds() -
+            double elapsed = timeCtx.getMapSeconds() -
                              double(lastPathPt->time);
             int trkElapsed = pt->time - lastPathPt->time;
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
@@ -175,14 +175,14 @@ TrackLayer::_drawPath(const ViewCtx *viewCtx, const TimeCtx *timeCtx)
 }
 
 void
-TrackLayer::_drawParticle(const ViewCtx *viewCtx) const
+TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
 {
     gl::color( Color( 1, 1, 1 ) );
-    float radius = viewCtx->getResolution() * 2.0;
+    float radius = viewCtx.getResolution() * 2.0;
     if (radius < 2.0)
         radius = 2.0;
     gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
-    if (viewCtx->isSelected(id())) {
+    if (viewCtx.isSelected(id())) {
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*1.5);
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*2.0);
     }
@@ -198,4 +198,10 @@ MapPoint
 TrackLayer::position() const
 {
     return _particlePos;
+}
+
+bool
+TrackLayer::ephemeral() const
+{
+    return false;
 }

@@ -126,7 +126,9 @@ protected:
     
     Map *_map;
     
-    TimeCtx *_timeCtx;
+    TimeCtx _timeCtx;
+    
+    ViewCtx _viewCtx;
     
     QElapsedTimer elapsedTimer;
     

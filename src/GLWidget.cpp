@@ -16,16 +16,16 @@
 GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
     _playMode(PlayMode_Pause),
+    _map(map),
     timer(new QTimer(this)),
     _fullScreen(false),
     _lockToLayer(false)
 {
     setMouseTracking(true);
     elapsedTimer.start();
-    _map = map;
     // For now center the camera on Oakland
-    MapPoint r = _map->getViewCtx()->toProjection(LonLat(-122.2, 37.81155));
-    MapPoint l = _map->getViewCtx()->toProjection(LonLat(-122.3, 37.81155));
+    MapPoint r = _map->getProjection().toProjection(LonLat(-122.2, 37.81155));
+    MapPoint l = _map->getProjection().toProjection(LonLat(-122.3, 37.81155));
     float viewheight = (r.x - l.x) * ((float)height() / (float)width());
     _camera = CameraOrtho(l.x,
                           r.x,
@@ -34,8 +34,6 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
                           -1,
                           1);
     _mapView.setCurrentCam(_camera);
-    _mapView.setViewCtx(_map->getViewCtx());
-    _timeCtx = _map->getTimeCtx();
     _updateViewCtx();
     connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
@@ -67,7 +65,7 @@ GLWidget::paintGL()
     
     gl::color( Color( 1, 0, 0 ) );
     
-    _map->draw();
+    _map->draw(_viewCtx, _timeCtx);
     
     glPopMatrix();
 }
@@ -92,8 +90,8 @@ GLWidget::sizeHint() const
 void
 GLWidget::resizeGL(int width, int height)
 {
-    int oldWidth = _map->getViewCtx()->getViewportWidth();
-    int oldHeight = _map->getViewCtx()->getViewportHeight();
+    int oldWidth = _viewCtx.getViewportWidth();
+    int oldHeight = _viewCtx.getViewportHeight();
     _mapView.resize(oldWidth, oldHeight, width, height);
     _updateViewCtx();
     glViewport (0, 0, (GLdouble) width, (GLdouble) height);
@@ -166,7 +164,7 @@ void
 GLWidget::update()
 {
     if (_playMode == PlayMode_Play && elapsedTimer.isValid())
-        _timeCtx->update(elapsedTimer.restart());
+        _timeCtx.update(elapsedTimer.restart());
     
     // If the view is locked to a layer, recenter
     if (_lockToLayer) {
@@ -176,7 +174,7 @@ GLWidget::update()
     }
         
     updateGL();
-    emit signalTimeChanged(_timeCtx->getMapSeconds());
+    emit signalTimeChanged(_timeCtx.getMapSeconds());
 }
 
 MapPoint
@@ -242,7 +240,6 @@ GLWidget::frameBoundingBox(const BoundingBox &bbox)
                               1);
     }
     _mapView.setCurrentCam(_camera);
-    _mapView.setViewCtx(_map->getViewCtx());
     _updateViewCtx();
     updateGL();
 }
@@ -250,8 +247,8 @@ GLWidget::frameBoundingBox(const BoundingBox &bbox)
 void
 GLWidget::slotPlay()
 {
-    if (_timeCtx->getPlaybackRate() <= 0)
-        _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
+    if (_timeCtx.getPlaybackRate() <= 0)
+        _timeCtx.setPlaybackRate(-_timeCtx.getPlaybackRate());
     _playMode = PlayMode_Play;
     elapsedTimer.restart();
     timer->start();
@@ -278,8 +275,8 @@ void
 GLWidget::slotReverse()
 {
     _playMode = PlayMode_Play;
-    if (_timeCtx->getPlaybackRate() >= 0)
-        _timeCtx->setPlaybackRate(-_timeCtx->getPlaybackRate());
+    if (_timeCtx.getPlaybackRate() >= 0)
+        _timeCtx.setPlaybackRate(-_timeCtx.getPlaybackRate());
     elapsedTimer.restart();
     timer->start();
 }
@@ -287,7 +284,7 @@ GLWidget::slotReverse()
 void
 GLWidget::slotRewind()
 {
-    _timeCtx->setMapSeconds(0.);
+    _timeCtx.setMapSeconds(0.);
     elapsedTimer.restart();
     update();
 }
@@ -295,7 +292,7 @@ GLWidget::slotRewind()
 void
 GLWidget::setPlaybackRate(double rate)
 {
-    _timeCtx->setPlaybackRate(rate);
+    _timeCtx.setPlaybackRate(rate);
 }
 
 void
@@ -321,8 +318,8 @@ GLWidget::slotSelectLayers(QList<LayerId> layerIds)
     foreach(layerId, layerIds) {
         newSel.insert(layerId);
     }
-    if (newSel != _map->getViewCtx()->selectedLayers) {
-        _map->getViewCtx()->selectedLayers = newSel;
+    if (newSel != _viewCtx.selectedLayers) {
+        _viewCtx.selectedLayers = newSel;
         update();
     }
 }
@@ -346,17 +343,17 @@ GLWidget::_updateViewCtx()
 {
     float left, top, right, bottom;
     _mapView.getFrustum(left, top, right, bottom);
-    _map->getViewCtx()->setViewport(MapPoint(left, top),
-                                    MapPoint(right, bottom),
-                                    width(),
-                                    height());
+    _viewCtx.setViewport(MapPoint(left, top),
+                         MapPoint(right, bottom),
+                         width(),
+                         height());
 }
 
 void
 GLWidget::_onMouseClicked(QPoint pos)
 {
     MapPoint clickPoint = screenPointToMapPoint(pos);
-    if (!_map->onMapClicked(clickPoint)) {
+    if (!_map->onMapClicked(clickPoint, _viewCtx)) {
         QList<LayerId> layers;
         emit(signalLayersSelected(layers));
     }

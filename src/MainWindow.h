@@ -42,6 +42,8 @@ public slots:
     void slotLayerVisibilityChanged(LayerId layerId, bool visible);
     
 protected:
+    void _loadBaseMap();
+    
     QMenuBar *_menuBar;
     GLWidget *_glWidget;
     LayerListWidget *_layerListWidget;

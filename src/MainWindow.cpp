@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QWidget>
 
+#include "OsmLayer.h"
 #include "TcxHandler.h"
 #include "TrackLayer.h"
 #include "TrackFileReader.h"
@@ -108,6 +109,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     loadTrackFile(pathTwo);
     QString pathThree("/Users/dal/Documents/gps/exports/all2013.tcx");
     loadTrackFile(pathThree);
+    _loadBaseMap();
 }
 
 MainWindow::~MainWindow()
@@ -147,6 +149,12 @@ MainWindow::loadTrackFile(const QString &path)
         _glWidget->getMap()->addLayer(thisLayer);
         _layerListWidget->addLayer(thisLayer);
     }
+}
+
+void
+MainWindow::_loadBaseMap()
+{
+    _glWidget->getMap()->addLayer(new OsmLayer());
 }
 
 void

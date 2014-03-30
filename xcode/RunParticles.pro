@@ -104,7 +104,9 @@ HEADERS = ../src/BoundingBox.h \
           ../src/MainWindow.h \
           ../src/Map.h \
           ../src/MapView.h \
+          ../src/OsmLayer.h \
           ../src/PathUtil.h \
+          ../src/Projection.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
           ../src/TrackFileReader.h \
@@ -123,7 +125,9 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \
+          ../src/OsmLayer.cpp \
           ../src/PathUtil.cpp \
+          ../src/Projection.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
           ../src/TrackFileReader.cpp \

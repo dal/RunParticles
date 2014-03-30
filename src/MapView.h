@@ -16,11 +16,13 @@
 #include "ViewCtx.h"
 
 using namespace cinder;
-
+/*
+ * Encapsulates one camera view onto a map.
+ */
 class MapView {
 public:
     MapView();
-    MapView(CameraOrtho&, ViewCtx *viewCtx);
+    MapView(CameraOrtho&);
     
     void mouseWheel(const int);
     
@@ -32,7 +34,6 @@ public:
         
     const CameraOrtho& getCamera() const;
     void setCurrentCam( CameraOrtho &aCurrentCam );
-    void setViewCtx( ViewCtx *newViewCtx );
     void zoom( const float );
     void recenter(const MapPoint &position);
     void getFrustum(float &left, float &top, float &right, float &bottom) const;
@@ -41,8 +42,6 @@ private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };
     
     CameraOrtho	mCurrentCam;
-    
-    ViewCtx *_viewCtx;
 };
 
 #endif

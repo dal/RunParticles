@@ -15,6 +15,12 @@
 class OsmLayer : public Layer
 {
     
+    enum {
+        Pass_BaseMap = PassLayer_Background + 1,
+        Pass_Count
+    } OsmLayerPasses;
+    
+    
 public:
     enum {
         pixelsPerTile = 256
@@ -33,6 +39,8 @@ public:
     QString sport() const;
     
     QDateTime startTime() const;
+    
+    PassMap passes() const;
     
     void project(const Projection&);
     

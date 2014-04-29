@@ -57,9 +57,9 @@ private:
     
     LayerMap _layerMap;
     
-    unsigned int _numPasses;
-    
     unsigned int _duration;
+    
+    PassMap _passes;
     
 signals:
     

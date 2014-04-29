@@ -12,7 +12,6 @@
 Map::Map(QObject *parent)
 : QObject(parent),
 _projection(Projection()),
-_numPasses(1),
 _duration(0)
 {
     
@@ -21,10 +20,12 @@ _duration(0)
 void
 Map::draw(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
+    PassMap::iterator pass;
     LayerPtrList::iterator it;
-    for (uint pass=0; pass < _numPasses; pass++){
+    for (pass = _passes.begin(); pass != _passes.end(); pass++) {
+        unsigned int thisPass = *pass;
         for (it = _layers.begin(); it != _layers.end(); it++) {
-            (*it)->draw(pass, viewCtx, timeCtx);
+            (*it)->draw(thisPass, viewCtx, timeCtx);
         }
     }
 }
@@ -37,7 +38,8 @@ Map::addLayer(Layer *layer)
     _layerMap.insert(std::pair<LayerId, LayerPtr>(layer->id(), layerPtr));
     // give the layer an opportunity to reproject
     layer->project(_projection);
-    _numPasses = (layer->passes() > _numPasses) ? layer->passes() : _numPasses;
+    PassMap layerPasses = layer->passes();
+    _passes.insert(layerPasses.begin(), layerPasses.end());
     _duration = (layer->duration() > _duration) ? layer->duration() : _duration;
     emit(signalLayerAdded());
     return true;

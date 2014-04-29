@@ -10,6 +10,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <set>
+
 #include "cinder/Vector.h"
 
 #include <QDateTime>
@@ -17,6 +19,15 @@
 #include <QString>
 
 using namespace cinder;
+
+typedef std::set<unsigned int> PassMap;
+
+enum {
+    PassLayer_Background,
+    PassLayer_MidGround = 50,
+    PassLayer_Foreground = 100,
+    PassLayer_Count
+} PassLayer;
 
 class LonLat : public Vec2d
 {

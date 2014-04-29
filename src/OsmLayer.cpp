@@ -5,8 +5,6 @@
 #define MAXLAT 85.0511287798066
 #define MAXLON 180.0
 
-#define M_PI 3.141592653589793238
-
 // from http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 int long2tilex(double lon, int z)
 {
@@ -67,6 +65,14 @@ OsmLayer::startTime() const
     return QDateTime();
 }
 
+PassMap
+OsmLayer::passes() const
+{
+    PassMap layers;
+    layers.insert(Pass_BaseMap);
+    return layers;
+}
+
 void
 OsmLayer::project(const Projection &projection)
 {
@@ -85,6 +91,9 @@ OsmLayer::project(const Projection &projection)
 void
 OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
 {
+    if (pass != Pass_BaseMap)
+        return;
+    
     if (_lastResolution != viewCtx.getResolution()) {
         _lastResolution = viewCtx.getResolution();
         _currentZoom = _getZoomLevel(viewCtx.getResolution());

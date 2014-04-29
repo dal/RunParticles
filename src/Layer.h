@@ -9,6 +9,7 @@
 #ifndef RunParticles_Layer_h
 #define RunParticles_Layer_h
 
+#include <set>
 #include <QString>
 #include <QDateTime>
 
@@ -39,7 +40,7 @@ public:
     
     virtual QDateTime startTime() const = 0;
     
-    virtual unsigned int passes() const { return 1; }
+    virtual PassMap passes() const = 0;
     
     virtual unsigned int duration() const { return 0; }
     

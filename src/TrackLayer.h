@@ -13,9 +13,9 @@ class TrackLayer : public Layer
 public:
     
     enum TrackLayerPasses {
-        Pass_UnselectedPath,
-        Pass_SelectedPath,
-        Pass_Particle,
+        Pass_UnselectedPath = PassLayer_MidGround + 1,
+        Pass_SelectedPath = PassLayer_MidGround + 4,
+        Pass_Particle = PassLayer_Foreground + 1,
         Pass_Count
     };
     
@@ -33,11 +33,11 @@ public:
     
     /*
      * TrackLayers require three passes: 
-     *  [3] Draws the track particle.
-     *  [2] Draws the path if it is selected
-     *  [1] Draws the path if it is not currently selected
+     *  top Draws the track particle.
+     *  mid Draws the path if it is selected
+     *  bottom Draws the path if it is not currently selected
      */
-    unsigned int passes() const { return Pass_Count; };
+    PassMap passes() const;
     
     unsigned int duration() const;
     

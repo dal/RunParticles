@@ -46,6 +46,16 @@ TrackLayer::startTime() const
     return _startTime;
 }
 
+PassMap
+TrackLayer::passes() const
+{
+    PassMap layers;
+    layers.insert(Pass_UnselectedPath);
+    layers.insert(Pass_SelectedPath);
+    layers.insert(Pass_Particle);
+    return layers;
+}
+
 /*
  * Linear interpolate between a and b by the fractional f.
  */

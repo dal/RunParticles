@@ -55,6 +55,8 @@ protected:
     
     void _setup();
     
+    void _getTileXYAtMapPoint(const MapPoint &pos, int zoomLevel, int *x, int *y);
+    
     MapPoint _worldTopLeft, _worldLowerRight;
     
     double _worldSize;

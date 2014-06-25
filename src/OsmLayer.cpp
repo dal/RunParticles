@@ -144,3 +144,11 @@ OsmLayer::_setup()
     _isSetup = true;
 }
 
+
+void
+OsmLayer::getTileXYAtMapPoint(MapPoint &pos, int zoomLevel, int *x, int *y)
+{
+    *x = int(floor(pow(2.,zoomLevel) * ((pos.x - _worldTopLeft.x)
+                                       / _worldLowerRight.x)));
+    // TODO *y
+}

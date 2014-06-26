@@ -34,7 +34,10 @@ void _drawQuad(const MapPoint &upperLeft, float width)
 }
 
 OsmLayer::OsmLayer() : Layer(),
+    _worldSize(0.0),
+    _tileSize(1.0),
     _currentZoom(0),
+    _numEdgeTiles(1),
     _lastResolution(0.),
     _shader(new QGLShaderProgram),
     _isSetup(false)
@@ -97,16 +100,39 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     if (_lastResolution != viewCtx.getResolution()) {
         _lastResolution = viewCtx.getResolution();
         _currentZoom = _getZoomLevel(viewCtx.getResolution());
+        _numEdgeTiles = pow(2., _currentZoom);
+        _tileSize = _worldSize / _numEdgeTiles;
         qDebug("Zoom level %d", _currentZoom);
     }
+    
+    BoundingBox viewport = viewCtx.getBoundingBox();
+    unsigned int upperLeftX, upperLeftY, lowerRightX, lowerRightY;
+    _getTileXYAtMapPoint(viewport.upperLeft, &upperLeftX, &upperLeftY);
+    _getTileXYAtMapPoint(viewport.lowerRight, &lowerRightX, &lowerRightY);
+    
     if (!_isSetup)
         _setup();
+
+    gl::color( Color( 1, 1, 1 ) );
+    for (unsigned int x=upperLeftX; x <= lowerRightX; x++) {
+        for (unsigned int y=upperLeftY; y <= lowerRightY; y++) {
+            double tileUpperLeftX = _worldTopLeft.x + (_worldSize * ((double)x / (double)_numEdgeTiles));
+            double tileUpperLeftY = _worldTopLeft.y - (_worldSize * ((double)y / (double)_numEdgeTiles));
+            double tileLowerRightX = tileUpperLeftX + _tileSize;
+            double tileLowerRightY = tileUpperLeftY - _tileSize;
+            gl::drawStrokedRect(RectT<float>(tileUpperLeftX, tileUpperLeftY,
+                                             tileLowerRightX, tileLowerRightY));
+        }
+    }
+    
+    /*
     _testTexture->enableAndBind();
 	_shader->bind();
 	_shader->setUniformValue(_shader->uniformLocation("tex0"), 0 );
     _drawQuad(_testTilePos, _testTileWidth);
     _testTexture->unbind();
     _shader->release();
+    */
 }
 
 BoundingBox
@@ -146,9 +172,10 @@ OsmLayer::_setup()
 
 
 void
-OsmLayer::getTileXYAtMapPoint(MapPoint &pos, int zoomLevel, int *x, int *y)
+OsmLayer::_getTileXYAtMapPoint(const MapPoint &pos, uint *x, uint *y) const
 {
-    *x = int(floor(pow(2.,zoomLevel) * ((pos.x - _worldTopLeft.x)
-                                       / _worldLowerRight.x)));
-    // TODO *y
+    
+    *x = int(floor(_numEdgeTiles * ((pos.x - _worldTopLeft.x) / _worldSize)));
+    *y = int(floor(_numEdgeTiles * (_worldTopLeft.y - pos.y) / _worldSize));
+                                    
 }

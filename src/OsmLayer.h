@@ -55,13 +55,13 @@ protected:
     
     void _setup();
     
-    void _getTileXYAtMapPoint(const MapPoint &pos, int zoomLevel, int *x, int *y);
+    void _getTileXYAtMapPoint(const MapPoint &pos, uint *x, uint *y) const;
     
     MapPoint _worldTopLeft, _worldLowerRight;
     
-    double _worldSize;
+    double _worldSize, _tileSize;
     
-    unsigned int _currentZoom;
+    unsigned int _currentZoom, _numEdgeTiles;
     
     double _lastResolution;
     

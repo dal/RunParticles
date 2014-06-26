@@ -55,7 +55,7 @@ protected:
     
     void _setup();
     
-    void _getTileXYAtMapPoint(const MapPoint &pos, uint *x, uint *y) const;
+    void _getTileXYAtMapPoint(const MapPoint &pos, int *x, int *y) const;
     
     MapPoint _worldTopLeft, _worldLowerRight;
     

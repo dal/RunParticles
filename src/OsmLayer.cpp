@@ -106,7 +106,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     }
     
     BoundingBox viewport = viewCtx.getBoundingBox();
-    unsigned int upperLeftX, upperLeftY, lowerRightX, lowerRightY;
+    int upperLeftX, upperLeftY, lowerRightX, lowerRightY;
     _getTileXYAtMapPoint(viewport.upperLeft, &upperLeftX, &upperLeftY);
     _getTileXYAtMapPoint(viewport.lowerRight, &lowerRightX, &lowerRightY);
     
@@ -114,8 +114,8 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
         _setup();
 
     gl::color( Color( 1, 1, 1 ) );
-    for (unsigned int x=upperLeftX; x <= lowerRightX; x++) {
-        for (unsigned int y=upperLeftY; y <= lowerRightY; y++) {
+    for (int x=upperLeftX; x <= lowerRightX && x < (int)_numEdgeTiles; x++) {
+        for (int y=upperLeftY; y <= lowerRightY && y < (int)_numEdgeTiles; y++) {
             double tileUpperLeftX = _worldTopLeft.x + (_worldSize * ((double)x / (double)_numEdgeTiles));
             double tileUpperLeftY = _worldTopLeft.y - (_worldSize * ((double)y / (double)_numEdgeTiles));
             double tileLowerRightX = tileUpperLeftX + _tileSize;
@@ -172,10 +172,11 @@ OsmLayer::_setup()
 
 
 void
-OsmLayer::_getTileXYAtMapPoint(const MapPoint &pos, uint *x, uint *y) const
+OsmLayer::_getTileXYAtMapPoint(const MapPoint &pos, int *x, int *y) const
 {
     
     *x = int(floor(_numEdgeTiles * ((pos.x - _worldTopLeft.x) / _worldSize)));
     *y = int(floor(_numEdgeTiles * (_worldTopLeft.y - pos.y) / _worldSize));
-                                    
+    *x = (*x < 0) ? 0 : *x;
+    *y = (*y < 0) ? 0 : *y;
 }

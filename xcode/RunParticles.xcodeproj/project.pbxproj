@@ -50,6 +50,22 @@
 					);
 			};
 		};
+		9EE8E4DCF3C367115874BC3E = {
+			isa = PBXFileReference;
+			name = "GpxHandler.cpp";
+			path = "../src/GpxHandler.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		109821037DC581A56E32357C = {
+			fileRef = "9EE8E4DCF3C367115874BC3E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		A98C72B30428A8FB182A3E06 = {
 			isa = PBXFileReference;
 			name = "main.cpp";
@@ -60,6 +76,38 @@
 		};
 		0906DF28750D0609E141693F = {
 			fileRef = "A98C72B30428A8FB182A3E06";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		1A246F819A1A9A7767D3E663 = {
+			isa = PBXFileReference;
+			name = "Layer.cpp";
+			path = "../src/Layer.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		F2BD9361A834D73D1DB26504 = {
+			fileRef = "1A246F819A1A9A7767D3E663";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		0247F88BB588A3B992798DD6 = {
+			isa = PBXFileReference;
+			name = "LayerListWidget.cpp";
+			path = "../src/LayerListWidget.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		D62B738184D0D74977F3AF99 = {
+			fileRef = "0247F88BB588A3B992798DD6";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -114,6 +162,22 @@
 					);
 			};
 		};
+		5F25E6FF7A9684BA07DB4899 = {
+			isa = PBXFileReference;
+			name = "OsmLayer.cpp";
+			path = "../src/OsmLayer.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		9AF3CECFC3D6B2AF38161FAF = {
+			fileRef = "5F25E6FF7A9684BA07DB4899";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		EEE94BFDC979A9C2CC51670C = {
 			isa = PBXFileReference;
 			name = "PathUtil.cpp";
@@ -124,6 +188,22 @@
 		};
 		E8A25AFE742A79553F82D374 = {
 			fileRef = "EEE94BFDC979A9C2CC51670C";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		D71DC348FEF09A07A30338D4 = {
+			isa = PBXFileReference;
+			name = "Projection.cpp";
+			path = "../src/Projection.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		04131A97EB69E7435805E75F = {
+			fileRef = "D71DC348FEF09A07A30338D4";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -162,6 +242,22 @@
 					);
 			};
 		};
+		06F355DF761AF5D779D5D71E = {
+			isa = PBXFileReference;
+			name = "TrackFileReader.cpp";
+			path = "../src/TrackFileReader.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		A48BF5CB6D3F2F7F5D84E9F6 = {
+			fileRef = "06F355DF761AF5D779D5D71E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		688CEAC26C4FB3F3406FFC9B = {
 			isa = PBXFileReference;
 			name = "TrackLayer.cpp";
@@ -194,6 +290,38 @@
 					);
 			};
 		};
+		B68022F9842E78E38888DF61 = {
+			isa = PBXFileReference;
+			name = "Util.cpp";
+			path = "../src/Util.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		A6AC75A31FA5A448EC00DAD9 = {
+			fileRef = "B68022F9842E78E38888DF61";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		3BBC3028C82414F145E7DD0E = {
+			isa = PBXFileReference;
+			name = "XmlHandler.cpp";
+			path = "../src/XmlHandler.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		200C5A054FD19CF20DCF4EB8 = {
+			fileRef = "3BBC3028C82414F145E7DD0E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		1B676BCE814D278338617BB7 = {
 			isa = PBXFileReference;
 			name = "moc_GLWidget.cpp";
@@ -204,6 +332,22 @@
 		};
 		46EC2FFE3CF896C7F01CC623 = {
 			fileRef = "1B676BCE814D278338617BB7";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		CF7C2F15179E06A0F644BF72 = {
+			isa = PBXFileReference;
+			name = "moc_LayerListWidget.cpp";
+			path = "moc_LayerListWidget.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		E1FA0A5D5781EC9E9343DC09 = {
+			fileRef = "CF7C2F15179E06A0F644BF72";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -256,10 +400,24 @@
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
+		0310924AF6A765D601B7E6D0 = {
+			isa = PBXFileReference;
+			name = "GpxHandler.h";
+			path = "../src/GpxHandler.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		290B40E1081732F53E2489DE = {
 			isa = PBXFileReference;
 			name = "Layer.h";
 			path = "../src/Layer.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		D2B91D7F508B1524A51F3E74 = {
+			isa = PBXFileReference;
+			name = "LayerListWidget.h";
+			path = "../src/LayerListWidget.h";
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
@@ -284,10 +442,31 @@
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
+		61B233EE59C94F2B6BD3D961 = {
+			isa = PBXFileReference;
+			name = "OsmLayer.h";
+			path = "../src/OsmLayer.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		E318F0B2E1AC39334963B530 = {
 			isa = PBXFileReference;
 			name = "PathUtil.h";
 			path = "../src/PathUtil.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		3F89790612D8DFC1A4041526 = {
+			isa = PBXFileReference;
+			name = "Projection.h";
+			path = "../src/Projection.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		DABF69B90753B4435162FA27 = {
+			isa = PBXFileReference;
+			name = "Singleton.h";
+			path = "../src/Singleton.h";
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
@@ -305,6 +484,13 @@
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
+		5250380F494490326675A450 = {
+			isa = PBXFileReference;
+			name = "TrackFileReader.h";
+			path = "../src/TrackFileReader.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		AE1BE578C104B6B834C14C39 = {
 			isa = PBXFileReference;
 			name = "TrackLayer.h";
@@ -319,10 +505,24 @@
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
+		51DE0D8F6C81EA7F72390978 = {
+			isa = PBXFileReference;
+			name = "Util.h";
+			path = "../src/Util.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
 		FD3FE89C76DAE4123EDD7EC3 = {
 			isa = PBXFileReference;
 			name = "ViewCtx.h";
 			path = "../src/ViewCtx.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		B4F1082F14896EF68592C0B6 = {
+			isa = PBXFileReference;
+			name = "XmlHandler.h";
+			path = "../src/XmlHandler.h";
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
@@ -354,16 +554,24 @@
 			children = (
 				"E60E6079B88A7F643403FDA7",
 				"71B064E2E08701E9869193DB",
+				"0310924AF6A765D601B7E6D0",
 				"290B40E1081732F53E2489DE",
+				"D2B91D7F508B1524A51F3E74",
 				"B0CCE35A63C66BA6A9CF3B65",
 				"245A1835322098C52B654A17",
 				"515A8F63771690694B8EE115",
+				"61B233EE59C94F2B6BD3D961",
 				"E318F0B2E1AC39334963B530",
+				"3F89790612D8DFC1A4041526",
+				"DABF69B90753B4435162FA27",
 				"550BE91A02005D84E4EBE786",
 				"43DE819D1B00A6317CA6C03E",
+				"5250380F494490326675A450",
 				"AE1BE578C104B6B834C14C39",
 				"716387C61E131D3E3F611C22",
-				"FD3FE89C76DAE4123EDD7EC3");
+				"51DE0D8F6C81EA7F72390978",
+				"FD3FE89C76DAE4123EDD7EC3",
+				"B4F1082F14896EF68592C0B6");
 			name = "src";
 			refType = 4;
 			sourceTree = "<Group>";
@@ -381,15 +589,23 @@
 			children = (
 				"DC77C3CA9F4AF2C083664DFA",
 				"8FD2780091D775D5CCEBBD38",
+				"9EE8E4DCF3C367115874BC3E",
 				"A98C72B30428A8FB182A3E06",
+				"1A246F819A1A9A7767D3E663",
+				"0247F88BB588A3B992798DD6",
 				"9401B8B47AE9AA5B09E67B54",
 				"733527686FDCD63BEC7B5251",
 				"C4D8568B4D2A69A1D7A4D3DA",
+				"5F25E6FF7A9684BA07DB4899",
 				"EEE94BFDC979A9C2CC51670C",
+				"D71DC348FEF09A07A30338D4",
 				"27E989ABCC1E6197D3D6CD1C",
 				"726E02FD0D4EDA7EA5B45E24",
+				"06F355DF761AF5D779D5D71E",
 				"688CEAC26C4FB3F3406FFC9B",
-				"A8164F2E335227ACC408437B");
+				"A8164F2E335227ACC408437B",
+				"B68022F9842E78E38888DF61",
+				"3BBC3028C82414F145E7DD0E");
 			name = "src";
 			refType = 4;
 			sourceTree = "<Group>";
@@ -414,6 +630,7 @@
 			isa = PBXGroup;
 			children = (
 				"1B676BCE814D278338617BB7",
+				"CF7C2F15179E06A0F644BF72",
 				"26827F2FC4DC4FBB23DE8287",
 				"A80D9B274C4631DFF5DE9F09");
 			name = "Temporary Sources";
@@ -427,16 +644,25 @@
 			generatedFileNames = (
 				"53DA425F130799FB1BBFDFBC",
 				"70C64B0C4DF679A983BD58E8",
+				"109821037DC581A56E32357C",
 				"0906DF28750D0609E141693F",
+				"F2BD9361A834D73D1DB26504",
+				"D62B738184D0D74977F3AF99",
 				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
+				"9AF3CECFC3D6B2AF38161FAF",
 				"E8A25AFE742A79553F82D374",
+				"04131A97EB69E7435805E75F",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
+				"A48BF5CB6D3F2F7F5D84E9F6",
 				"264088B4E9D456989552A133",
 				"0174E42383F8EA419215C9BE",
+				"A6AC75A31FA5A448EC00DAD9",
+				"200C5A054FD19CF20DCF4EB8",
 				"46EC2FFE3CF896C7F01CC623",
+				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
 				"88CA52E89813A0BB940BCB52");
 			isa = PBXShellScriptBuildPhase;
@@ -444,16 +670,25 @@
 			neededFileNames = (
 				"53DA425F130799FB1BBFDFBC",
 				"70C64B0C4DF679A983BD58E8",
+				"109821037DC581A56E32357C",
 				"0906DF28750D0609E141693F",
+				"F2BD9361A834D73D1DB26504",
+				"D62B738184D0D74977F3AF99",
 				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
+				"9AF3CECFC3D6B2AF38161FAF",
 				"E8A25AFE742A79553F82D374",
+				"04131A97EB69E7435805E75F",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
+				"A48BF5CB6D3F2F7F5D84E9F6",
 				"264088B4E9D456989552A133",
 				"0174E42383F8EA419215C9BE",
+				"A6AC75A31FA5A448EC00DAD9",
+				"200C5A054FD19CF20DCF4EB8",
 				"46EC2FFE3CF896C7F01CC623",
+				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
 				"88CA52E89813A0BB940BCB52");
 			shellPath = "/bin/sh";
@@ -464,16 +699,25 @@
 			files = (
 				"53DA425F130799FB1BBFDFBC",
 				"70C64B0C4DF679A983BD58E8",
+				"109821037DC581A56E32357C",
 				"0906DF28750D0609E141693F",
+				"F2BD9361A834D73D1DB26504",
+				"D62B738184D0D74977F3AF99",
 				"56203036AD790066DC5AC5D5",
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
+				"9AF3CECFC3D6B2AF38161FAF",
 				"E8A25AFE742A79553F82D374",
+				"04131A97EB69E7435805E75F",
 				"E98B487F1F4DC7D157B519D1",
 				"1230654D328A74C345289118",
+				"A48BF5CB6D3F2F7F5D84E9F6",
 				"264088B4E9D456989552A133",
 				"0174E42383F8EA419215C9BE",
+				"A6AC75A31FA5A448EC00DAD9",
+				"200C5A054FD19CF20DCF4EB8",
 				"46EC2FFE3CF896C7F01CC623",
+				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
 				"88CA52E89813A0BB940BCB52");
 			isa = PBXSourcesBuildPhase;
@@ -1019,6 +1263,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = "YES";
 				GCC_OPTIMIZATION_LEVEL = "0";
 				PRODUCT_NAME = "RunParticles";
+				SDKROOT = "/Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk";
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework/Versions/4/Headers",
 					"/usr/local/Trolltech/Qt-4.8.4/include/QtCore",
@@ -1113,6 +1358,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = "YES";
 				GCC_OPTIMIZATION_LEVEL = "0";
 				PRODUCT_NAME = "RunParticles";
+				SDKROOT = "/Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk";
 				PRODUCT_NAME = "RunParticles";
 			};
 			name = "Debug";
@@ -1126,6 +1372,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = "YES";
 				GCC_OPTIMIZATION_LEVEL = "0";
 				PRODUCT_NAME = "RunParticles";
+				SDKROOT = "/Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk";
 			};
 			isa = "PBXBuildStyle";
 			name = "Debug";
@@ -1137,6 +1384,7 @@
 				COPY_PHASE_STRIP = "YES";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = "NO";
 				PRODUCT_NAME = "RunParticles";
+				SDKROOT = "/Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk";
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework/Versions/4/Headers",
 					"/usr/local/Trolltech/Qt-4.8.4/include/QtCore",
@@ -1230,6 +1478,7 @@
 				COPY_PHASE_STRIP = "YES";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = "NO";
 				PRODUCT_NAME = "RunParticles";
+				SDKROOT = "/Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk";
 				PRODUCT_NAME = "RunParticles";
 			};
 			name = "Release";
@@ -1242,6 +1491,7 @@
 				COPY_PHASE_STRIP = "YES";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = "NO";
 				PRODUCT_NAME = "RunParticles";
+				SDKROOT = "/Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk";
 			};
 			isa = "PBXBuildStyle";
 			name = "Release";

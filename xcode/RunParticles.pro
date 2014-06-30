@@ -107,6 +107,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/OsmLayer.h \
           ../src/PathUtil.h \
           ../src/Projection.h \
+          ../src/Singleton.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
           ../src/TrackFileReader.h \

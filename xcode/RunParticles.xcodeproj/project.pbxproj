@@ -178,6 +178,22 @@
 					);
 			};
 		};
+		DB3374E8F9B32B39272D319B = {
+			isa = PBXFileReference;
+			name = "OsmTileSource.cpp";
+			path = "../src/OsmTileSource.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		CB656478EAAE5A9392433B68 = {
+			fileRef = "DB3374E8F9B32B39272D319B";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		EEE94BFDC979A9C2CC51670C = {
 			isa = PBXFileReference;
 			name = "PathUtil.cpp";
@@ -386,6 +402,22 @@
 					);
 			};
 		};
+		301B8D4F7C44B411BB95324E = {
+			isa = PBXFileReference;
+			name = "moc_OsmTileSource.cpp";
+			path = "moc_OsmTileSource.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		824DCAD9F221413529995963 = {
+			fileRef = "301B8D4F7C44B411BB95324E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		E60E6079B88A7F643403FDA7 = {
 			isa = PBXFileReference;
 			name = "BoundingBox.h";
@@ -446,6 +478,13 @@
 			isa = PBXFileReference;
 			name = "OsmLayer.h";
 			path = "../src/OsmLayer.h";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+		};
+		6A509168D8878F522D9A4068 = {
+			isa = PBXFileReference;
+			name = "OsmTileSource.h";
+			path = "../src/OsmTileSource.h";
 			refType = 4;
 			sourceTree = "SOURCE_ROOT";
 		};
@@ -561,6 +600,7 @@
 				"245A1835322098C52B654A17",
 				"515A8F63771690694B8EE115",
 				"61B233EE59C94F2B6BD3D961",
+				"6A509168D8878F522D9A4068",
 				"E318F0B2E1AC39334963B530",
 				"3F89790612D8DFC1A4041526",
 				"DABF69B90753B4435162FA27",
@@ -597,6 +637,7 @@
 				"733527686FDCD63BEC7B5251",
 				"C4D8568B4D2A69A1D7A4D3DA",
 				"5F25E6FF7A9684BA07DB4899",
+				"DB3374E8F9B32B39272D319B",
 				"EEE94BFDC979A9C2CC51670C",
 				"D71DC348FEF09A07A30338D4",
 				"27E989ABCC1E6197D3D6CD1C",
@@ -632,7 +673,8 @@
 				"1B676BCE814D278338617BB7",
 				"CF7C2F15179E06A0F644BF72",
 				"26827F2FC4DC4FBB23DE8287",
-				"A80D9B274C4631DFF5DE9F09");
+				"A80D9B274C4631DFF5DE9F09",
+				"301B8D4F7C44B411BB95324E");
 			name = "Temporary Sources";
 			refType = 4;
 			sourceTree = "<Group>";
@@ -652,6 +694,7 @@
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
 				"9AF3CECFC3D6B2AF38161FAF",
+				"CB656478EAAE5A9392433B68",
 				"E8A25AFE742A79553F82D374",
 				"04131A97EB69E7435805E75F",
 				"E98B487F1F4DC7D157B519D1",
@@ -664,7 +707,8 @@
 				"46EC2FFE3CF896C7F01CC623",
 				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
-				"88CA52E89813A0BB940BCB52");
+				"88CA52E89813A0BB940BCB52",
+				"824DCAD9F221413529995963");
 			isa = PBXShellScriptBuildPhase;
 			name = "Qt Preprocessors";
 			neededFileNames = (
@@ -678,6 +722,7 @@
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
 				"9AF3CECFC3D6B2AF38161FAF",
+				"CB656478EAAE5A9392433B68",
 				"E8A25AFE742A79553F82D374",
 				"04131A97EB69E7435805E75F",
 				"E98B487F1F4DC7D157B519D1",
@@ -690,7 +735,8 @@
 				"46EC2FFE3CF896C7F01CC623",
 				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
-				"88CA52E89813A0BB940BCB52");
+				"88CA52E89813A0BB940BCB52",
+				"824DCAD9F221413529995963");
 			shellPath = "/bin/sh";
 			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_preprocess.mak\'";
 		};
@@ -707,6 +753,7 @@
 				"AA99E5F14E054E62B553DBA5",
 				"E841EDE132C823DB407E580A",
 				"9AF3CECFC3D6B2AF38161FAF",
+				"CB656478EAAE5A9392433B68",
 				"E8A25AFE742A79553F82D374",
 				"04131A97EB69E7435805E75F",
 				"E98B487F1F4DC7D157B519D1",
@@ -719,7 +766,8 @@
 				"46EC2FFE3CF896C7F01CC623",
 				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
-				"88CA52E89813A0BB940BCB52");
+				"88CA52E89813A0BB940BCB52",
+				"824DCAD9F221413529995963");
 			isa = PBXSourcesBuildPhase;
 			name = "Build Sources";
 		};
@@ -1064,6 +1112,20 @@
 			settings = {
 			};
 		};
+		7E57783DCF3B7E10775FFF35 = {
+			isa = PBXFileReference;
+			name = "QtNetwork.framework";
+			path = "/usr/local/Trolltech/Qt-4.8.4/lib/QtNetwork.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		B814BFAE1BF41E9344952D87 = {
+			fileRef = "7E57783DCF3B7E10775FFF35";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C6766F86E49E9C8701C8E637 = {
 			isa = PBXFileReference;
 			name = "AGL.framework";
@@ -1105,6 +1167,7 @@
 				"879AAAB17BA0A77D3097F95F",
 				"5CB6F8B4A159ED991BD3DAA2",
 				"AAC81F19099646AE44475FD9",
+				"7E57783DCF3B7E10775FFF35",
 				"C6766F86E49E9C8701C8E637");
 			isa = PBXGroup;
 			name = "External Frameworks and Libraries";
@@ -1140,6 +1203,7 @@
 				"C4EB4B2EAF3A49A2DCC28178",
 				"5F9E4ABD7AD30EB54AB9DA70",
 				"8F0E7A0EF2862AFF400E41AA",
+				"B814BFAE1BF41E9344952D87",
 				"0C6D4628EE0B0D1479A20551");
 			isa = PBXFrameworksBuildPhase;
 			name = "Frameworks & Libraries";
@@ -1267,6 +1331,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework/Versions/4/Headers",
 					"/usr/local/Trolltech/Qt-4.8.4/include/QtCore",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtNetwork.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtNetwork",
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtGui.framework/Versions/4/Headers",
 					"/usr/local/Trolltech/Qt-4.8.4/include/QtGui",
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtOpenGL.framework/Versions/4/Headers",
@@ -1314,6 +1380,7 @@
 					"-DQT_XML_LIB",
 					"-DQT_OPENGL_LIB",
 					"-DQT_GUI_LIB",
+					"-DQT_NETWORK_LIB",
 					"-DQT_CORE_LIB",
 					"-DQT_SHARED");
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1326,6 +1393,7 @@
 					"-DQT_XML_LIB",
 					"-DQT_OPENGL_LIB",
 					"-DQT_GUI_LIB",
+					"-DQT_NETWORK_LIB",
 					"-DQT_CORE_LIB",
 					"-DQT_SHARED");
 				OTHER_LDFLAGS = (
@@ -1388,6 +1456,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtCore.framework/Versions/4/Headers",
 					"/usr/local/Trolltech/Qt-4.8.4/include/QtCore",
+					"/usr/local/Trolltech/Qt-4.8.4/lib/QtNetwork.framework/Versions/4/Headers",
+					"/usr/local/Trolltech/Qt-4.8.4/include/QtNetwork",
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtGui.framework/Versions/4/Headers",
 					"/usr/local/Trolltech/Qt-4.8.4/include/QtGui",
 					"/usr/local/Trolltech/Qt-4.8.4/lib/QtOpenGL.framework/Versions/4/Headers",
@@ -1435,6 +1505,7 @@
 					"-DQT_XML_LIB",
 					"-DQT_OPENGL_LIB",
 					"-DQT_GUI_LIB",
+					"-DQT_NETWORK_LIB",
 					"-DQT_CORE_LIB",
 					"-DQT_SHARED");
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1447,6 +1518,7 @@
 					"-DQT_XML_LIB",
 					"-DQT_OPENGL_LIB",
 					"-DQT_GUI_LIB",
+					"-DQT_NETWORK_LIB",
 					"-DQT_CORE_LIB",
 					"-DQT_SHARED");
 				OTHER_LDFLAGS = (

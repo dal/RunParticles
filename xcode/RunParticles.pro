@@ -105,6 +105,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/Map.h \
           ../src/MapView.h \
           ../src/OsmLayer.h \
+          ../src/OsmTileSource.h \
           ../src/PathUtil.h \
           ../src/Projection.h \
           ../src/Singleton.h \
@@ -127,6 +128,7 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/Map.cpp \
           ../src/MapView.cpp \
           ../src/OsmLayer.cpp \
+          ../src/OsmTileSource.cpp \
           ../src/PathUtil.cpp \
           ../src/Projection.cpp \
           ../src/TcxHandler.cpp \
@@ -136,4 +138,4 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/ViewCtx.cpp \
           ../src/Util.cpp \
           ../src/XmlHandler.cpp
-QT += opengl xml
+QT += opengl network xml

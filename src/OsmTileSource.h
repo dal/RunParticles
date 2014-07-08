@@ -16,30 +16,23 @@
 
 #include "Singleton.h"
 
-#include <map>
-#include <vector>
-
-#define SELECTION_TOLERANCE_PIXELS 5.0
-
-typedef std::shared_ptr<Layer> LayerPtr;
-
-typedef std::vector<LayerPtr> LayerPtrList;
-
-typedef std::map<LayerId, LayerPtr> LayerMap;
+#include "math.h"
 
 struct OsmTile {
     unsigned int x, y, z;
 };
 
-template<>
-class OsmTileHash<OsmTile>
+template<typename T>
+struct OsmTileHash
 {
-public:
-    std::size_t operator()(const OsmTile& t) const 
+    std::size_t operator()(const T& t) const
     {
-        unsigned int edge = pow(2, t.z)
-        unsigned int last = t.z > 0 ? pow(2, 2*(t.z-1)) : 0;
-        return std::size_t(last + t.x * edge + t.y);
+        unsigned int offset = 0;
+        for (unsigned int i=1; i < t.z; i++) {
+            offset += pow(2, 2*i);
+        }
+        unsigned int edge = pow(2, t.z);
+        return std::size_t(offset + t.x * edge + t.y);
     }
 };
 
@@ -53,7 +46,7 @@ public:
     
 signals:
     
-    void tileReady(int x, int y, int x);
+    void tileReady(int x, int y, int z);
     
 public slots:
     
@@ -63,6 +56,6 @@ protected:
     
     
     
-}
+};
 
 #endif

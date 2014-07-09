@@ -27,11 +27,11 @@ struct OsmTileHash
 {
     std::size_t operator()(const T& t) const
     {
-        unsigned int offset = 0;
-        for (unsigned int i=1; i < t.z; i++) {
+        unsigned long offset = 0;
+        for (int i=1; i < t.z; i++) {
             offset += pow(2, 2*i);
         }
-        unsigned int edge = pow(2, t.z);
+        int edge = pow(2, t.z);
         return std::size_t(offset + t.x * edge + t.y);
     }
 };

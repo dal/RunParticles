@@ -16,14 +16,22 @@
 
 #include "Singleton.h"
 
+#include "cinder/Surface.h"
 #include "math.h"
+#include <unordered_map>
 
-struct OsmTile {
+struct OsmIndex {
     unsigned int x, y, z;
 };
 
+struct OsmTile {
+    OsmIndex index;
+    std::shared_ptr<unsigned int*> _imageData;
+    cinder::Surface *surface;
+};
+
 template<typename T>
-struct OsmTileHash
+struct OsmHasher
 {
     std::size_t operator()(const T& t) const
     {
@@ -35,6 +43,8 @@ struct OsmTileHash
         return std::size_t(offset + t.x * edge + t.y);
     }
 };
+
+typedef std::unordered_map<OsmIndex, OsmHasher<OsmIndex>> OsmTileMap;
 
 class OsmTileSource : public QObject
 {
@@ -54,7 +64,7 @@ public slots:
     
 protected:
     
-    
+    OsmTileMap tiles;
     
 };
 

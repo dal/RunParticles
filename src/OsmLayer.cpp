@@ -165,7 +165,7 @@ OsmLayer::_setup()
                                      "{\n"
                                      "gl_FragColor = texture2D( tex0, gl_TexCoord[0].st);\n"
                                      "}\n");
-    ImageSourceRef _testImg = cinder::loadImage( "/Users/dal/tmp/13.1313.3165.png");
+    _testImg = cinder::loadImage( "/Users/dal/tmp/13.1313.3165.png");
     _testTexture = new cinder::gl::Texture(_testImg);
     _isSetup = true;
 }

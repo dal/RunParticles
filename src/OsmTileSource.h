@@ -21,6 +21,7 @@
 #include <unordered_map>
 
 struct OsmIndex {
+    OsmIndex(unsigned int x, unsigned int y, unsigned int z) : x(x), y(y), z(z) {};
     unsigned int x, y, z;
 };
 
@@ -52,6 +53,10 @@ class OsmTileSource : public QObject
     
 public:
     
+    enum {
+        memCacheSize = 128
+    };
+    
     void getTile(int x, int y, int z);
     
 signals:
@@ -64,7 +69,7 @@ public slots:
     
 protected:
     
-    OsmTileMap tiles;
+    OsmTileMap _memoryTileCache;
     
 };
 

@@ -19,6 +19,7 @@
 #include "cinder/Surface.h"
 #include "math.h"
 #include <unordered_map>
+#include <map>
 
 struct OsmIndex {
     OsmIndex(unsigned int x, unsigned int y, unsigned int z) : x(x), y(y), z(z) {};
@@ -47,6 +48,8 @@ struct OsmHasher
 
 typedef std::unordered_map<OsmIndex, OsmHasher<OsmIndex>> OsmTileMap;
 
+typedef std::map<time_t, OsmIndex> OsmTileTimeMap;
+
 class OsmTileSource : public QObject
 {
     Q_OBJECT
@@ -70,6 +73,8 @@ public slots:
 protected:
     
     OsmTileMap _memoryTileCache;
+    
+    OsmTileTimeMap _memoryTileHistory;
     
 };
 

@@ -16,6 +16,8 @@
 
 #include "Singleton.h"
 
+#include "boost/shared_ptr.hpp"
+
 #include "cinder/Surface.h"
 #include "math.h"
 #include <unordered_map>
@@ -46,7 +48,9 @@ struct OsmHasher
     }
 };
 
-typedef std::unordered_map<OsmIndex, OsmHasher<OsmIndex>> OsmTileMap;
+typedef std::shared_ptr<OsmTile*> OsmTileRef;
+
+typedef std::unordered_map<OsmIndex, OsmTileRef, OsmHasher<OsmIndex>> OsmTileMap;
 
 typedef std::map<time_t, OsmIndex> OsmTileTimeMap;
 
@@ -71,6 +75,8 @@ public slots:
     void onRequestFinished(QNetworkReply *reply);
     
 protected:
+    
+    void _requestTile(const OsmIndex index) const;
     
     OsmTileMap _memoryTileCache;
     

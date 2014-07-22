@@ -1,5 +1,7 @@
 #include "OsmTileSource.h"
 
+#include <QtGlobal>
+
 #include "Singleton.h"
 
 void
@@ -15,8 +17,36 @@ OsmTileSource::getTile(int x, int y, int z)
 }
 
 void
-OsmTileSource::onRequestFinished(QNetworkReply *reply)
+OsmTileSource::onRequestFinished()
 {
+    QObject * sender = QObject::sender();
+    QNetworkReply * reply = qobject_cast<QNetworkReply *>(sender);
+    
+    if (reply == 0)
+    {
+        qWarning("Failed to cast QNetworkReply");
+        return;
+    }
+    
+    reply->deleteLater();
+    
+    if (!_pendingReplies.contains(reply))
+    {
+        qWarning("Unknown QNetworkReply");
+        return;
+    }
+    
+    OsmIndex index = _pendingReplies.take(reply);
+    _pendingRequests.erase(index);
+
+    //If there was a network error, ignore the reply
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qDebug("Network Error: %s", reply->errorString().toAscii().constData());
+        return;
+    }
+    
+    QByteArray bytes = reply->readAll();
     
 }
 

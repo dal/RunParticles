@@ -24,58 +24,59 @@
 #include <map>
 #include <set>
 
-struct OsmIndex {
-    
-    OsmIndex(unsigned int x, unsigned int y, unsigned int z)
-        : x(x), y(y), z(z) {};
-    
-    unsigned int x, y, z;
-    
-    std::size_t hash() const {
-        unsigned long offset = 0;
-        for (unsigned int i=1; i < this->z; i++) {
-            offset += pow(2, 2*i);
-        }
-        int edge = pow(2, this->z);
-        return std::size_t(offset + this->x * edge + this->y);
-    }
-    
-    bool operator==(const OsmIndex other) const {
-        return hash() == other.hash();
-    }
-    
-    bool operator<(const OsmIndex other) const {
-        return hash() < other.hash();
-    }
-};
-
-struct OsmTile {
-    OsmIndex index;
-    std::shared_ptr<unsigned int*> _imageData;
-    cinder::Surface *surface;
-};
-
-template<typename T>
-struct OsmHasher
-{
-    std::size_t operator()(const T& t) const
-    {
-        return t.hash();
-    }
-};
-
-typedef std::shared_ptr<OsmTile*> OsmTileRef;
-
-typedef std::unordered_map<OsmIndex, OsmTileRef, OsmHasher<OsmIndex>>
-    OsmTileMap;
-
-typedef std::map<time_t, OsmIndex> OsmTileTimeMap;
-
-typedef QMap<QNetworkReply*, OsmIndex> OsmReplyMap;
-
 class OsmTileSource : public QObject
 {
     Q_OBJECT
+    
+    struct OsmIndex {
+        
+        OsmIndex(unsigned int x, unsigned int y, unsigned int z)
+        : x(x), y(y), z(z) {};
+        
+        unsigned int x, y, z;
+        
+        std::size_t hash() const {
+            unsigned long offset = 0;
+            for (unsigned int i=1; i < this->z; i++) {
+                offset += pow(2, 2*i);
+            }
+            int edge = pow(2, this->z);
+            return std::size_t(offset + this->x * edge + this->y);
+        }
+        
+        bool operator==(const OsmIndex other) const {
+            return hash() == other.hash();
+        }
+        
+        bool operator<(const OsmIndex other) const {
+            return hash() < other.hash();
+        }
+    };
+    
+    struct OsmTile {
+        OsmIndex index;
+        std::shared_ptr<unsigned int*> _imageData;
+        cinder::Surface *surface;
+    };
+    
+    template<typename T>
+    struct OsmHasher
+    {
+        std::size_t operator()(const T& t) const
+        {
+            return t.hash();
+        }
+    };
+    
+    typedef std::shared_ptr<OsmTile*> OsmTileRef;
+    
+    typedef std::unordered_map<OsmIndex, OsmTileRef, OsmHasher<OsmIndex>>
+    OsmTileMap;
+    
+    typedef std::map<time_t, OsmIndex> OsmTileTimeMap;
+    
+    typedef QMap<QNetworkReply*, OsmIndex> OsmReplyMap;
+
     
 public:
     
@@ -91,7 +92,7 @@ signals:
     
 public slots:
     
-    void onRequestFinished(QNetworkReply *reply);
+    void onRequestFinished();
     
 protected:
     

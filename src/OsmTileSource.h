@@ -30,6 +30,8 @@ class OsmTileSource : public QObject
     
     struct OsmIndex {
         
+        OsmIndex() : x(0), y(0), z(0) {};
+        
         OsmIndex(unsigned int x, unsigned int y, unsigned int z)
         : x(x), y(y), z(z) {};
         
@@ -54,9 +56,12 @@ class OsmTileSource : public QObject
     };
     
     struct OsmTile {
+        OsmTile(OsmIndex i, QByteArray d, cinder::Surface s)
+            : index(i), data(d), surface(s) {};
+        
         OsmIndex index;
-        std::shared_ptr<unsigned int*> _imageData;
-        cinder::Surface *surface;
+        QByteArray data;
+        cinder::Surface surface;
     };
     
     template<typename T>
@@ -70,8 +75,8 @@ class OsmTileSource : public QObject
     
     typedef std::shared_ptr<OsmTile*> OsmTileRef;
     
-    typedef std::unordered_map<OsmIndex, OsmTileRef, OsmHasher<OsmIndex>>
-    OsmTileMap;
+    typedef std::unordered_map<OsmIndex, OsmTile, OsmHasher<OsmIndex>>
+        OsmTileMap;
     
     typedef std::map<time_t, OsmIndex> OsmTileTimeMap;
     

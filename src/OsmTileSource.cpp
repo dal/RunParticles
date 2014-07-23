@@ -4,6 +4,10 @@
 
 #include "Singleton.h"
 
+#include <cinder/Buffer.h>
+#include <cinder/DataSource.h>
+#include <cinder/imageIO.h>
+
 void
 OsmTileSource::getTile(int x, int y, int z)
 {
@@ -48,6 +52,13 @@ OsmTileSource::onRequestFinished()
     
     QByteArray bytes = reply->readAll();
     
+    cinder::Buffer buffer((void*)bytes.constData(), bytes.size() + 1);
+    cinder::DataSourceBufferRef data = cinder::DataSourceBuffer::create(buffer);
+    cinder::Surface8u surface(cinder::loadImage(data,
+                                                cinder::ImageSource::Options(),
+                                                "png"));
+    _memoryTileCache.insert(
+        std::pair<OsmIndex, OsmTile>(index, OsmTile(index, bytes, surface)));
 }
 
 void

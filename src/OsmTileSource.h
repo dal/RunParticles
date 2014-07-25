@@ -24,6 +24,9 @@
 #include <map>
 #include <set>
 
+typedef std::shared_ptr<cinder::Surface8u> Surface8uRef;
+typedef std::weak_ptr<cinder::Surface8u> Surface8uPtr;
+
 class OsmTileSource : public QObject
 {
     Q_OBJECT
@@ -56,12 +59,12 @@ class OsmTileSource : public QObject
     };
     
     struct OsmTile {
-        OsmTile(OsmIndex i, QByteArray d, cinder::Surface s)
-            : index(i), data(d), surface(s) {};
+        OsmTile() { };
+        OsmTile(OsmIndex idx, cinder::Surface *surf)
+            : index(idx), surface(surf) {};
         
         OsmIndex index;
-        QByteArray data;
-        cinder::Surface surface;
+        Surface8uRef surface;
     };
     
     template<typename T>
@@ -90,6 +93,8 @@ public:
     };
     
     void getTile(int x, int y, int z);
+    
+    Surface8uPtr retrieveFinishedTile(int x, int y, int z);
     
 signals:
     

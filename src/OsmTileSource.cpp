@@ -11,13 +11,20 @@
 void
 OsmTileSource::getTile(int x, int y, int z)
 {
-    OsmIndex index = OsmIndex(z, x, y);
+    OsmIndex index = OsmIndex(x, y, z);
     if (_memoryTileCache.find(index) != _memoryTileCache.end()) {
         emit tileReady(x, y, z);
         return;
     }
     
     _requestTile(index);
+}
+
+Surface8uPtr
+OsmTileSource::retrieveFinishedTile(int x, int y, int z)
+{
+    OsmIndex idx(x, y, z);
+    return _memoryTileCache[idx].surface;
 }
 
 void
@@ -54,11 +61,13 @@ OsmTileSource::onRequestFinished()
     
     cinder::Buffer buffer((void*)bytes.constData(), bytes.size() + 1);
     cinder::DataSourceBufferRef data = cinder::DataSourceBuffer::create(buffer);
-    cinder::Surface8u surface(cinder::loadImage(data,
-                                                cinder::ImageSource::Options(),
-                                                "png"));
+    cinder::Surface8u *surf = new cinder::Surface8u(cinder::loadImage(data,
+                                                    cinder::ImageSource::Options(),
+                                                    "png"));
     _memoryTileCache.insert(
-        std::pair<OsmIndex, OsmTile>(index, OsmTile(index, bytes, surface)));
+        std::pair<OsmIndex, OsmTile>(index, OsmTile(index, surf)));
+    
+    emit tileReady(index.x, index.y, index.z);
 }
 
 void

@@ -9,7 +9,7 @@
 #include <cinder/imageIO.h>
 
 void
-OsmTileSource::getTile(int x, int y, int z)
+OsmTileSource::getTile(unsigned int x, unsigned int y, unsigned int z)
 {
     OsmIndex index = OsmIndex(x, y, z);
     if (_memoryTileCache.find(index) != _memoryTileCache.end()) {
@@ -20,11 +20,13 @@ OsmTileSource::getTile(int x, int y, int z)
     _requestTile(index);
 }
 
-Surface8uPtr
-OsmTileSource::retrieveFinishedTile(int x, int y, int z)
+cinder::Surface8u&
+OsmTileSource::retrieveFinishedTile(unsigned int x,
+                                    unsigned int y,
+                                    unsigned int z)
 {
     OsmIndex idx(x, y, z);
-    return _memoryTileCache[idx].surface;
+    return *_memoryTileCache[idx].surface;
 }
 
 void
@@ -73,6 +75,7 @@ OsmTileSource::onRequestFinished()
 void
 OsmTileSource::_requestTile(const OsmIndex index)
 {
+    //qDebug("x %d y %d z %d h %d", index.x, index.y, index.z, index.hash());
     if (_pendingRequests.find(index) != _pendingRequests.end())
         return;
     _pendingRequests.insert(index);
@@ -81,9 +84,11 @@ OsmTileSource::_requestTile(const OsmIndex index)
                                                QString::number(index.x),
                                                QString::number(index.y));
     QNetworkRequest request = QNetworkRequest(QUrl(host + url));
+    request.setRawHeader("User-Agent", DEFAULT_USER_AGENT);
     
     QNetworkAccessManager *network =
         &Singleton<QNetworkAccessManager>::Instance();
+    qDebug("GET %s%s", host.toAscii().constData(), url.toAscii().constData());
     QNetworkReply *reply = network->get(request);
     _pendingReplies.insert(reply, index);
     QObject::connect(reply,

@@ -27,13 +27,14 @@ double tiley2lat(int y, int z)
 	return 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
 }
 
-void _drawQuad(const MapPoint &upperLeft, float width)
+void _drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight)
 {
     gl::drawSolidRect(Rectf(upperLeft.x, upperLeft.y,
-                            upperLeft.x + width, upperLeft.y - width));
+                            lowerRight.x, lowerRight.y));
 }
 
 OsmLayer::OsmLayer() : Layer(),
+    _tileSource(new OsmTileSource()),
     _worldSize(0.0),
     _tileSize(1.0),
     _currentZoom(0),
@@ -42,7 +43,8 @@ OsmLayer::OsmLayer() : Layer(),
     _shader(new QGLShaderProgram),
     _isSetup(false)
 {
-    
+    connect(_tileSource, SIGNAL(tileReady(unsigned int, unsigned int, unsigned int)),
+            SLOT(onTileReady(unsigned int, unsigned int, unsigned int)));
 }
 
 OsmLayer::~OsmLayer()
@@ -114,25 +116,36 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
         _setup();
 
     gl::color( Color( 1, 1, 1 ) );
+    OsmIndexSet visibleTiles;
     for (int x=upperLeftX; x <= lowerRightX && x < (int)_numEdgeTiles; x++) {
-        for (int y=upperLeftY; y <= lowerRightY && y < (int)_numEdgeTiles; y++) {
-            double tileUpperLeftX = _worldTopLeft.x + (_worldSize * ((double)x / (double)_numEdgeTiles));
-            double tileUpperLeftY = _worldTopLeft.y - (_worldSize * ((double)y / (double)_numEdgeTiles));
-            double tileLowerRightX = tileUpperLeftX + _tileSize;
-            double tileLowerRightY = tileUpperLeftY - _tileSize;
-            gl::drawStrokedRect(RectT<float>(tileUpperLeftX, tileUpperLeftY,
-                                             tileLowerRightX, tileLowerRightY));
+        for (int y=upperLeftY; y <= lowerRightY && y < (int)_numEdgeTiles; y++)
+        {
+            OsmIndex idx(x, y, _currentZoom);
+            visibleTiles.insert(idx);
+            if (_tiles.find(idx) == _tiles.end()) {
+                Tile *newTile = new Tile();
+                newTile->shader = _shader;
+                newTile->index = idx;
+                newTile->upperLeft.x = _worldTopLeft.x +
+                    (_worldSize * ((double)x / (double)_numEdgeTiles));
+                newTile->upperLeft.y = _worldTopLeft.y -
+                    (_worldSize * ((double)y / (double)_numEdgeTiles));
+                newTile->lowerRight.x = newTile->upperLeft.x + _tileSize;
+                newTile->lowerRight.y = newTile->upperLeft.y - _tileSize;
+                _tileSource->getTile(idx.x, idx.y, idx.z);
+                _tiles.insert(std::pair<OsmIndex, Tile*>(idx, newTile));
+            }
         }
     }
     
-    /*
-    _testTexture->enableAndBind();
-	_shader->bind();
-	_shader->setUniformValue(_shader->uniformLocation("tex0"), 0 );
-    _drawQuad(_testTilePos, _testTileWidth);
-    _testTexture->unbind();
-    _shader->release();
-    */
+    for (TileMap::iterator i=_tiles.begin(); i != _tiles.end(); i++) {
+        if (visibleTiles.find(i->first) == visibleTiles.end()) {
+            delete i->second;
+            _tiles.erase(i);
+        } else {
+            i->second->draw();
+        }
+    }
 }
 
 BoundingBox
@@ -145,6 +158,40 @@ MapPoint
 OsmLayer::position() const
 {
     return MapPoint(0., 0.);
+}
+
+void
+OsmLayer::onTileReady(unsigned int x, unsigned int y, unsigned int z)
+{
+    OsmIndex idx = OsmIndex(x, y, z);
+    TileMap::iterator i = _tiles.find(idx);
+    if (i != _tiles.end()) {
+        i->second->setTexture(_tileSource->retrieveFinishedTile(x, y, z));
+    }
+}
+
+OsmLayer::Tile::Tile() : texture(NULL), shader(NULL)
+{
+    
+}
+
+void
+OsmLayer::Tile::draw()
+{
+    if (!texture)
+        return;
+    texture->enableAndBind();
+	shader->bind();
+	shader->setUniformValue(shader->uniformLocation("tex0"), 0 );
+    _drawQuad(upperLeft, lowerRight);
+    texture->unbind();
+    shader->release();
+}
+
+void
+OsmLayer::Tile::setTexture(const Surface8u &surface)
+{
+    texture = new cinder::gl::Texture(surface);
 }
 
 uint
@@ -165,8 +212,6 @@ OsmLayer::_setup()
                                      "{\n"
                                      "gl_FragColor = texture2D( tex0, gl_TexCoord[0].st);\n"
                                      "}\n");
-    _testImg = cinder::loadImage( "/Users/dal/tmp/13.1313.3165.png");
-    _testTexture = new cinder::gl::Texture(_testImg);
     _isSetup = true;
 }
 
@@ -180,3 +225,4 @@ OsmLayer::_getTileXYAtMapPoint(const MapPoint &pos, int *x, int *y) const
     *x = (*x < 0) ? 0 : *x;
     *y = (*y < 0) ? 0 : *y;
 }
+

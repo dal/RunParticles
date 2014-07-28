@@ -12,6 +12,7 @@
 #include <set>
 #include <QString>
 #include <QDateTime>
+#include <QObject>
 
 #include "BoundingBox.h"
 #include "Projection.h"
@@ -24,11 +25,14 @@ class TimeCtx;
 
 typedef unsigned int LayerId;
 
-class Layer
+class Layer : public QObject
 {
+    
+    Q_OBJECT
+    
 public:
     
-    Layer() : _id(Layer::getNextId()), _visible(true) {};
+    Layer() : QObject(), _id(Layer::getNextId()), _visible(true) {};
     
     virtual ~Layer() {};
     

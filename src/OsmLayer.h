@@ -2,6 +2,7 @@
 #define OSMLAYER_H
 
 #include "Layer.h"
+#include "OsmTileSource.h"
 #include "Types.h"
 #include "ViewCtx.h"
 
@@ -10,10 +11,15 @@
 #include "cinder/CinderResources.h"
 #include "cinder/gl/Texture.h"
 
+#include <unordered_map>
+
+#include <QObject>
 #include <QGLShaderProgram>
 
 class OsmLayer : public Layer
 {
+    
+    Q_OBJECT
     
     enum {
         Pass_BaseMap = PassLayer_Background + 1,
@@ -50,7 +56,32 @@ public:
     
     MapPoint position() const;
     
+public slots:
+
+    void onTileReady(unsigned int x, unsigned int y, unsigned int z);
+    
 protected:
+    
+    struct Tile
+    {
+        Tile();
+        gl::Texture *texture;
+        OsmIndex index;
+        MapPoint upperLeft;
+        MapPoint lowerRight;
+        QGLShaderProgram *shader;
+        
+        void setTexture(const Surface8u &surface);
+        
+        void draw();
+    };
+    
+    typedef std::unordered_map<OsmIndex, Tile*, OsmHasher<OsmIndex>> TileMap;
+    
+    OsmTileSource *_tileSource;
+    
+    TileMap _tiles;
+    
     uint _getZoomLevel(double resolution) const;
     
     void _setup();
@@ -61,17 +92,13 @@ protected:
     
     double _worldSize, _tileSize;
     
-    unsigned int _currentZoom, _numEdgeTiles;
+    unsigned int _currentZoom, _lastZoom, _numEdgeTiles;
     
     double _lastResolution;
     
     float _resolutions[numZoomLevels];
     
     QGLShaderProgram *_shader;
-    
-    gl::Texture	*_testTexture;
-    
-    ImageSourceRef _testImg;
     
     MapPoint _testTilePos;
     

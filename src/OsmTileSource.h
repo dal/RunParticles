@@ -21,42 +21,54 @@
 #include "cinder/Surface.h"
 #include "math.h"
 #include <unordered_map>
+#include <unordered_set>
 #include <map>
 #include <set>
 
 typedef std::shared_ptr<cinder::Surface8u> Surface8uRef;
 typedef std::weak_ptr<cinder::Surface8u> Surface8uPtr;
 
+struct OsmIndex {
+    
+    OsmIndex() : x(0), y(0), z(0) {};
+    
+    OsmIndex(unsigned int x, unsigned int y, unsigned int z)
+    : x(x), y(y), z(z) {};
+    
+    unsigned int x, y, z;
+    
+    std::size_t hash() const {
+        unsigned long offset = 0;
+        for (unsigned int i=1; i < this->z; i++) {
+            offset += pow(2, 2*i);
+        }
+        int edge = pow(2, this->z);
+        return std::size_t(offset + this->x * edge + this->y);
+    }
+    
+    bool operator==(const OsmIndex other) const {
+        return hash() == other.hash();
+    }
+    
+    bool operator<(const OsmIndex other) const {
+        return hash() < other.hash();
+    }
+};
+
+template<typename T>
+struct OsmHasher
+{
+    std::size_t operator()(const T& t) const
+    {
+        return t.hash();
+    }
+};
+
+typedef std::unordered_set<OsmIndex, OsmHasher<OsmIndex>> OsmIndexSet;
+
 class OsmTileSource : public QObject
 {
     Q_OBJECT
-    
-    struct OsmIndex {
-        
-        OsmIndex() : x(0), y(0), z(0) {};
-        
-        OsmIndex(unsigned int x, unsigned int y, unsigned int z)
-        : x(x), y(y), z(z) {};
-        
-        unsigned int x, y, z;
-        
-        std::size_t hash() const {
-            unsigned long offset = 0;
-            for (unsigned int i=1; i < this->z; i++) {
-                offset += pow(2, 2*i);
-            }
-            int edge = pow(2, this->z);
-            return std::size_t(offset + this->x * edge + this->y);
-        }
-        
-        bool operator==(const OsmIndex other) const {
-            return hash() == other.hash();
-        }
-        
-        bool operator<(const OsmIndex other) const {
-            return hash() < other.hash();
-        }
-    };
     
     struct OsmTile {
         OsmTile() { };
@@ -67,14 +79,7 @@ class OsmTileSource : public QObject
         Surface8uRef surface;
     };
     
-    template<typename T>
-    struct OsmHasher
-    {
-        std::size_t operator()(const T& t) const
-        {
-            return t.hash();
-        }
-    };
+    const QByteArray DEFAULT_USER_AGENT = "RunParticles";
     
     typedef std::shared_ptr<OsmTile*> OsmTileRef;
     
@@ -84,7 +89,6 @@ class OsmTileSource : public QObject
     typedef std::map<time_t, OsmIndex> OsmTileTimeMap;
     
     typedef QMap<QNetworkReply*, OsmIndex> OsmReplyMap;
-
     
 public:
     
@@ -92,13 +96,15 @@ public:
         memCacheSize = 128
     };
     
-    void getTile(int x, int y, int z);
+    void getTile(unsigned int x, unsigned int y, unsigned int z);
     
-    Surface8uPtr retrieveFinishedTile(int x, int y, int z);
+    cinder::Surface8u& retrieveFinishedTile(unsigned int x,
+                                      unsigned int y,
+                                      unsigned int z);
     
 signals:
     
-    void tileReady(int x, int y, int z);
+    void tileReady(unsigned int x, unsigned int y, unsigned int z);
     
 public slots:
     
@@ -112,7 +118,7 @@ protected:
     
     OsmTileTimeMap _memoryTileHistory;
     
-    std::set<OsmIndex>_pendingRequests;
+    OsmIndexSet _pendingRequests;
     
     OsmReplyMap _pendingReplies;
     

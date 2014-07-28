@@ -354,6 +354,22 @@
 					);
 			};
 		};
+		C5D4AAB44800959EA92BC3D5 = {
+			isa = PBXFileReference;
+			name = "moc_Layer.cpp";
+			path = "moc_Layer.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		98FCC527FBF6BD858FA3FE2C = {
+			fileRef = "C5D4AAB44800959EA92BC3D5";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		CF7C2F15179E06A0F644BF72 = {
 			isa = PBXFileReference;
 			name = "moc_LayerListWidget.cpp";
@@ -396,6 +412,22 @@
 		};
 		88CA52E89813A0BB940BCB52 = {
 			fileRef = "A80D9B274C4631DFF5DE9F09";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		A8BBB947EA6A226FBE4173EA = {
+			isa = PBXFileReference;
+			name = "moc_OsmLayer.cpp";
+			path = "moc_OsmLayer.cpp";
+			refType = 4;
+			sourceTree = "SOURCE_ROOT";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		D73DFCB2D13A3190A84175BA = {
+			fileRef = "A8BBB947EA6A226FBE4173EA";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -671,9 +703,11 @@
 			isa = PBXGroup;
 			children = (
 				"1B676BCE814D278338617BB7",
+				"C5D4AAB44800959EA92BC3D5",
 				"CF7C2F15179E06A0F644BF72",
 				"26827F2FC4DC4FBB23DE8287",
 				"A80D9B274C4631DFF5DE9F09",
+				"A8BBB947EA6A226FBE4173EA",
 				"301B8D4F7C44B411BB95324E");
 			name = "Temporary Sources";
 			refType = 4;
@@ -705,9 +739,11 @@
 				"A6AC75A31FA5A448EC00DAD9",
 				"200C5A054FD19CF20DCF4EB8",
 				"46EC2FFE3CF896C7F01CC623",
+				"98FCC527FBF6BD858FA3FE2C",
 				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
 				"88CA52E89813A0BB940BCB52",
+				"D73DFCB2D13A3190A84175BA",
 				"824DCAD9F221413529995963");
 			isa = PBXShellScriptBuildPhase;
 			name = "Qt Preprocessors";
@@ -733,9 +769,11 @@
 				"A6AC75A31FA5A448EC00DAD9",
 				"200C5A054FD19CF20DCF4EB8",
 				"46EC2FFE3CF896C7F01CC623",
+				"98FCC527FBF6BD858FA3FE2C",
 				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
 				"88CA52E89813A0BB940BCB52",
+				"D73DFCB2D13A3190A84175BA",
 				"824DCAD9F221413529995963");
 			shellPath = "/bin/sh";
 			shellScript = "make\ -C\ /Users/dal/Documents/cinder/RunParticles/xcode\ -f\ \'RunParticles.xcodeproj/qt_preprocess.mak\'";
@@ -764,9 +802,11 @@
 				"A6AC75A31FA5A448EC00DAD9",
 				"200C5A054FD19CF20DCF4EB8",
 				"46EC2FFE3CF896C7F01CC623",
+				"98FCC527FBF6BD858FA3FE2C",
 				"E1FA0A5D5781EC9E9343DC09",
 				"A4582233947FB7FB159573BB",
 				"88CA52E89813A0BB940BCB52",
+				"D73DFCB2D13A3190A84175BA",
 				"824DCAD9F221413529995963");
 			isa = PBXSourcesBuildPhase;
 			name = "Build Sources";

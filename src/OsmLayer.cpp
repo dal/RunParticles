@@ -1,6 +1,8 @@
 
 #include "OsmLayer.h"
 
+#include <stdio.h>
+
 // This is the total number of meters in the world -180. - 180 W,
 #define MAXLAT 85.0511287798066
 #define MAXLON 180.0
@@ -13,7 +15,9 @@ int long2tilex(double lon, int z)
 
 int lat2tiley(double lat, int z)
 {
-	return (int)(floor((1.0 - log( tan(lat * M_PI/180.0) + 1.0 / cos(lat * M_PI/180.0)) / M_PI) / 2.0 * pow(2.0, z)));
+	return (int)(floor((1.0 - log( tan(lat * M_PI/180.0) + 1.0 /
+                                  cos(lat * M_PI/180.0)) / M_PI) /
+                       2.0 * pow(2.0, z)));
 }
 
 double tilex2long(int x, int z)
@@ -86,11 +90,6 @@ OsmLayer::project(const Projection &projection)
     _worldSize = _worldTopLeft.y - _worldLowerRight.y;
     for (int i = 0; i < numZoomLevels; i++)
         _resolutions[i] = (_worldSize / (1 << i)) / pixelsPerTile;
-    // a test tile
-    double lat = tiley2lat(3165, 13);
-    _testTilePos = projection.toProjection(LonLat(tilex2long(1313, 13), lat));
-    MapPoint leftTile = projection.toProjection(LonLat(tilex2long(1312, 13), lat));
-    _testTileWidth = _testTilePos.x - leftTile.x;
 }
 
 void
@@ -104,7 +103,6 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
         _currentZoom = _getZoomLevel(viewCtx.getResolution());
         _numEdgeTiles = pow(2., _currentZoom);
         _tileSize = _worldSize / _numEdgeTiles;
-        qDebug("Zoom level %d", _currentZoom);
     }
     
     BoundingBox viewport = viewCtx.getBoundingBox();
@@ -122,7 +120,8 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
         {
             OsmIndex idx(x, y, _currentZoom);
             visibleTiles.insert(idx);
-            if (_tiles.find(idx) == _tiles.end()) {
+            TileMap::iterator i = _tiles.find(idx);
+            if (i == _tiles.end()) {
                 Tile *newTile = new Tile();
                 newTile->shader = _shader;
                 newTile->index = idx;
@@ -132,8 +131,8 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
                     (_worldSize * ((double)y / (double)_numEdgeTiles));
                 newTile->lowerRight.x = newTile->upperLeft.x + _tileSize;
                 newTile->lowerRight.y = newTile->upperLeft.y - _tileSize;
-                _tileSource->getTile(idx.x, idx.y, idx.z);
                 _tiles.insert(std::pair<OsmIndex, Tile*>(idx, newTile));
+                _tileSource->getTile(idx.x, idx.y, idx.z);
             }
         }
     }
@@ -178,14 +177,14 @@ OsmLayer::Tile::Tile() : texture(NULL), shader(NULL)
 void
 OsmLayer::Tile::draw()
 {
-    if (!texture)
-        return;
-    texture->enableAndBind();
-	shader->bind();
-	shader->setUniformValue(shader->uniformLocation("tex0"), 0 );
-    _drawQuad(upperLeft, lowerRight);
-    texture->unbind();
-    shader->release();
+    if (texture != NULL) {
+        texture->enableAndBind();
+        shader->bind();
+        shader->setUniformValue(shader->uniformLocation("tex0"), 0 );
+        _drawQuad(upperLeft, lowerRight);
+        texture->unbind();
+        shader->release();
+    }
 }
 
 void

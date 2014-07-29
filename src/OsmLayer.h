@@ -100,10 +100,6 @@ protected:
     
     QGLShaderProgram *_shader;
     
-    MapPoint _testTilePos;
-    
-    int _testTileWidth;
-    
     bool _isSetup;
     
 };

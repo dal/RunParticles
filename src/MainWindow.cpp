@@ -105,14 +105,12 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _layerListWidget->show();
     
     // DEBUG
-    /*
     OsmLayer *bgLayer = new OsmLayer();
     _glWidget->getMap()->addLayer(bgLayer);
     QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
     loadTrackFile(pathTwo);
     QString pathThree("/Users/dal/Documents/gps/exports/all2013.tcx");
     loadTrackFile(pathThree);
-    */
     _loadBaseMap();
 }
 

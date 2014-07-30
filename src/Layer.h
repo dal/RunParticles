@@ -63,6 +63,10 @@ public:
     
     virtual bool ephemeral() const;
     
+signals:
+    
+    void layerUpdated();
+    
 protected:
     static LayerId getNextId() { return _gid++; }
     

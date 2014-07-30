@@ -41,6 +41,7 @@ Map::addLayer(Layer *layer)
     PassMap layerPasses = layer->passes();
     _passes.insert(layerPasses.begin(), layerPasses.end());
     _duration = (layer->duration() > _duration) ? layer->duration() : _duration;
+    connect(layer, SIGNAL(layerUpdated()), SIGNAL(layerUpdated()));
     emit(signalLayerAdded());
     return true;
 }
@@ -59,3 +60,4 @@ Map::onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const
     }
     return false;
 }
+

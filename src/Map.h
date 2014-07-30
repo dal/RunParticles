@@ -49,6 +49,10 @@ public slots:
     
     bool onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const;
     
+signals:
+    
+    void layerUpdated();
+    
 private:
     
     const Projection _projection;

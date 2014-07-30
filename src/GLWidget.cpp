@@ -17,7 +17,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
     _playMode(PlayMode_Pause),
     _map(map),
-    timer(new QTimer(this)),
+    _timer(new QTimer(this)),
+    _idleTimer(new QTimer(this)),
     _fullScreen(false),
     _lockToLayer(false)
 {
@@ -38,8 +39,11 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
             this, SLOT(slotLayerSelected(LayerId)));
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->setInterval(Refresh_Interval);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(_map, SIGNAL(layerUpdated()), SLOT(updateWhenReady()));
+    _timer->setInterval(Refresh_Interval);
+    _idleTimer->setSingleShot(true);
+    connect(_idleTimer, SIGNAL(timeout()), SLOT(updateGL()));
 }
 
 void
@@ -251,7 +255,7 @@ GLWidget::slotPlay()
         _timeCtx.setPlaybackRate(-_timeCtx.getPlaybackRate());
     _playMode = PlayMode_Play;
     elapsedTimer.restart();
-    timer->start();
+    _timer->start();
 }
 
 void
@@ -259,7 +263,7 @@ GLWidget::slotPause()
 {
     _playMode = PlayMode_Pause;
     elapsedTimer.invalidate();
-    timer->stop();
+    _timer->stop();
 }
 
 void
@@ -278,7 +282,7 @@ GLWidget::slotReverse()
     if (_timeCtx.getPlaybackRate() >= 0)
         _timeCtx.setPlaybackRate(-_timeCtx.getPlaybackRate());
     elapsedTimer.restart();
-    timer->start();
+    _timer->start();
 }
 
 void
@@ -365,5 +369,13 @@ GLWidget::slotLayerSelected(LayerId layerId)
     QList<LayerId> layers;
     layers << layerId;
     emit(signalLayersSelected(layers));
+}
+
+void
+GLWidget::updateWhenReady()
+{
+    // update the GL view when idle
+    if (!_timer->isActive() && !_idleTimer->isActive())
+        _idleTimer->start(0);
 }
 

@@ -98,6 +98,8 @@ public slots:
     
     void slotLayerSelected(LayerId layerId);
     
+    void updateWhenReady();
+    
 signals:
     
     void signalTimeChanged(double);
@@ -132,7 +134,7 @@ protected:
     
     QElapsedTimer elapsedTimer;
     
-    QTimer *timer;
+    QTimer *_timer, *_idleTimer;
     
     bool _fullScreen;
     

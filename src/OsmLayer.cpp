@@ -106,22 +106,21 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     }
     
     BoundingBox viewport = viewCtx.getBoundingBox();
-    int upperLeftX, upperLeftY, lowerRightX, lowerRightY;
+    unsigned int upperLeftX, upperLeftY, lowerRightX, lowerRightY;
     _getTileXYAtMapPoint(viewport.upperLeft, &upperLeftX, &upperLeftY);
     _getTileXYAtMapPoint(viewport.lowerRight, &lowerRightX, &lowerRightY);
     
     if (!_isSetup)
         _setup();
 
-    gl::color( Color( 1, 1, 1 ) );
     OsmIndexSet visibleTiles;
-    for (int x=upperLeftX; x <= lowerRightX && x < (int)_numEdgeTiles; x++) {
-        for (int y=upperLeftY; y <= lowerRightY && y < (int)_numEdgeTiles; y++)
+    for (unsigned int x = upperLeftX; x <= lowerRightX && x < _numEdgeTiles; x++) {
+        for (unsigned int y=upperLeftY; y <= lowerRightY && y < _numEdgeTiles; y++)
         {
             OsmIndex idx(x, y, _currentZoom);
             visibleTiles.insert(idx);
-            TileMap::iterator i = _tiles.find(idx);
-            if (i == _tiles.end()) {
+            TileMap::iterator foundTile = _tiles.find(idx);
+            if (foundTile == _tiles.end()) {
                 Tile *newTile = new Tile();
                 newTile->shader = _shader;
                 newTile->index = idx;
@@ -133,16 +132,18 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
                 newTile->lowerRight.y = newTile->upperLeft.y - _tileSize;
                 _tiles.insert(std::pair<OsmIndex, Tile*>(idx, newTile));
                 _tileSource->getTile(idx.x, idx.y, idx.z);
+                newTile->draw();
+            } else {
+                foundTile->second->draw();
             }
         }
     }
     
+    // clean up tiles we no longer display
     for (TileMap::iterator i=_tiles.begin(); i != _tiles.end(); i++) {
         if (visibleTiles.find(i->first) == visibleTiles.end()) {
             delete i->second;
             _tiles.erase(i);
-        } else {
-            i->second->draw();
         }
     }
 }
@@ -166,6 +167,7 @@ OsmLayer::onTileReady(unsigned int x, unsigned int y, unsigned int z)
     TileMap::iterator i = _tiles.find(idx);
     if (i != _tiles.end()) {
         i->second->setTexture(_tileSource->retrieveFinishedTile(x, y, z));
+        emit layerUpdated();
     }
 }
 
@@ -177,6 +179,12 @@ OsmLayer::Tile::Tile() : texture(NULL), shader(NULL)
 void
 OsmLayer::Tile::draw()
 {
+    // debug, draw diagonal lines
+    gl::color( Color( 1, 1, 1 ) );
+    gl::drawLine(upperLeft, lowerRight);
+    gl::drawLine(Vec2f(upperLeft.x, lowerRight.y),
+                 Vec2f(lowerRight.x, upperLeft.y));
+    // end debug diagonal lines
     if (texture != NULL) {
         texture->enableAndBind();
         shader->bind();
@@ -216,12 +224,14 @@ OsmLayer::_setup()
 
 
 void
-OsmLayer::_getTileXYAtMapPoint(const MapPoint &pos, int *x, int *y) const
+OsmLayer::_getTileXYAtMapPoint(const MapPoint &pos,
+                               unsigned int *x,
+                               unsigned int *y) const
 {
-    
-    *x = int(floor(_numEdgeTiles * ((pos.x - _worldTopLeft.x) / _worldSize)));
-    *y = int(floor(_numEdgeTiles * (_worldTopLeft.y - pos.y) / _worldSize));
-    *x = (*x < 0) ? 0 : *x;
-    *y = (*y < 0) ? 0 : *y;
+    int px, py;
+    px = int(floor(_numEdgeTiles * ((pos.x - _worldTopLeft.x) / _worldSize)));
+    py = int(floor(_numEdgeTiles * (_worldTopLeft.y - pos.y) / _worldSize));
+    *x = (px < 0) ? 0 : px;
+    *y = (py < 0) ? 0 : py;
 }
 

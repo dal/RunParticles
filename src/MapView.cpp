@@ -19,7 +19,8 @@
  */
 
 MapView::MapView() :
-    mCurrentCam(CameraOrtho())
+    mCurrentCam(CameraOrtho()),
+    _aspectRatio(1.0)
 { 
     
 }
@@ -77,6 +78,7 @@ void MapView::mouseDrag(const Vec2f &mouseDelta,
 void
 MapView::resize(int oldWidth, int oldHeight, int newWidth, int newHeight)
 {
+    _aspectRatio = (float)newWidth / (float)newHeight;
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
     mCurrentCam.getFrustum(&oldLeft,
                            &oldTop,
@@ -105,7 +107,8 @@ MapView::getCamera() const
 void
 MapView::setCurrentCam( CameraOrtho &aCurrentCam )
 { 
-    mCurrentCam = aCurrentCam; 
+    mCurrentCam = aCurrentCam;
+    _aspectRatio = mCurrentCam.getAspectRatio();
 }
 
 void
@@ -120,11 +123,9 @@ MapView::zoom(const float amount)
                            &oldFar);
     float size = (amount == 0) ? 1.0 : 1.0 + amount * 0.002;
     float width = fabsf(oldRight - oldLeft);
-    float height = fabsf(oldTop - oldBottom);
-    double aspect = height / width;
     MapPoint ctr((oldLeft+oldRight)*0.5, (oldBottom+oldTop)*0.5);
     float hsize = width * size * 0.5;
-    float vsize = hsize * aspect;
+    float vsize = hsize / _aspectRatio;
     mCurrentCam.setOrtho(ctr.x - hsize,
                          ctr.x + hsize,
                          ctr.y - vsize,

@@ -42,6 +42,7 @@ private:
     enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };
     
     CameraOrtho	mCurrentCam;
+    float _aspectRatio;
 };
 
 #endif

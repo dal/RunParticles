@@ -1031,32 +1031,6 @@
 			settings = {
 			};
 		};
-		87B941E8EB46B1E26289A4D8 = {
-			isa = PBXFileReference;
-			name = "libboost_thread.a";
-			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_thread.a";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		8B5542686E1BE23AC80C1F4B = {
-			fileRef = "87B941E8EB46B1E26289A4D8";
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		84B90F5664CE65067F1639BC = {
-			isa = PBXFileReference;
-			name = "libboost_regex.a";
-			path = "/usr/local/cinder_0.8.5_mac/lib/macosx/libboost_regex.a";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		1F8BE8CCB21853C76F99E213 = {
-			fileRef = "84B90F5664CE65067F1639BC";
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		B42AA02B4D19934453CAFFD0 = {
 			isa = PBXFileReference;
 			name = "libcairo.a";
@@ -1198,8 +1172,6 @@
 				"0E710D5040069804D5E24963",
 				"3115C225E04302C7E25EB851",
 				"750DE5A7200792154C928F98",
-				"87B941E8EB46B1E26289A4D8",
-				"84B90F5664CE65067F1639BC",
 				"B42AA02B4D19934453CAFFD0",
 				"75CD288A01C35FEE947E486B",
 				"DBE2DD789DD1AD5E2473CFF3",
@@ -1234,8 +1206,6 @@
 				"4A31460D8B2D5931C0C199D4",
 				"08BF389A0CE532301000DCEA",
 				"39ABBD83F78766CC15E7310B",
-				"8B5542686E1BE23AC80C1F4B",
-				"1F8BE8CCB21853C76F99E213",
 				"E749DA7F0F3B6BC8AA5A7DBC",
 				"A191D6D8A2E3F9BCD6F8FF32",
 				"D64282AD947732CCBFD44182",

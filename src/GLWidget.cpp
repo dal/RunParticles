@@ -40,7 +40,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
             this, SLOT(slotLayerSelected(LayerId)));
     connect(_timer, SIGNAL(timeout()), this, SLOT(update()));
-    connect(_map, SIGNAL(layerUpdated()), SLOT(updateWhenReady()));
+    connect(_map, SIGNAL(layerUpdated()), SLOT(slotRedrawWhenReady()));
     _timer->setInterval(Refresh_Interval);
     _idleTimer->setSingleShot(true);
     connect(_idleTimer, SIGNAL(timeout()), SLOT(updateGL()));
@@ -294,6 +294,13 @@ GLWidget::slotRewind()
 }
 
 void
+GLWidget::setMapSeconds(double seconds)
+{
+    _timeCtx.setMapSeconds(seconds);
+    update();
+}
+
+void
 GLWidget::setPlaybackRate(double rate)
 {
     _timeCtx.setPlaybackRate(rate);
@@ -372,7 +379,7 @@ GLWidget::slotLayerSelected(LayerId layerId)
 }
 
 void
-GLWidget::updateWhenReady()
+GLWidget::slotRedrawWhenReady()
 {
     // update the GL view when idle
     if (!_timer->isActive() && !_idleTimer->isActive())

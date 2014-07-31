@@ -71,6 +71,9 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_rewindAction, SIGNAL(triggered()),
             _glWidget, SLOT(slotRewind()));
     
+    connect(_slider, SIGNAL(valueChanged(int)),
+            SLOT(onTimeSliderDrag(int)));
+    
     connect(_glWidget, SIGNAL(signalTimeChanged(double)),
             this, SLOT(slotTimeChanged(double)));
     connect(_glWidget->getMap(), SIGNAL(signalLayerAdded()),
@@ -105,12 +108,14 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _layerListWidget->show();
     
     // DEBUG
+    /*
     OsmLayer *bgLayer = new OsmLayer();
     _glWidget->getMap()->addLayer(bgLayer);
     QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
     loadTrackFile(pathTwo);
     QString pathThree("/Users/dal/Documents/gps/exports/all2013.tcx");
     loadTrackFile(pathThree);
+    */
     _loadBaseMap();
 }
 
@@ -189,7 +194,15 @@ MainWindow::slotTimeChanged(double mapSeconds)
 {
     QString time = Util::secondsToString(mapSeconds);
     _currentTimeLineEdit->setText(time);
+    _slider->blockSignals(true);
     _slider->setSliderPosition(int(mapSeconds));
+    _slider->blockSignals(false);
+}
+
+void
+MainWindow::onTimeSliderDrag(int seconds)
+{
+    _glWidget->setMapSeconds((double)seconds);
 }
 
 void

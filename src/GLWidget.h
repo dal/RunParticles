@@ -86,6 +86,8 @@ public slots:
     
     void slotRewind();
     
+    void setMapSeconds(double seconds);
+    
     void setPlaybackRate(double rate);
     
     void slotFrameLayers(QList<LayerId> layerIds);
@@ -98,7 +100,7 @@ public slots:
     
     void slotLayerSelected(LayerId layerId);
     
-    void updateWhenReady();
+    void slotRedrawWhenReady();
     
 signals:
     

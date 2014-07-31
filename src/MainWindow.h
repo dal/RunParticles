@@ -33,6 +33,8 @@ public slots:
     
     void slotTimeChanged(double mapSeconds);
     
+    void onTimeSliderDrag(int seconds);
+    
     void slotLayerAdded();
     
     void slotFrameLayers(const QList<LayerId> layerIds);

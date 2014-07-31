@@ -140,10 +140,12 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     }
     
     // clean up tiles we no longer display
-    for (TileMap::iterator i=_tiles.begin(); i != _tiles.end(); i++) {
+    for (TileMap::iterator i=_tiles.begin(); i != _tiles.end();) {
         if (visibleTiles.find(i->first) == visibleTiles.end()) {
             delete i->second;
-            _tiles.erase(i);
+            i = _tiles.erase(i);
+        } else {
+            ++i;
         }
     }
 }

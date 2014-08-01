@@ -105,7 +105,7 @@ TrackLayer::project(const Projection &projection)
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, 20.
+    _path_lo = PathUtil::DouglasPeucker(_path_med, 10.
                                         * projection.getScaleMultiplier());
     qDebug("lo: %d points", _path_lo.count());
 }
@@ -204,7 +204,7 @@ TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*1.5);
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*2.0);
     }
-    gl::color( Color( 0, 0, 0 ) );
+    gl::color( Color( 0.3, 0.3, 0.3 ) );
     gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius);
 }
 

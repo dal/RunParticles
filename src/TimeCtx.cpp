@@ -8,8 +8,9 @@
 
 #include "TimeCtx.h"
 
-TimeCtx::TimeCtx()
-: _playbackRate(1.0),
+TimeCtx::TimeCtx() :
+_playbackRate(1.0),
+_mapSeconds(0.),
 _lastTime(0.)
 {
     

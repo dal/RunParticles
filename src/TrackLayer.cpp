@@ -1,8 +1,11 @@
 #include "TrackLayer.h"
 
 #include "PathUtil.h"
+#include "Projection.h"
 #include "Types.h"
 #include "ViewCtx.h"
+
+#define PARTICLE_RADIUS 20.0
 
 using namespace cinder;
 
@@ -11,6 +14,7 @@ const Color TrackLayer::OtherColor = Color( 0.3, 0.3, 1 );
 const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
 TrackLayer::TrackLayer(const Track *track) : Layer(),
+_particleRadius(PARTICLE_RADIUS),
 _track(track),
 _duration(0)
 {
@@ -91,14 +95,18 @@ TrackLayer::project(const Projection &projection)
         _bounds += newPt.pos;
     }
     
+    _particleRadius *= projection.getScaleMultiplier();
+    
     qDebug("hi: %d points", _path_hi.count());
     
     // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi, 1.0);
+    _path_med = PathUtil::DouglasPeucker(_path_hi,
+                                        100. * projection.getScaleMultiplier());
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, 0.2);
+    _path_lo = PathUtil::DouglasPeucker(_path_med, 20.
+                                        * projection.getScaleMultiplier());
     qDebug("lo: %d points", _path_lo.count());
 }
 
@@ -188,14 +196,16 @@ void
 TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
 {
     gl::color( Color( 1, 1, 1 ) );
-    float radius = viewCtx.getResolution() * 2.0;
-    if (radius < 2.0)
-        radius = 2.0;
+    float radius = _particleRadius;
+    if (radius < viewCtx.getResolution()*2.)
+        radius = viewCtx.getResolution()*2.;
     gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
     if (viewCtx.isSelected(id())) {
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*1.5);
         gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*2.0);
     }
+    gl::color( Color( 0, 0, 0 ) );
+    gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius);
 }
 
 BoundingBox

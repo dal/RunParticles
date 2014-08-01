@@ -20,7 +20,7 @@
 #include <map>
 #include <vector>
 
-#define SELECTION_TOLERANCE_PIXELS 5.0
+#define SELECTION_TOLERANCE_PIXELS 10.0
 
 typedef std::shared_ptr<Layer> LayerPtr;
 

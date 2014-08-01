@@ -9,15 +9,6 @@
 
 #include "MapView.h"
 
-/*
- *  MapView.h
- *  RunParticles
- *
- *  Created by Doug Letterman on 2/21/13.
- *  Copyright 2013 Doug Letterman. All rights reserved.
- *
- */
-
 MapView::MapView() :
     mCurrentCam(CameraOrtho()),
     _aspectRatio(1.0)
@@ -108,7 +99,14 @@ void
 MapView::setCurrentCam( CameraOrtho &aCurrentCam )
 { 
     mCurrentCam = aCurrentCam;
-    _aspectRatio = mCurrentCam.getAspectRatio();
+    float left, top, right, bottom, near, far;
+    mCurrentCam.getFrustum(&left,
+                           &top,
+                           &right,
+                           &bottom,
+                           &near,
+                           &far);
+    _aspectRatio = (right - left) / (top - bottom);
 }
 
 void

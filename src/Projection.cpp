@@ -11,7 +11,7 @@
 
 // scale the map domain down by this amount
 // this helps prevent floating point precision artifacts
-#define SCALE_MULT 0.1
+#define SCALE_MULT 0.08
 
 #define PI 3.141592653589793238
 
@@ -67,5 +67,8 @@ Projection::fromProjection(const MapPoint &point) const
     return coord;
 }
 
-
-
+float
+Projection::getScaleMultiplier() const
+{
+    return SCALE_MULT;
+}

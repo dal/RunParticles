@@ -56,6 +56,8 @@ protected:
     
     void _drawParticle(const ViewCtx &viewCtx) const;
     
+    float _particleRadius;
+    
     const Track *_track;
     
     Path _path_hi, _path_med, _path_lo;
@@ -69,6 +71,7 @@ protected:
     QDateTime _startTime;
     
     float *_pathBuffer;
+    
 };
 
 #endif

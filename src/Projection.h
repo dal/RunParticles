@@ -6,6 +6,7 @@
 class Projection
 {
 public:
+    
     Projection();
     
     virtual ~Projection();
@@ -13,6 +14,8 @@ public:
     MapPoint toProjection(const LonLat&) const;
     
     LonLat fromProjection(const MapPoint&) const;
+    
+    float getScaleMultiplier() const;
     
 protected:
     

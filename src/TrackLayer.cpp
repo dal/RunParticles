@@ -199,21 +199,19 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 void
 TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
 {;
-    MapPoint w2c = viewCtx.getWorldToCamera();
     gl::color( Color( 1, 1, 1 ) );
     float radius = _particleRadius;
     if (radius < viewCtx.getResolution()*2.)
         radius = viewCtx.getResolution()*2.;
-    Vec2d myPt = w2c + Vec2d( _particlePos.x, _particlePos.y );
-    gl::drawSolidCircle( myPt, radius);
+    // transform to camera space
+    const Vec2d particlePosCamera = viewCtx.getWorldToCamera() + _particlePos;
+    gl::drawSolidCircle( particlePosCamera, radius);
     if (viewCtx.isSelected(id())) {
-        gl::drawStrokedCircle( w2c + Vec2d(_particlePos.x, _particlePos.y),
-                              radius*1.5);
-        gl::drawStrokedCircle( w2c + Vec2d(_particlePos.x, _particlePos.y),
-                              radius*2.0);
+        gl::drawStrokedCircle(particlePosCamera, radius*1.5);
+        gl::drawStrokedCircle(particlePosCamera, radius*2.0);
     }
     gl::color( Color( 0.3, 0.3, 0.3 ) );
-    gl::drawStrokedCircle( w2c + Vec2f(_particlePos.x, _particlePos.y), radius);
+    gl::drawStrokedCircle(particlePosCamera, radius);
 }
 
 BoundingBox

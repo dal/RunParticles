@@ -5,7 +5,9 @@
 #include "Types.h"
 #include "ViewCtx.h"
 
-#define PARTICLE_RADIUS 20.0
+#define PARTICLE_RADIUS 12.0
+#define MEDIUM_LOD_RES 15.0
+#define LO_LOD_RES 30.0
 
 using namespace cinder;
 
@@ -15,6 +17,8 @@ const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
 TrackLayer::TrackLayer(const Track *track) : Layer(),
 _particleRadius(PARTICLE_RADIUS),
+_mediumLodRes(MEDIUM_LOD_RES),
+_loLodRes(LO_LOD_RES),
 _track(track),
 _duration(0)
 {
@@ -96,17 +100,18 @@ TrackLayer::project(const Projection &projection)
     }
     
     _particleRadius *= projection.getScaleMultiplier();
+    _mediumLodRes *= projection.getScaleMultiplier();
+    _loLodRes *= projection.getScaleMultiplier();
     
+    qDebug("med: %f, lo: %f", _mediumLodRes, _loLodRes);
     qDebug("hi: %d points", _path_hi.count());
     
     // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi,
-                                        100. * projection.getScaleMultiplier());
+    _path_med = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, 10.
-                                        * projection.getScaleMultiplier());
+    _path_lo = PathUtil::DouglasPeucker(_path_hi, _loLodRes);
     qDebug("lo: %d points", _path_lo.count());
 }
 
@@ -137,9 +142,9 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     // Choose which path to display
     Path *currentPath = &_path_hi;
     double res = viewCtx.getResolution();
-    if (res >= 1.0 && res < 3.0)
+    if (res >= _mediumLodRes && res < _loLodRes)
         currentPath = &_path_med;
-    else if (res >= 3.0)
+    else if (res >= _loLodRes)
         currentPath = &_path_lo;
     
     if (viewCtx.isSelected(id()))

@@ -58,6 +58,10 @@ protected:
     
     float _particleRadius;
     
+    float _mediumLodRes;
+    
+    float _loLodRes;
+    
     const Track *_track;
     
     Path _path_hi, _path_med, _path_lo;

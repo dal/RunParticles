@@ -6,8 +6,8 @@
 #include "ViewCtx.h"
 
 #define PARTICLE_RADIUS 12.0
-#define MEDIUM_LOD_RES 15.0
-#define LO_LOD_RES 30.0
+#define MEDIUM_LOD_RES 10.0
+#define LO_LOD_RES 20.0
 
 using namespace cinder;
 
@@ -111,7 +111,7 @@ TrackLayer::project(const Projection &projection)
     qDebug("med: %d points", _path_med.count());
     
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_hi, _loLodRes);
+    _path_lo = PathUtil::DouglasPeucker(_path_med, _loLodRes);
     qDebug("lo: %d points", _path_lo.count());
 }
 

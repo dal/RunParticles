@@ -34,6 +34,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
                           r.y + viewheight*0.5,
                           -1,
                           1);
+    _viewCamera = _camera;
     _mapView.setCurrentCam(_camera);
     _updateViewCtx();
     connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
@@ -62,7 +63,7 @@ GLWidget::paintGL()
     
     // setup camera
 	gl::pushMatrices();
-	gl::setMatrices( _camera );
+	gl::setMatrices( _viewCamera );
     
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
@@ -145,6 +146,7 @@ GLWidget::wheelEvent(QWheelEvent *event)
     _mapView.mouseWheel(-event->delta());
     _updateViewCtx();
     updateGL();
+    qDebug("res: %f", _viewCtx.getResolution());
 }
 
 void
@@ -358,6 +360,8 @@ GLWidget::_updateViewCtx()
                          MapPoint(right, bottom),
                          width(),
                          height());
+    _viewCamera.setOrtho(0., right-left, 0., top-bottom, -1, 1);
+    _viewCtx.setCameraToWorld(Vec2d(left, bottom));
 }
 
 void

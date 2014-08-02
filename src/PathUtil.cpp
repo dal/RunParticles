@@ -24,12 +24,14 @@ closestPoint(Vec2d v, Vec2d w, Vec2d p)
 Path
 PathUtil::DouglasPeucker(const Path &input, double epsilon)
 {
-    // Find the point with the maximum distance
+    ulong end = input.count();
+    if (end <= 2)
+        return input;
     Path result;
     float dmax = 0.;
     int index = 0;
-    ulong end = input.count();
-    for (ulong i=0; i < end; i++) {
+    // Find the point with the maximum distance
+    for (ulong i=1; i < end - 1; i++) {
         float d = closestPoint(input[0].pos, input.last().pos, input[i].pos);
         if ( d > dmax ) {
             index = i;

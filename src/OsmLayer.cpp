@@ -132,9 +132,9 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
                 newTile->lowerRight.y = newTile->upperLeft.y - _tileSize;
                 _tiles.insert(std::pair<OsmIndex, Tile*>(idx, newTile));
                 _tileSource->getTile(idx.x, idx.y, idx.z);
-                newTile->draw();
+                newTile->draw(viewCtx);
             } else {
-                foundTile->second->draw();
+                foundTile->second->draw(viewCtx);
             }
         }
     }
@@ -179,19 +179,20 @@ OsmLayer::Tile::Tile() : texture(NULL), shader(NULL)
 }
 
 void
-OsmLayer::Tile::draw()
+OsmLayer::Tile::draw(const ViewCtx &viewCtx)
 {
     // debug, draw diagonal lines
     gl::color( Color( 1, 1, 1 ) );
-    gl::drawLine(upperLeft, lowerRight);
-    gl::drawLine(Vec2f(upperLeft.x, lowerRight.y),
-                 Vec2f(lowerRight.x, upperLeft.y));
+    MapPoint w2c = viewCtx.getWorldToCamera();
+    gl::drawLine(w2c + upperLeft, w2c + lowerRight);
+    gl::drawLine(w2c + Vec2d(upperLeft.x, lowerRight.y),
+                 w2c + Vec2d(lowerRight.x, upperLeft.y));
     // end debug diagonal lines
     if (texture != NULL) {
         texture->enableAndBind();
         shader->bind();
         shader->setUniformValue(shader->uniformLocation("tex0"), 0 );
-        _drawQuad(upperLeft, lowerRight);
+        _drawQuad(w2c+ upperLeft, w2c + lowerRight);
         texture->unbind();
         shader->release();
     }

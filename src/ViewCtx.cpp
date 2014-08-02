@@ -10,7 +10,8 @@
 #include "ViewCtx.h"
 
 ViewCtx::ViewCtx()
-    : _width(0),
+    : _cameraToWorld(0, 0),
+      _width(0),
       _height(0),
       _resolution(1.)
 {
@@ -38,6 +39,24 @@ ViewCtx::setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
     _height = height;
     _resolution = (width != 0) ? abs(lowerRight.x - upperLeft.x) / double(width)
                                : 1.0;
+}
+
+void
+ViewCtx::setCameraToWorld(MapPoint c2w)
+{
+    _cameraToWorld = c2w;
+}
+
+MapPoint
+ViewCtx::getWorldToCamera() const
+{
+    return -_cameraToWorld;
+}
+
+MapPoint
+ViewCtx::getCameraToWorld() const
+{
+    return _cameraToWorld;
 }
 
 BoundingBox

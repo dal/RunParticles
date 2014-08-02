@@ -39,6 +39,12 @@ public:
     void setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
                      int width, int height);
     
+    void setCameraToWorld(MapPoint c2w);
+    
+    MapPoint getWorldToCamera() const;
+    
+    MapPoint getCameraToWorld() const;
+    
     int getViewportWidth() const { return _width; }
     
     int getViewportHeight() const { return _height; }
@@ -50,6 +56,8 @@ public:
 protected:
     
     MapPoint _upperLeft, _lowerRight;
+    
+    MapPoint _cameraToWorld;
     
     int _width, _height;
     

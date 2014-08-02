@@ -11,7 +11,7 @@
 
 // scale the map domain down by this amount
 // this helps prevent floating point precision artifacts
-#define SCALE_MULT 10.0
+#define SCALE_MULT 1.0
 
 #define PI 3.141592653589793238
 

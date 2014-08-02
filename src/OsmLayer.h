@@ -73,7 +73,7 @@ protected:
         
         void setTexture(const Surface8u &surface);
         
-        void draw();
+        void draw(const ViewCtx &viewCtx);
     };
     
     typedef std::unordered_map<OsmIndex, Tile*, OsmHasher<OsmIndex>> TileMap;

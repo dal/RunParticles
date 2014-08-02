@@ -154,6 +154,7 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     else
         gl::color( OtherColor );
     
+    MapPoint w2c = viewCtx.getWorldToCamera();
     PathPoint *lastPathPt;
     MapPoint *lastMapPt;
     int bufferIndex = 0;
@@ -164,14 +165,14 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         bool inbounds = viewCtx.getBoundingBox().contains(*thisMapPt);
         if (i == 0 || pt->time < timeCtx.getMapSeconds()) {
             if (i > 0 && (inbounds || lastInbounds)) {
-                _pathBuffer[bufferIndex++] = lastMapPt->x;
-                _pathBuffer[bufferIndex++] = lastMapPt->y;
-                _pathBuffer[bufferIndex++] = thisMapPt->x;
-                _pathBuffer[bufferIndex++] = thisMapPt->y;
+                _pathBuffer[bufferIndex++] = w2c.x + lastMapPt->x;
+                _pathBuffer[bufferIndex++] = w2c.y + lastMapPt->y;
+                _pathBuffer[bufferIndex++] = w2c.x + thisMapPt->x;
+                _pathBuffer[bufferIndex++] = w2c.y + thisMapPt->y;
             }
             lastMapPt = thisMapPt;
             lastPathPt = pt;
-            _particlePos = *thisMapPt;
+            _particlePos = *lastMapPt;
         } else {
             double elapsed = timeCtx.getMapSeconds() -
                              double(lastPathPt->time);
@@ -179,13 +180,11 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
             if (f > 0.0 && (inbounds || lastInbounds)) {
                 MapPoint finalPt = lerp(*lastMapPt, *thisMapPt, f);
-                _pathBuffer[bufferIndex++] = lastMapPt->x;
-                _pathBuffer[bufferIndex++] = lastMapPt->y;
-                _pathBuffer[bufferIndex++] = finalPt.x;
-                _pathBuffer[bufferIndex++] = finalPt.y;
+                _pathBuffer[bufferIndex++] = w2c.x + lastMapPt->x;
+                _pathBuffer[bufferIndex++] = w2c.y + lastMapPt->y;
+                _pathBuffer[bufferIndex++] = w2c.x + finalPt.x;
+                _pathBuffer[bufferIndex++] = w2c.y + finalPt.y;
                 _particlePos = finalPt;
-            } else {
-                _particlePos = *thisMapPt;
             }
             break;
         }
@@ -199,18 +198,22 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 
 void
 TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
-{
+{;
+    MapPoint w2c = viewCtx.getWorldToCamera();
     gl::color( Color( 1, 1, 1 ) );
     float radius = _particleRadius;
     if (radius < viewCtx.getResolution()*2.)
         radius = viewCtx.getResolution()*2.;
-    gl::drawSolidCircle( Vec2f( _particlePos.x, _particlePos.y ), radius);
+    Vec2d myPt = w2c + Vec2d( _particlePos.x, _particlePos.y );
+    gl::drawSolidCircle( myPt, radius);
     if (viewCtx.isSelected(id())) {
-        gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*1.5);
-        gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius*2.0);
+        gl::drawStrokedCircle( w2c + Vec2d(_particlePos.x, _particlePos.y),
+                              radius*1.5);
+        gl::drawStrokedCircle( w2c + Vec2d(_particlePos.x, _particlePos.y),
+                              radius*2.0);
     }
     gl::color( Color( 0.3, 0.3, 0.3 ) );
-    gl::drawStrokedCircle( Vec2f(_particlePos.x, _particlePos.y), radius);
+    gl::drawStrokedCircle( w2c + Vec2f(_particlePos.x, _particlePos.y), radius);
 }
 
 BoundingBox

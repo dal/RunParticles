@@ -39,13 +39,16 @@ PathUtil::DouglasPeucker(const Path &input, double epsilon)
     // If max distance is greater than epsilon, recursively simplify
     if ( dmax > epsilon ) {
         // Recurse
-        Path recResults1 = DouglasPeucker(input.mid(0, index), epsilon);
+        Path recResults1 = DouglasPeucker(input.mid(0, index+1), epsilon);
         Path recResults2 = DouglasPeucker(input.mid(index, -1), epsilon);
         
         // Build the result list
-        return recResults1.mid(0, recResults1.count()-2) + recResults2;
+        return recResults1.mid(0, recResults1.count()-1) + recResults2;
     } else {
-        return input;
+        Path ends;
+        ends.append(input.first());
+        ends.append(input.last());
+        return ends;
     }
 }
 

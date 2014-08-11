@@ -14,6 +14,9 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    app.setApplicationName("RunParticles");
+    app.setOrganizationDomain("renderfast.com");
+    app.setOrganizationName("Renderfast");
     
     Map *map = new Map();
     

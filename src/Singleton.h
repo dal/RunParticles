@@ -9,9 +9,11 @@ template <class T>
 class Singleton
 {
 public:
-    static T& Instance()
+    static T* Instance()
     {
-        static T _instance; // create static instance of our class
+        static T* _instance;
+        if (!_instance)
+            _instance = new T();
         return _instance;   // return it
     }
  

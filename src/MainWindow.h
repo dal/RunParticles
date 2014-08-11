@@ -9,6 +9,8 @@
 #include <QComboBox>
 #include <QShortcut>
 #include <QSlider>
+#include <QNetworkAccessManager>
+#include <QNetworkDiskCache>
 
 #include "GLWidget.h"
 #include "LayerListWidget.h"
@@ -22,6 +24,8 @@ public:
     virtual ~MainWindow();
     
     void loadTrackFile(const QString &path);
+    
+    QString getNetworkCacheDir() const;
     
 protected:
     void _layout(QWidget*);
@@ -56,6 +60,8 @@ protected:
     QAction *_openLayerAction, *_forwardAction, *_backAction, *_rewindAction,
             *_pauseAction;
     QShortcut *_playPauseShortcut, *_openLayerShortcut;
+    QNetworkAccessManager *_networkAccessManager;
+    QNetworkDiskCache *_diskCache;
 };
 
 #endif

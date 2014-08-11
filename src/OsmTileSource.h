@@ -81,9 +81,9 @@ class OsmTileSource : public QObject
     
     const QByteArray DEFAULT_USER_AGENT = "RunParticles";
     
-    typedef std::shared_ptr<OsmTile*> OsmTileRef;
+    typedef std::shared_ptr<OsmTile> OsmTileRef;
     
-    typedef std::unordered_map<OsmIndex, OsmTile, OsmHasher<OsmIndex>>
+    typedef std::unordered_map<OsmIndex, OsmTileRef, OsmHasher<OsmIndex>>
         OsmTileMap;
     
     typedef std::map<time_t, OsmIndex> OsmTileTimeMap;

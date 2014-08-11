@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 
 #include <QApplication>
+#include <QDesktopServices>
+#include <QDir>
 #include <QEventLoop>
 #include <QFileDialog>
 #include <QGridLayout>
@@ -22,6 +24,14 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _glWidget(glWidget),
     _layerListWidget(new LayerListWidget())
 {
+    _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
+    _networkAccessManager->setParent(this);
+    _diskCache = new QNetworkDiskCache(this);
+    QString cacheDir = getNetworkCacheDir();
+    _diskCache->setCacheDirectory(cacheDir);
+    _networkAccessManager->setCache(_diskCache);
+    qDebug("Cache directory is %s", cacheDir.toAscii().constData());
+    
     QWidget *ctr = new QWidget(this);
     setCentralWidget(ctr);
     _rewindButton = new QPushButton(QString::fromUtf8("\u25C0\u25C0"), ctr);//<<
@@ -108,14 +118,10 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _layerListWidget->show();
     
     // DEBUG
-    /*
-    OsmLayer *bgLayer = new OsmLayer();
-    _glWidget->getMap()->addLayer(bgLayer);
     QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
     loadTrackFile(pathTwo);
     QString pathThree("/Users/dal/Documents/gps/exports/all2013.tcx");
     loadTrackFile(pathThree);
-    */
     _loadBaseMap();
 }
 
@@ -156,6 +162,17 @@ MainWindow::loadTrackFile(const QString &path)
         _glWidget->getMap()->addLayer(thisLayer);
         _layerListWidget->addLayer(thisLayer);
     }
+}
+
+QString
+MainWindow::getNetworkCacheDir() const
+{
+    QString cacheLoc = QDesktopServices::storageLocation(
+                                               QDesktopServices::CacheLocation);
+    if (cacheLoc.isEmpty()) {
+        cacheLoc = QDir::homePath()+"/."+QCoreApplication::applicationName();
+    }
+    return cacheLoc;
 }
 
 void

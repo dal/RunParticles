@@ -26,7 +26,7 @@ OsmTileSource::retrieveFinishedTile(unsigned int x,
                                     unsigned int z)
 {
     OsmIndex idx(x, y, z);
-    return *_memoryTileCache[idx].surface;
+    return *_memoryTileCache[idx]->surface;
 }
 
 void
@@ -66,8 +66,9 @@ OsmTileSource::onRequestFinished()
     cinder::Surface8u *surf = new cinder::Surface8u(cinder::loadImage(data,
                                                     cinder::ImageSource::Options(),
                                                     "png"));
+    OsmTileRef tileRef = OsmTileRef(new OsmTile(index, surf));
     _memoryTileCache.insert(
-        std::pair<OsmIndex, OsmTile>(index, OsmTile(index, surf)));
+        std::pair<OsmIndex, OsmTileRef>(index, tileRef));
     
     emit tileReady(index.x, index.y, index.z);
 }
@@ -85,9 +86,10 @@ OsmTileSource::_requestTile(const OsmIndex index)
                                                QString::number(index.y));
     QNetworkRequest request = QNetworkRequest(QUrl(host + url));
     request.setRawHeader("User-Agent", DEFAULT_USER_AGENT);
-    
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute,
+                 QNetworkRequest::PreferCache);
     QNetworkAccessManager *network =
-        &Singleton<QNetworkAccessManager>::Instance();
+        Singleton<QNetworkAccessManager>::Instance();
     qDebug("GET %s%s", host.toAscii().constData(), url.toAscii().constData());
     QNetworkReply *reply = network->get(request);
     _pendingReplies.insert(reply, index);

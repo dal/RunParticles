@@ -123,9 +123,7 @@ protected:
     CameraOrtho _camera;
     CameraOrtho _viewCamera;
     
-    QPoint _lastPos, _lastDownPos;
-    
-    bool _inDrag;
+    QPoint _lastDownPos;
     
     MapView _mapView;
     

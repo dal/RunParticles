@@ -22,7 +22,6 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _fullScreen(false),
     _lockToLayer(false)
 {
-    setMouseTracking(true);
     elapsedTimer.start();
     // For now center the camera on Oakland
     MapPoint r = _map->getProjection().toProjection(LonLat(-122.2, 37.81155));
@@ -123,20 +122,18 @@ GLWidget::mouseReleaseEvent(QMouseEvent *event)
 void
 GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    QPoint eventXy = QPoint(event->x(), height() - event->y());
     if (event->buttons() != Qt::NoButton) {
         slotUnlockView();
-        _inDrag = true;
-        QPoint delta = eventXy - _lastPos;
+        QPoint delta = event->pos() - _lastDownPos;
         MapPoint mapDelta = screenPointToRelativeMapPoint(delta);
-        _mapView.mouseDrag(Vec2f(-mapDelta.x, -mapDelta.y),
+        _mapView.mouseDrag(Vec2f(-mapDelta.x, mapDelta.y),
                            bool(event->buttons() & Qt::LeftButton),
                            bool(event->buttons() & Qt::MiddleButton),
                            bool(event->buttons() & Qt::RightButton));
         _updateViewCtx();
         updateGL();
+        _lastDownPos = event->pos();
     }
-    _lastPos = eventXy;
     event->accept();
 }
 

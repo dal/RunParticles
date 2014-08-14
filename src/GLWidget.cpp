@@ -67,8 +67,6 @@ GLWidget::paintGL()
 	// clear out the window with black
 	gl::clear( Color( 0, 0, 0 ) );
     
-    gl::color( Color( 1, 0, 0 ) );
-    
     _map->draw(_viewCtx, _timeCtx);
     
     glPopMatrix();
@@ -98,7 +96,7 @@ GLWidget::resizeGL(int width, int height)
     int oldHeight = _viewCtx.getViewportHeight();
     _mapView.resize(oldWidth, oldHeight, width, height);
     _updateViewCtx();
-    glViewport (0, 0, (GLdouble) width, (GLdouble) height);
+    glViewport (0, 0, (GLint) width, (GLint) height);
 }
 
 void

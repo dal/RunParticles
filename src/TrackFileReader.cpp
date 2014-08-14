@@ -5,6 +5,7 @@
 
 #include <QXmlInputSource>
 #include <QXmlSimpleReader>
+#include <QtDebug>
 
 #include "XmlHandler.h"
 #include "GpxHandler.h"
@@ -23,7 +24,7 @@ TrackFileReader::read(const QString &path,
     QFile *theFile = new QFile(path);
     if (!theFile->exists()) {
         if (whyNot) {
-            sprintf(*whyNot, "'%s' doesn't exist", path.toAscii().constData());
+            qWarning() << "'" << path << "' doesn't exist";
         }
         return false;
     }

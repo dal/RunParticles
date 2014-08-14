@@ -1,6 +1,7 @@
 #include "OsmTileSource.h"
 
 #include <QtGlobal>
+#include <QtDebug>
 
 #include "Singleton.h"
 
@@ -55,7 +56,7 @@ OsmTileSource::onRequestFinished()
     //If there was a network error, ignore the reply
     if (reply->error() != QNetworkReply::NoError)
     {
-        qDebug("Network Error: %s", reply->errorString().toAscii().constData());
+        qWarning() << "Network Error: " << reply->errorString();
         return;
     }
     
@@ -90,7 +91,7 @@ OsmTileSource::_requestTile(const OsmIndex index)
                  QNetworkRequest::PreferCache);
     QNetworkAccessManager *network =
         Singleton<QNetworkAccessManager>::Instance();
-    qDebug("GET %s%s", host.toAscii().constData(), url.toAscii().constData());
+    qDebug() << "GET " << host << url;
     QNetworkReply *reply = network->get(request);
     _pendingReplies.insert(reply, index);
     QObject::connect(reply,

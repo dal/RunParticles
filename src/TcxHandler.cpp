@@ -1,6 +1,8 @@
 
 #include "TcxHandler.h"
 
+#include <QtDebug>
+
 #include "Util.h"
 
 TcxHandler::TcxHandler(QList<Track*> *tracks) :
@@ -94,17 +96,18 @@ TcxHandler::characters ( const QString & ch )
         if (ok) {
             _foundLat = true;
         } else {
-            qWarning("Invalid latitude: %s", ch.toAscii().constData());
+            qWarning() << "Invalid latitude: " << ch;
         }
     } else if (_inLongitudeDegrees) {
         _currentPoint->pos.x = ch.toDouble(&ok);
         if (ok) {
             _foundLon = true;
         } else {
-            qWarning("Invalid longitude: %s", ch.toAscii().constData());
+            qWarning() << "Invalid longitude: " << ch;
         }
     } else if (_inTime && _currentPoint) {
-        _currentPoint->time = Util::parseTime(ch.toAscii().constData());
+        QByteArray ba = ch.toLocal8Bit();
+        _currentPoint->time = Util::parseTime(ba.constData());
         _foundTime = true;
     } else if (_inId && _currentTrack) {
         _currentTrack->name = QString(ch);

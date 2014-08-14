@@ -10,6 +10,7 @@ FRAMEWORKS=/System/Library/Frameworks
 
 VPATH += $${CINDER}/include/
 INCLUDEPATH += $${CINDER}/include/
+INCLUDEPATH += $${CINDER}/boost/
 INCLUDEPATH += $${CINDER}/boost/boost/
 
 win32 {
@@ -37,6 +38,7 @@ LIBS += $${CINDER}"/lib/msw/zlib.lib"
 }
 
 macx {
+CONFIG += c++11
 QMAKE_LFLAGS += -L$${FRAMEWORKS}/Accelerate.framework
 LIBS += -framework Accelerate
 QMAKE_LFLAGS += -L$${FRAMEWORKS}/AudioToolbox.framework
@@ -89,7 +91,7 @@ QMAKE_MAC_XCODE_SETTINGS += XCODE_COMPILER_LIBRARY
 #CONFIG += x86
 #ARCHES -= x86_64
 ARCHES -= i386
-QMAKE_MAC_SDK = /Applications/Xcode.app/Contents/./Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+QMAKE_MAC_SDK = macosx
 }
 
 CONFIG += qt

@@ -208,7 +208,7 @@ uint
 OsmLayer::_getZoomLevel(double resolution) const
 {
     uint i;
-    for (i = 1; i < numZoomLevels && resolution < _resolutions[i]; i++) {}
+    for (i = 1; i <= numZoomLevels && resolution < _resolutions[i]; i++) {}
     return i-1;
 }
 

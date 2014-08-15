@@ -33,7 +33,7 @@ public:
     };
     
     enum {
-        numZoomLevels = 18
+        numZoomLevels = 19
     };
     
     OsmLayer();

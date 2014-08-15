@@ -59,7 +59,7 @@ OsmLayer::~OsmLayer()
 QString
 OsmLayer::name() const
 {
-    return QString("Open Street Map");
+    return QString("OpenStreetMap");
 }
 
 QString
@@ -208,8 +208,8 @@ uint
 OsmLayer::_getZoomLevel(double resolution) const
 {
     uint i;
-    for (i = 0; i < numZoomLevels && resolution < _resolutions[i]; i++) {}
-    return i;
+    for (i = 1; i < numZoomLevels && resolution < _resolutions[i]; i++) {}
+    return i-1;
 }
 
 void

@@ -220,7 +220,11 @@ OsmLayer::_setup()
                                      "uniform sampler2D tex0;\n"
                                      "void main()\n"
                                      "{\n"
-                                     "gl_FragColor = texture2D( tex0, gl_TexCoord[0].st);\n"
+                                     "vec4 texelColor = texture2D(tex0, gl_TexCoord[0].st);\n"
+                                     "vec4 scaledColor = texelColor * vec4(0.3, 0.59, 0.11, 1.0);\n"
+                                     "float luminance = scaledColor.r + scaledColor.g + scaledColor.b;\n"
+                                     "luminance = 1. - luminance;\n"
+                                     "gl_FragColor = vec4( luminance, luminance, luminance, texelColor.a);\n"
                                      "}\n");
     _isSetup = true;
 }

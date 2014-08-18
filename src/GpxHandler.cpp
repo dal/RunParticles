@@ -1,6 +1,8 @@
 #include "GpxHandler.h"
 #include <time.h>
 
+#include <QtDebug>
+
 #include "Util.h"
 
 GpxHandler::GpxHandler(QList<Track*> *tracks) :
@@ -35,7 +37,7 @@ GpxHandler::startElement(const QString & namespaceURI,
                       const QString & qName, 
                       const QXmlAttributes & atts )
 {
-    qDebug("Start: %s", localName.toAscii().constData());
+    qDebug() << "Start: " << localName;
     if (localName == "trk") {
         if (_depth != 0) {
             qWarning("Nested tracks!");
@@ -59,8 +61,8 @@ GpxHandler::startElement(const QString & namespaceURI,
             if (ok) {
                 _foundLat = true;
             } else {
-                qWarning("Invalid trk element latitude: '%s'", 
-                         lat.toAscii().constData());
+                qWarning() << "Invalid trk element latitude: '"
+                           << lat << "'";
             }
         }
         int lonIdx = atts.index(QString(""), "lon");
@@ -70,8 +72,8 @@ GpxHandler::startElement(const QString & namespaceURI,
             if (ok) {
                 _foundLon = true;
             } else {
-                qWarning("Invalid trk element longitude: '%s'", 
-                         lon.toAscii().constData());
+                qWarning() << "Invalid trk element longitude: '"
+                           << lon << "'";
             }
         } else {
             qWarning("trk element was missing a valid longitude");
@@ -88,7 +90,8 @@ bool
 GpxHandler::characters ( const QString & ch )
 {
     if (_inTime && _currentPoint) {
-        _currentPoint->time = Util::parseTime(ch.toAscii().constData());
+        QByteArray ba = ch.toLocal8Bit();
+        _currentPoint->time = Util::parseTime(ba.constData());
         _foundTime = true;
     } else if (_inName && _currentTrack) {
         _currentTrack->name = QString(ch);

@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 
 #include <QApplication>
-#include <QDesktopServices>
+#include <QStandardPaths>
 #include <QDir>
 #include <QEventLoop>
 #include <QFileDialog>
@@ -30,7 +30,6 @@ MainWindow::MainWindow(GLWidget *glWidget,
     QString cacheDir = getNetworkCacheDir();
     _diskCache->setCacheDirectory(cacheDir);
     _networkAccessManager->setCache(_diskCache);
-    qDebug("Cache directory is %s", cacheDir.toAscii().constData());
     
     QWidget *ctr = new QWidget(this);
     setCentralWidget(ctr);
@@ -167,8 +166,8 @@ MainWindow::loadTrackFile(const QString &path)
 QString
 MainWindow::getNetworkCacheDir() const
 {
-    QString cacheLoc = QDesktopServices::storageLocation(
-                                               QDesktopServices::CacheLocation);
+    QString cacheLoc = QStandardPaths::writableLocation
+                                                (QStandardPaths::CacheLocation);
     if (cacheLoc.isEmpty()) {
         cacheLoc = QDir::homePath()+"/."+QCoreApplication::applicationName();
     }

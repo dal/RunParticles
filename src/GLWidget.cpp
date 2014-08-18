@@ -8,6 +8,8 @@
 
 #include "GLWidget.h"
 
+#include <QWindow>
+
 #include "cinder/gl/gl.h"
 #include "cinder/Vector.h"
 
@@ -350,11 +352,12 @@ void
 GLWidget::_updateViewCtx()
 {
     float left, top, right, bottom;
+    qreal pixelRatio = windowHandle()->devicePixelRatio();
     _mapView.getFrustum(left, top, right, bottom);
     _viewCtx.setViewport(MapPoint(left, top),
                          MapPoint(right, bottom),
-                         width(),
-                         height());
+                         width() * pixelRatio,
+                         height() * pixelRatio);
     _viewCamera.setOrtho(0., right-left, 0., top-bottom, -1, 1);
     _viewCtx.setCameraToWorld(Vec2d(left, bottom));
 }

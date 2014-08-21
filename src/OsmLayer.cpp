@@ -89,7 +89,8 @@ OsmLayer::project(const Projection &projection)
     _worldLowerRight = projection.toProjection(LonLat(MAXLON, -MAXLAT));
     _worldSize = _worldTopLeft.y - _worldLowerRight.y;
     for (int i = 0; i < numZoomLevels; i++)
-        _resolutions[i] = (_worldSize / (1 << i)) / pixelsPerTile;
+        _resolutions[i] = (_worldSize / (1 << i)) / pixelsPerTile
+                          * 1.5; // settle somewhere in the middle
 }
 
 void
@@ -181,13 +182,7 @@ OsmLayer::Tile::Tile() : texture(NULL), shader(NULL)
 void
 OsmLayer::Tile::draw(const ViewCtx &viewCtx)
 {
-    // debug, draw diagonal lines
-    gl::color( Color( 1, 1, 1 ) );
     MapPoint w2c = viewCtx.getWorldToCamera();
-    gl::drawLine(w2c + upperLeft, w2c + lowerRight);
-    gl::drawLine(w2c + Vec2d(upperLeft.x, lowerRight.y),
-                 w2c + Vec2d(lowerRight.x, upperLeft.y));
-    // end debug diagonal lines
     if (texture != NULL) {
         texture->enableAndBind();
         shader->bind();

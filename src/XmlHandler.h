@@ -11,7 +11,8 @@ using namespace std;
 enum TrackFileType {
     TrackFileType_Unknown,
     TrackFileType_Gpx,
-    TrackFileType_Tcx
+    TrackFileType_Tcx,
+    TrackFileType_RunParticlesMap
 };
 
 class XmlHandler : public QXmlDefaultHandler

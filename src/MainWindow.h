@@ -14,6 +14,7 @@
 
 #include "GLWidget.h"
 #include "LayerListWidget.h"
+#include "MapFileIO.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,13 +26,27 @@ public:
     
     void loadTrackFile(const QString &path);
     
+    void loadMapFile(const QString &path);
+    
+    void clearMap();
+    
+    void saveMapFile(const QString &path);
+    
     QString getNetworkCacheDir() const;
     
 protected:
     void _layout(QWidget*);
     
 public slots:
-    void slotLoadFile();
+    bool slotSaveMapFile();
+    
+    bool slotSaveMapFileAs();
+    
+    bool slotOpenMapFile();
+    
+    void slotNewMap();
+    
+    void slotLoadTrackFile();
     
     void slotPlaybackRateChanged(const QString &newRate);
     
@@ -47,8 +62,12 @@ public slots:
     
     void slotLayerVisibilityChanged(LayerId layerId, bool visible);
     
+    void slotSetMapFilePath(const QString &path);
+    
 protected:
     void _loadBaseMap();
+    
+    MapFileIO *_fileIO;
     
     QMenuBar *_menuBar;
     GLWidget *_glWidget;
@@ -57,11 +76,13 @@ protected:
     QSlider *_slider;
     QLineEdit *_currentTimeLineEdit;
     QComboBox *_playSpeedCombo;
-    QAction *_openLayerAction, *_forwardAction, *_backAction, *_rewindAction,
-            *_pauseAction;
-    QShortcut *_playPauseShortcut, *_openLayerShortcut;
+    QAction *_newMapAction, *_openMapFileAction, *_saveMapFileAction,
+            *_saveAsMapFileAction, *_addLayerAction, *_forwardAction,
+            *_backAction, *_rewindAction, *_pauseAction;
+    QShortcut *_playPauseShortcut, *_addLayerShortcut;
     QNetworkAccessManager *_networkAccessManager;
     QNetworkDiskCache *_diskCache;
+    QStringList _trackFiles;
 };
 
 #endif

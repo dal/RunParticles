@@ -24,7 +24,8 @@ TrackFileReader::read(const QString &path,
     QFile *theFile = new QFile(path);
     if (!theFile->exists()) {
         if (whyNot) {
-            qWarning() << "'" << path << "' doesn't exist";
+            QString tmpWhyNot = QString("'%0' doesn't exist").arg(path);
+            *whyNot = tmpWhyNot.toLocal8Bit().data();
         }
         return false;
     }

@@ -105,6 +105,8 @@ HEADERS = ../src/BoundingBox.h \
           ../src/LayerListWidget.h \
           ../src/MainWindow.h \
           ../src/Map.h \
+          ../src/MapFileHandler.h \
+          ../src/MapFileIO.h \
           ../src/MapView.h \
           ../src/OsmLayer.h \
           ../src/OsmTileSource.h \
@@ -128,6 +130,8 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/LayerListWidget.cpp \
           ../src/MainWindow.cpp \
           ../src/Map.cpp \
+          ../src/MapFileHandler.cpp \
+          ../src/MapFileIO.cpp \
           ../src/MapView.cpp \
           ../src/OsmLayer.cpp \
           ../src/OsmTileSource.cpp \

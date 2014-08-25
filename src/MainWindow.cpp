@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QWidget>
 
+#include "MapFileWriter.h"
 #include "OsmLayer.h"
 #include "TcxHandler.h"
 #include "TrackLayer.h"
@@ -20,6 +21,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
                        QWidget * parent,
                        Qt::WindowFlags flags) :
     QMainWindow::QMainWindow(parent, flags),
+    _fileIO(new MapFileIO(this)),
     _menuBar(new QMenuBar(0)),
     _glWidget(glWidget),
     _layerListWidget(new LayerListWidget())
@@ -52,13 +54,29 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _currentTimeLineEdit->setAlignment(Qt::AlignRight);
     _layout(ctr);
     QMenu *_fileMenu = _menuBar->addMenu("File");
-    _openLayerAction = new QAction("&Open Layer. . .", this);
+    _newMapAction = new QAction("&New Map", this);
+    _openMapFileAction = new QAction("&Open Map. . .", this);
+    _saveAsMapFileAction = new QAction("Save Map As. . .", this);
+    _saveMapFileAction = new QAction("&Save Map", this);
+    _addLayerAction = new QAction("&Add Track File. . .", this);
     _forwardAction = new QAction("Play", this);
     _backAction = new QAction("Reverse", this);
     _rewindAction = new QAction("Rewind", this);
     _pauseAction = new QAction("Pause", this);
-    _fileMenu->addAction(_openLayerAction);
-    connect(_openLayerAction, SIGNAL(triggered(bool)),
+    _fileMenu->addAction(_newMapAction);
+    _fileMenu->addAction(_openMapFileAction);
+    _fileMenu->addAction(_saveAsMapFileAction);
+    _fileMenu->addAction(_saveMapFileAction);
+    _fileMenu->addAction(_addLayerAction);
+    connect(_newMapAction, SIGNAL(triggered(bool)),
+            this, SLOT(slotNewMap()));
+    connect(_openMapFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(slotOpenMapFile()));
+    connect(_saveMapFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(slotSaveMapFile()));
+    connect(_saveAsMapFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(slotSaveMapFileAs()));
+    connect(_addLayerAction, SIGNAL(triggered(bool)),
             this, SLOT(slotLoadFile()));
     connect(_forwardButton, SIGNAL(clicked(bool)),
             _forwardAction, SLOT(trigger()));
@@ -95,10 +113,10 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _playPauseShortcut->setContext(Qt::ApplicationShortcut);
     connect(_playPauseShortcut, SIGNAL(activated()),
             _glWidget, SLOT(slotTogglePlayPause()));
-    _openLayerShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_O), this);
-    _openLayerShortcut->setContext(Qt::ApplicationShortcut);
-    connect(_openLayerShortcut, SIGNAL(activated()),
-            _openLayerAction, SLOT(trigger()));
+    _addLayerShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_A), this);
+    _addLayerShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_addLayerShortcut, SIGNAL(activated()),
+            _addLayerAction, SLOT(trigger()));
     
     // Connect the layer list signals
     connect(_layerListWidget, SIGNAL(signalFrameLayers(QList<LayerId>)),
@@ -152,15 +170,41 @@ MainWindow::loadTrackFile(const QString &path)
     TrackFileReader reader;
     bool success = reader.read(path, &tracks, &whyNot);
     if (!success) {
-        QMessageBox::critical(this, "Could not load file", whyNot);
+        QMessageBox::critical(this, "Could not load file", QString(whyNot));
         return;
     }
+    _trackFiles.append(path);
     Track *thisTrack;
     foreach(thisTrack, tracks) {
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
         _glWidget->getMap()->addLayer(thisLayer);
         _layerListWidget->addLayer(thisLayer);
     }
+}
+
+void
+MainWindow::loadMapFile(const QString &path)
+{
+    _fileIO->setFilename(path);
+    _fileIO->loadMapFile();
+    QString trackFile;
+    foreach(trackFile, _fileIO->getTrackFiles()) {
+        loadTrackFile(trackFile);
+    }
+}
+
+void
+MainWindow::clearMap()
+{
+    _fileIO->clear();
+    _glWidget->getMap()->clearLayers();
+}
+
+void
+MainWindow::saveMapFile(const QString &path)
+{
+    _fileIO->setFilename(path);
+    _fileIO->writeMapFile();
 }
 
 QString
@@ -174,6 +218,27 @@ MainWindow::getNetworkCacheDir() const
     return cacheLoc;
 }
 
+bool
+MainWindow::slotSaveMapFile()
+{
+    if (_fileIO->getFilename().isEmpty())
+        return slotSaveMapFileAs();
+    _fileIO->writeMapFile();
+    return true;
+}
+
+bool
+MainWindow::slotOpenMapFile()
+{
+    if (_fileIO->isDirty())
+        
+    QString path = QFileDialog::getOpenFileName(this,
+                                                "Select map file",
+                                                QString() /*dir*/,
+                                                "XML (&.xml)");
+    return true;
+}
+
 void
 MainWindow::_loadBaseMap()
 {
@@ -181,15 +246,18 @@ MainWindow::_loadBaseMap()
 }
 
 void
-MainWindow::slotLoadFile()
+MainWindow::slotLoadTrackFile()
 {
-    QString path = QFileDialog::getOpenFileName(this, 
-                                                "Select track file",
-                                                QString() /*dir*/, 
-                                                "Tracklogs (*.gpx *.tcx)");
-    if (!path.isEmpty()) {
+    QStringList paths = QFileDialog::getOpenFileNames(this,
+                                                      "Select track file",
+                                                      QString() /*dir*/,
+                                                      "Tracklogs (*.gpx *.tcx)");
+    if (!paths.isEmpty()) {
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
-        loadTrackFile(path);
+        QString path;
+        foreach(path, paths) {
+            loadTrackFile(path);
+        }
     }
 }
 

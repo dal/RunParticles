@@ -45,6 +45,10 @@ public:
     
     const Projection getProjection() const { return _projection; }
     
+    LayerPtrList getLayers() const;
+    
+    void clearLayers();
+    
 public slots:
     
     bool onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const;

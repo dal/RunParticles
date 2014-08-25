@@ -46,6 +46,18 @@ Map::addLayer(Layer *layer)
     return true;
 }
 
+LayerPtrList
+Map::getLayers() const
+{
+    return _layers;
+}
+
+void
+Map::clearLayers()
+{
+    _layers.clear();
+}
+
 bool
 Map::onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const
 {

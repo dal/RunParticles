@@ -30,7 +30,7 @@ MapFileHandler::startElement(const QString & namespaceURI,
         
         int pathIdx = atts.index(QString(""), "path");
         if (pathIdx != -1) {
-            _trackFiles.append(atts.value(sportIdx));
+            _trackFiles.append(atts.value(pathIdx));
         }
     }
     return true;

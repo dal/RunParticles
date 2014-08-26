@@ -10,7 +10,7 @@
 #include <QMessageBox>
 #include <QWidget>
 
-#include "MapFileWriter.h"
+#include "MapFileIO.h"
 #include "OsmLayer.h"
 #include "TcxHandler.h"
 #include "TrackLayer.h"
@@ -65,8 +65,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _pauseAction = new QAction("Pause", this);
     _fileMenu->addAction(_newMapAction);
     _fileMenu->addAction(_openMapFileAction);
-    _fileMenu->addAction(_saveAsMapFileAction);
     _fileMenu->addAction(_saveMapFileAction);
+    _fileMenu->addAction(_saveAsMapFileAction);
     _fileMenu->addAction(_addLayerAction);
     connect(_newMapAction, SIGNAL(triggered(bool)),
             this, SLOT(slotNewMap()));
@@ -77,7 +77,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_saveAsMapFileAction, SIGNAL(triggered(bool)),
             this, SLOT(slotSaveMapFileAs()));
     connect(_addLayerAction, SIGNAL(triggered(bool)),
-            this, SLOT(slotLoadFile()));
+            this, SLOT(slotAddLayer()));
     connect(_forwardButton, SIGNAL(clicked(bool)),
             _forwardAction, SLOT(trigger()));
     connect(_backButton, SIGNAL(clicked(bool)),
@@ -117,6 +117,18 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _addLayerShortcut->setContext(Qt::ApplicationShortcut);
     connect(_addLayerShortcut, SIGNAL(activated()),
             _addLayerAction, SLOT(trigger()));
+    _saveMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_S), this);
+    _saveMapShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_saveMapShortcut, SIGNAL(activated()),
+            _saveMapFileAction, SLOT(trigger()));
+    _openMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_O), this);
+    _openMapShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_openMapShortcut, SIGNAL(activated()),
+            _openMapFileAction, SLOT(trigger()));
+    _newMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_N), this);
+    _newMapShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_newMapShortcut, SIGNAL(activated()),
+            _newMapAction, SLOT(trigger()));
     
     // Connect the layer list signals
     connect(_layerListWidget, SIGNAL(signalFrameLayers(QList<LayerId>)),
@@ -134,11 +146,6 @@ MainWindow::MainWindow(GLWidget *glWidget,
     slotTimeChanged(0);
     _layerListWidget->show();
     
-    // DEBUG
-    QString pathTwo("/Users/dal/Documents/gps/exports/all2012.tcx");
-    loadTrackFile(pathTwo);
-    QString pathThree("/Users/dal/Documents/gps/exports/all2013.tcx");
-    loadTrackFile(pathThree);
     _loadBaseMap();
 }
 
@@ -182,7 +189,7 @@ MainWindow::loadTrackFile(const QString &path)
     }
 }
 
-void
+bool
 MainWindow::loadMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
@@ -191,6 +198,7 @@ MainWindow::loadMapFile(const QString &path)
     foreach(trackFile, _fileIO->getTrackFiles()) {
         loadTrackFile(trackFile);
     }
+    return true;
 }
 
 void
@@ -198,13 +206,31 @@ MainWindow::clearMap()
 {
     _fileIO->clear();
     _glWidget->getMap()->clearLayers();
+    _loadBaseMap();
 }
 
-void
+bool
 MainWindow::saveMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
-    _fileIO->writeMapFile();
+    return _fileIO->writeMapFile();
+}
+
+bool
+MainWindow::confirmAbandonMap()
+{
+    if (_fileIO->isDirty()) {
+        QMessageBox::StandardButton res = QMessageBox::question(this,
+            "Save changes to map?",
+            "Map has unsaved changes, save it or discard?",
+            QMessageBox::Save | QMessageBox::Cancel | QMessageBox::Discard,
+            QMessageBox::Save);
+        if (res == QMessageBox::Cancel)
+            return false;
+        else if (res == QMessageBox::Save)
+            return slotSaveMapFile();
+    }
+    return true;
 }
 
 QString
@@ -228,15 +254,32 @@ MainWindow::slotSaveMapFile()
 }
 
 bool
+MainWindow::slotSaveMapFileAs()
+{
+    QString saveFileName = QFileDialog::getSaveFileName(this);
+    if (saveFileName.isEmpty())
+        return false;
+    return saveMapFile(saveFileName);
+}
+
+bool
 MainWindow::slotOpenMapFile()
 {
-    if (_fileIO->isDirty())
-        
-    QString path = QFileDialog::getOpenFileName(this,
-                                                "Select map file",
-                                                QString() /*dir*/,
-                                                "XML (&.xml)");
-    return true;
+    if (!confirmAbandonMap())
+        return false;
+    QString path = QFileDialog::getOpenFileName(this, "Select map file");
+    if (path.isEmpty())
+        return false;
+    return loadMapFile(path);
+}
+
+void
+MainWindow::slotNewMap()
+{
+    if (!confirmAbandonMap())
+        return;
+    _glWidget->getMap()->clearLayers();
+    _fileIO->clear();
 }
 
 void
@@ -246,7 +289,7 @@ MainWindow::_loadBaseMap()
 }
 
 void
-MainWindow::slotLoadTrackFile()
+MainWindow::slotAddLayer()
 {
     QStringList paths = QFileDialog::getOpenFileNames(this,
                                                       "Select track file",
@@ -257,6 +300,7 @@ MainWindow::slotLoadTrackFile()
         QString path;
         foreach(path, paths) {
             loadTrackFile(path);
+            _fileIO->addTrackFile(path);
         }
     }
 }

@@ -27,6 +27,7 @@ public:
                       const QString&,
                       const QString&,
                       const QXmlAttributes&);
+    QStringList getTrackFiles() const { return _trackFiles; }
     
 protected:
     

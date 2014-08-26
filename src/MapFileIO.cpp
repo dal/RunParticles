@@ -11,6 +11,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QIODevice>
 #include <QSaveFile>
 #include <QTextStream>
 #include <QXmlSimpleReader>
@@ -38,6 +39,7 @@ MapFileIO::writeMapFile()
         trackFileList.appendChild(trackFileElem);
     }
     QSaveFile saveFile(_filename);
+    saveFile.open(QIODevice::WriteOnly);
     QTextStream ts(&saveFile);
     ts << doc.toString();
     saveFile.commit();
@@ -64,6 +66,7 @@ MapFileIO::loadMapFile(char **whyNot)
     QXmlInputSource source(theFile);
     
     reader.parse(&source, true /*incremental*/);
+    _trackFiles = handler.getTrackFiles();
     return true;
 }
 
@@ -78,5 +81,13 @@ void
 MapFileIO::setFilename(const QString &filename)
 {
     _filename = filename;
+}
+
+void
+MapFileIO::clear()
+{
+    _filename.clear();
+    _trackFiles.clear();
+    _dirty = false;
 }
 

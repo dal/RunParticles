@@ -26,11 +26,13 @@ public:
     
     void loadTrackFile(const QString &path);
     
-    void loadMapFile(const QString &path);
+    bool loadMapFile(const QString &path);
     
     void clearMap();
     
-    void saveMapFile(const QString &path);
+    bool saveMapFile(const QString &path);
+    
+    bool confirmAbandonMap();
     
     QString getNetworkCacheDir() const;
     
@@ -46,7 +48,7 @@ public slots:
     
     void slotNewMap();
     
-    void slotLoadTrackFile();
+    void slotAddLayer();
     
     void slotPlaybackRateChanged(const QString &newRate);
     
@@ -61,8 +63,6 @@ public slots:
     void slotLayerSelectionChanged(const QList<LayerId> layerIds);
     
     void slotLayerVisibilityChanged(LayerId layerId, bool visible);
-    
-    void slotSetMapFilePath(const QString &path);
     
 protected:
     void _loadBaseMap();
@@ -79,7 +79,8 @@ protected:
     QAction *_newMapAction, *_openMapFileAction, *_saveMapFileAction,
             *_saveAsMapFileAction, *_addLayerAction, *_forwardAction,
             *_backAction, *_rewindAction, *_pauseAction;
-    QShortcut *_playPauseShortcut, *_addLayerShortcut;
+    QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
+              *_openMapShortcut, *_newMapShortcut;
     QNetworkAccessManager *_networkAccessManager;
     QNetworkDiskCache *_diskCache;
     QStringList _trackFiles;

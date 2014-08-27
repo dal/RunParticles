@@ -208,6 +208,7 @@ MainWindow::clearMap()
     _glWidget->getMap()->clearLayers();
     _layerListWidget->clear();
     _loadBaseMap();
+    _glWidget->update();
 }
 
 bool

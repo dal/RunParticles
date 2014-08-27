@@ -122,7 +122,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
             visibleTiles.insert(idx);
             TileMap::iterator foundTile = _tiles.find(idx);
             if (foundTile == _tiles.end()) {
-                Tile *newTile = new Tile();
+                TileRefPtr newTile = std::make_shared<Tile>();
                 newTile->shader = _shader;
                 newTile->index = idx;
                 newTile->upperLeft.x = _worldTopLeft.x +
@@ -131,7 +131,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
                     (_worldSize * ((double)y / (double)_numEdgeTiles));
                 newTile->lowerRight.x = newTile->upperLeft.x + _tileSize;
                 newTile->lowerRight.y = newTile->upperLeft.y - _tileSize;
-                _tiles.insert(std::pair<OsmIndex, Tile*>(idx, newTile));
+                _tiles.insert(std::pair<OsmIndex, TileRefPtr>(idx, newTile));
                 _tileSource->getTile(idx.x, idx.y, idx.z);
                 newTile->draw(viewCtx);
             } else {
@@ -143,7 +143,6 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     // clean up tiles we no longer display
     for (TileMap::iterator i=_tiles.begin(); i != _tiles.end();) {
         if (visibleTiles.find(i->first) == visibleTiles.end()) {
-            delete i->second;
             i = _tiles.erase(i);
         } else {
             ++i;
@@ -211,16 +210,16 @@ void
 OsmLayer::_setup()
 {
     _shader->addShaderFromSourceCode(QGLShader::Fragment,
-                                     "#version 110\n\n"
-                                     "uniform sampler2D tex0;\n"
-                                     "void main()\n"
-                                     "{\n"
-                                     "vec4 texelColor = texture2D(tex0, gl_TexCoord[0].st);\n"
-                                     "vec4 scaledColor = texelColor * vec4(0.3, 0.59, 0.11, 1.0);\n"
-                                     "float luminance = scaledColor.r + scaledColor.g + scaledColor.b;\n"
-                                     "luminance = 1. - luminance;\n"
-                                     "gl_FragColor = vec4( luminance, luminance, luminance, texelColor.a);\n"
-                                     "}\n");
+        "#version 110\n\n"
+        "uniform sampler2D tex0;\n"
+        "void main()\n"
+        "{\n"
+        "vec4 texelColor = texture2D(tex0, gl_TexCoord[0].st);\n"
+        "vec4 scaledColor = texelColor * vec4(0.3, 0.59, 0.11, 1.0);\n"
+        "float luminance = scaledColor.r + scaledColor.g + scaledColor.b;\n"
+        "luminance = 1. - luminance;\n"
+        "gl_FragColor = vec4( luminance, luminance, luminance, texelColor.a);\n"
+        "}\n");
     _isSetup = true;
 }
 

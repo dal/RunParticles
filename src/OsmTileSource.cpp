@@ -9,6 +9,39 @@
 #include <cinder/DataSource.h>
 #include <cinder/imageIO.h>
 
+unsigned int OsmTileSource::OsmTile::_accessCount = 0;
+
+OsmTileSource::OsmTile::OsmTile(OsmIndex idx, cinder::Surface *surf)
+: index(idx), _surface(surf), _lastAccess(++_accessCount)
+{
+
+};
+
+unsigned int
+OsmTileSource::OsmTile::age() const
+{
+    return _accessCount - _lastAccess;
+}
+
+cinder::Surface8u&
+OsmTileSource::OsmTile::getSurface()
+{
+    _lastAccess = ++_accessCount;
+    return *_surface;
+}
+
+OsmTileSource::OsmTileSource(QObject *parent)
+    : QObject(parent),
+      _tileCount(0)
+{
+
+}
+
+OsmTileSource::~OsmTileSource()
+{
+    
+}
+
 void
 OsmTileSource::getTile(unsigned int x, unsigned int y, unsigned int z)
 {
@@ -27,7 +60,7 @@ OsmTileSource::retrieveFinishedTile(unsigned int x,
                                     unsigned int z)
 {
     OsmIndex idx(x, y, z);
-    return *_memoryTileCache[idx]->surface;
+    return _memoryTileCache[idx]->getSurface();
 }
 
 void
@@ -70,7 +103,7 @@ OsmTileSource::onRequestFinished()
     OsmTileRef tileRef = OsmTileRef(new OsmTile(index, surf));
     _memoryTileCache.insert(
         std::pair<OsmIndex, OsmTileRef>(index, tileRef));
-    
+    _cleanCache();
     emit tileReady(index.x, index.y, index.z);
 }
 
@@ -98,4 +131,19 @@ OsmTileSource::_requestTile(const OsmIndex index)
                      SIGNAL(finished()),
                      this,
                      SLOT(onRequestFinished()));
+}
+
+void
+OsmTileSource::_cleanCache()
+{
+    if (_memoryTileCache.size() <= memCacheSize * 2)
+        return;
+    qDebug() << "Cleaning memory tile cache";
+    for (OsmTileMap::iterator i=_memoryTileCache.begin();
+         i != _memoryTileCache.end();) {
+        if (i->second->age() > memCacheSize)
+            i = _memoryTileCache.erase(i);
+        else
+            i++;
+    }
 }

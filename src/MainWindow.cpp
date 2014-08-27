@@ -207,6 +207,7 @@ MainWindow::clearMap()
     _fileIO->clear();
     _glWidget->getMap()->clearLayers();
     _loadBaseMap();
+    _glWidget->update();
 }
 
 bool
@@ -278,8 +279,7 @@ MainWindow::slotNewMap()
 {
     if (!confirmAbandonMap())
         return;
-    _glWidget->getMap()->clearLayers();
-    _fileIO->clear();
+    clearMap();
 }
 
 void

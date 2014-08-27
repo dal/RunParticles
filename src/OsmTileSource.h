@@ -70,13 +70,18 @@ class OsmTileSource : public QObject
 {
     Q_OBJECT
     
-    struct OsmTile {
+    class OsmTile {
+    
+    public:
         OsmTile() { };
-        OsmTile(OsmIndex idx, cinder::Surface *surf)
-            : index(idx), surface(surf) {};
-        
+        OsmTile(OsmIndex idx, cinder::Surface *surf);
         OsmIndex index;
-        Surface8uRef surface;
+        unsigned int age() const;
+        cinder::Surface8u& getSurface();
+    protected:
+        static unsigned int _accessCount;
+        Surface8uRef _surface;
+        unsigned int _lastAccess;
     };
     
     const QByteArray DEFAULT_USER_AGENT = "RunParticles";
@@ -93,8 +98,15 @@ class OsmTileSource : public QObject
 public:
     
     enum {
-        memCacheSize = 128
+        /* ideal number of tiles in the memory cache
+           cleanup occurs when the tile count is double this number
+         */
+        memCacheSize = 256
     };
+    
+    OsmTileSource(QObject *parent=NULL);
+    
+    ~OsmTileSource();
     
     void getTile(unsigned int x, unsigned int y, unsigned int z);
     
@@ -114,13 +126,15 @@ protected:
     
     void _requestTile(const OsmIndex index);
     
-    OsmTileMap _memoryTileCache;
+    void _cleanCache();
     
-    OsmTileTimeMap _memoryTileHistory;
+    OsmTileMap _memoryTileCache;
     
     OsmIndexSet _pendingRequests;
     
     OsmReplyMap _pendingReplies;
+    
+    int _tileCount;
     
 };
 

@@ -6,6 +6,8 @@
 #include "Types.h"
 #include "ViewCtx.h"
 
+#include "boost/shared_ptr.hpp"
+
 #include "cinder/gl/gl.h"
 #include "cinder/ImageIo.h"
 #include "cinder/CinderResources.h"
@@ -76,7 +78,9 @@ protected:
         void draw(const ViewCtx &viewCtx);
     };
     
-    typedef std::unordered_map<OsmIndex, Tile*, OsmHasher<OsmIndex>> TileMap;
+    typedef std::shared_ptr<Tile> TileRefPtr;
+    
+    typedef std::unordered_map<OsmIndex, TileRefPtr, OsmHasher<OsmIndex>> TileMap;
     
     OsmTileSource *_tileSource;
     

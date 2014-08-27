@@ -66,6 +66,7 @@ MapFileIO::loadMapFile(char **whyNot)
     QXmlInputSource source(theFile);
     
     reader.parse(&source, true /*incremental*/);
+    while (reader.parseContinue()) { };
     _trackFiles = handler.getTrackFiles();
     return true;
 }

@@ -272,6 +272,7 @@ MainWindow::slotOpenMapFile()
     QString path = QFileDialog::getOpenFileName(this, "Select map file");
     if (path.isEmpty())
         return false;
+    clearMap();
     return loadMapFile(path);
 }
 
@@ -357,5 +358,6 @@ void
 MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
 {
     Layer *layer = _glWidget->getMap()->getLayer(layerId);
-    layer->setVisible(visible);
+    if (layer)
+        layer->setVisible(visible);
 }

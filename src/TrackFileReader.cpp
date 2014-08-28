@@ -21,8 +21,8 @@ TrackFileReader::read(const QString &path,
                       QList<Track*> *tracks, 
                       char **whyNot) const
 {
-    QFile *theFile = new QFile(path);
-    if (!theFile->exists()) {
+    QFile theFile(path);
+    if (!theFile.exists()) {
         if (whyNot) {
             QString tmpWhyNot = QString("'%0' doesn't exist").arg(path);
             *whyNot = tmpWhyNot.toLocal8Bit().data();
@@ -34,7 +34,7 @@ TrackFileReader::read(const QString &path,
     reader.setContentHandler(&xmlHandler);
     reader.setErrorHandler(&xmlHandler);
     
-    QXmlInputSource source(theFile);
+    QXmlInputSource source(&theFile);
     
     reader.parse(&source, true /*incremental*/);
     while (reader.parseContinue()) { };

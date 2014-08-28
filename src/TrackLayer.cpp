@@ -34,6 +34,7 @@ TrackLayer::~TrackLayer()
 {
     free(_pathBuffer);
     _pathBuffer = NULL;
+    delete _track;
 }
 
 QString

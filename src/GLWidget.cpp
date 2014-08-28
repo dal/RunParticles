@@ -172,8 +172,10 @@ GLWidget::update()
     // If the view is locked to a layer, recenter
     if (_lockToLayer) {
         const Layer *myLayer = _map->getLayer(_lockedLayer);
-        _mapView.recenter(myLayer->position());
-        _updateViewCtx();
+        if (myLayer) {
+            _mapView.recenter(myLayer->position());
+            _updateViewCtx();
+        }
     }
         
     updateGL();
@@ -315,7 +317,8 @@ GLWidget::slotFrameLayers(QList<LayerId> layerIds)
     foreach(layerId, layerIds)
     {
         Layer* layer = _map->getLayer(layerId);
-        bbox += layer->getBoundingBox();
+        if (layer)
+            bbox += layer->getBoundingBox();
     }
     frameBoundingBox(bbox);
 }

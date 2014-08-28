@@ -55,7 +55,13 @@ Map::getLayers() const
 void
 Map::clearLayers()
 {
+    LayerPtrList::iterator it;
+    for (it = _layers.begin(); it != _layers.end(); it++) {
+        (*it)->disconnect();
+    }
+    _passes.clear();
     _layers.clear();
+    _layerMap.clear();
 }
 
 bool

@@ -42,15 +42,19 @@ typedef Vec2d MapPoint;
 
 struct TrackPoint
 {
+    TrackPoint() {};
+    TrackPoint(const TrackPoint &other) { pos = other.pos; time = other.time; };
     LonLat pos;
     unsigned int time;
 };
+
+typedef std::vector<TrackPoint> TrackPath;
 
 struct Track
 {
     QString sport;
     QString name;
-    QList<TrackPoint> points;
+    TrackPath points;
 };
 
 struct PathPoint

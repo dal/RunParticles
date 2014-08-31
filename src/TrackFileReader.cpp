@@ -18,7 +18,7 @@ TrackFileReader::TrackFileReader()
 
 bool
 TrackFileReader::read(const QString &path, 
-                      QList<Track*> *tracks, 
+                      QList<Track*> *tracks,
                       char **whyNot) const
 {
     QFile theFile(path);

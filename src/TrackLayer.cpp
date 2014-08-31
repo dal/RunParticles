@@ -22,7 +22,7 @@ _loLodRes(LO_LOD_RES),
 _track(track),
 _duration(0)
 {
-    int numPts = track->points.count();
+    int numPts = track->points.size();
     if (numPts > 0)
         _startTime = QDateTime::fromTime_t(track->points[0].time);
     if (numPts > 1)
@@ -89,7 +89,7 @@ TrackLayer::project(const Projection &projection)
 {
     // Project the track into the hi-res path and compute the bounding box
     int startTime = 0;
-    for(int i=0; i < _track->points.count(); i++) {
+    for(size_t i=0; i < _track->points.size(); i++) {
         TrackPoint pt = _track->points[i];
         if (i == 0)
             startTime = pt.time;

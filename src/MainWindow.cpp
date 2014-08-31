@@ -12,7 +12,6 @@
 
 #include "MapFileIO.h"
 #include "OsmLayer.h"
-#include "TcxHandler.h"
 #include "TrackLayer.h"
 #include "TrackFileReader.h"
 #include "Util.h"
@@ -208,6 +207,7 @@ MainWindow::clearMap()
     _glWidget->getMap()->clearLayers();
     _layerListWidget->clear();
     _loadBaseMap();
+    _slider->setMaximum(1800); /* 30 minutes */
     _glWidget->update();
 }
 
@@ -272,6 +272,8 @@ MainWindow::slotOpenMapFile()
     QString path = QFileDialog::getOpenFileName(this, "Select map file");
     if (path.isEmpty())
         return false;
+    /* pump the event loop once to let the dialog disappear */
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     clearMap();
     return loadMapFile(path);
 }

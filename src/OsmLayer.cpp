@@ -53,6 +53,7 @@ OsmLayer::OsmLayer() : Layer(),
 
 OsmLayer::~OsmLayer()
 {
+    delete _tileSource;
     delete _shader;
 }
 

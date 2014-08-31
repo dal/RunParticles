@@ -8,9 +8,9 @@
 GpxHandler::GpxHandler(QList<Track*> *tracks) :
 QXmlDefaultHandler(),
 _tracks(tracks),
-_currentPoint(NULL),
 _currentTrack(NULL),
 _depth(0),
+_inPoint(false),
 _inTime(false),
 _inName(false),
 _foundLat(false),
@@ -32,9 +32,9 @@ GpxHandler::startDocument()
 }
 
 bool 
-GpxHandler::startElement(const QString & namespaceURI,
+GpxHandler::startElement(const QString & /* namespaceURI */,
                       const QString & localName, 
-                      const QString & qName, 
+                      const QString & /*qName */,
                       const QXmlAttributes & atts )
 {
     qDebug() << "Start: " << localName;
@@ -52,12 +52,12 @@ GpxHandler::startElement(const QString & namespaceURI,
         _depth += 1;
         _foundLat = false;
         _foundLon = false;
-        _currentPoint = new TrackPoint();
+        _inPoint = true;
         bool ok = false;
         int latIdx = atts.index(QString(""), "lat");
         if (latIdx != -1) {
             QString lat = atts.value(latIdx);
-            _currentPoint->pos.y = lat.toDouble(&ok);
+            _currentPoint.pos.y = lat.toDouble(&ok);
             if (ok) {
                 _foundLat = true;
             } else {
@@ -68,7 +68,7 @@ GpxHandler::startElement(const QString & namespaceURI,
         int lonIdx = atts.index(QString(""), "lon");
         if (lonIdx != -1) {
             QString lon = atts.value(lonIdx);
-            _currentPoint->pos.x = lon.toDouble(&ok);
+            _currentPoint.pos.x = lon.toDouble(&ok);
             if (ok) {
                 _foundLon = true;
             } else {
@@ -79,7 +79,7 @@ GpxHandler::startElement(const QString & namespaceURI,
             qWarning("trk element was missing a valid longitude");
         }
     } else if (localName == "time") {
-        if (_currentPoint) {
+        if (_inPoint) {
             _inTime = true;
         }
     }
@@ -89,9 +89,9 @@ GpxHandler::startElement(const QString & namespaceURI,
 bool 
 GpxHandler::characters ( const QString & ch )
 {
-    if (_inTime && _currentPoint) {
+    if (_inTime && _inPoint) {
         QByteArray ba = ch.toLocal8Bit();
-        _currentPoint->time = Util::parseTime(ba.constData());
+        _currentPoint.time = Util::parseTime(ba.constData());
         _foundTime = true;
     } else if (_inName && _currentTrack) {
         _currentTrack->name = QString(ch);
@@ -115,11 +115,12 @@ GpxHandler::endElement(const QString &,
         _depth -= 1;
     } else if (localName == "trkpt") {
         _depth -= 1;
-        if (_currentPoint && _foundLat && _foundLon && _foundTime) {
+        if (_inPoint && _foundLat && _foundLon && _foundTime) {
             if (_currentTrack) {
-                _currentTrack->points.append(*_currentPoint);
+                /* push a copy of our point into the list */
+                _currentTrack->points.push_back(TrackPoint(_currentPoint));
             }
-            _currentPoint = NULL;
+            _inPoint = false;
         }
     } else if (localName == "time") {
         _inTime = false;

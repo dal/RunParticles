@@ -31,13 +31,13 @@ public:
 protected:
     QList<Track*> *_tracks;
     
-    TrackPoint *_currentPoint;
+    TrackPoint _currentPoint;
     
     Track *_currentTrack;
     
     int _depth;
     
-    bool _inTime, _inName, _foundLat, _foundLon, _foundTime;
+    bool _inPoint, _inTime, _inName, _foundLat, _foundLon, _foundTime;
 
 };
 

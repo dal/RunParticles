@@ -98,6 +98,8 @@ CONFIG += qt
 
 TEMPLATE = app
 
+ICON = RunParticles.icns
+
 HEADERS = ../src/BoundingBox.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \

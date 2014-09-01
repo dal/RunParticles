@@ -38,7 +38,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _viewCamera = _camera;
     _mapView.setCurrentCam(_camera);
     _updateViewCtx();
-    connect(_map, SIGNAL(signalLayerAdded()), this, SLOT(updateGL()));
+    connect(_map, SIGNAL(signalLayerAdded(LayerId)),
+            this, SLOT(updateGL()));
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
             this, SLOT(slotLayerSelected(LayerId)));
     connect(_timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -320,7 +321,8 @@ GLWidget::slotFrameLayers(QList<LayerId> layerIds)
         if (layer)
             bbox += layer->getBoundingBox();
     }
-    frameBoundingBox(bbox);
+    if (bbox.valid())
+        frameBoundingBox(bbox);
 }
 
 void

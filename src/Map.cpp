@@ -42,7 +42,7 @@ Map::addLayer(Layer *layer)
     _passes.insert(layerPasses.begin(), layerPasses.end());
     _duration = (layer->duration() > _duration) ? layer->duration() : _duration;
     connect(layer, SIGNAL(layerUpdated()), SIGNAL(layerUpdated()));
-    emit(signalLayerAdded());
+    emit(signalLayerAdded(layer->id()));
     return true;
 }
 
@@ -67,15 +67,23 @@ Map::clearLayers()
 bool
 Map::onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const
 {
-    double dist = viewCtx.getResolution() * viewCtx.getResolution()
-                  * SELECTION_TOLERANCE_PIXELS;
+    double limit = pow(viewCtx.getResolution() * SELECTION_TOLERANCE_PIXELS, 2);
+    LayerId closestId = 0;
+    double closestDistance = 0.;
+    bool found = false;
     LayerPtrList::const_iterator it;
     for (it = _layers.begin(); it != _layers.end(); it++) {
-        if (pt.distanceSquared((*it)->position()) < dist) {
-            emit(signalLayerClicked((*it)->id()));
-            return true;
+        if ((*it)->visible()) {
+            double myDist = pt.distanceSquared((*it)->position());
+            if (myDist < limit && (!found || myDist < closestDistance)) {
+                closestDistance = myDist;
+                closestId = (*it)->id();
+                found = true;
+            }
         }
     }
-    return false;
+    if (found)
+        emit(signalLayerClicked(closestId));
+    return found;
 }
 

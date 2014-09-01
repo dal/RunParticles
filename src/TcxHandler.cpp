@@ -8,6 +8,7 @@
 TcxHandler::TcxHandler(QList<Track*> *tracks) :
 QXmlDefaultHandler(),
 _tracks(tracks),
+_currentTrack(NULL),
 _depth(0),
 _inTime(false),
 _inId(false),
@@ -110,6 +111,7 @@ TcxHandler::characters ( const QString & ch )
         _currentPoint.time = Util::parseTime(ba.constData());
         _foundTime = true;
     } else if (_inId && _currentTrack) {
+        qDebug() << " characters: " << ch;
         _currentTrack->name = QString(ch);
     }
     return true;

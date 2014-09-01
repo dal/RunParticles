@@ -11,6 +11,8 @@ struct BoundingBox
     
     BoundingBox(double left, double top, double right, double bottom);
     
+    bool valid() const { return _valid; }
+    
     bool overlaps(const BoundingBox& other) const;
     
     bool contains(const MapPoint& pt) const;

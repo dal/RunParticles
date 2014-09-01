@@ -102,8 +102,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     
     connect(_glWidget, SIGNAL(signalTimeChanged(double)),
             this, SLOT(slotTimeChanged(double)));
-    connect(_glWidget->getMap(), SIGNAL(signalLayerAdded()),
-            this, SLOT(slotLayerAdded()));
+    connect(_glWidget->getMap(), SIGNAL(signalLayerAdded(LayerId)),
+            this, SLOT(slotLayerAdded(LayerId)));
     connect(_glWidget, SIGNAL(signalLayersSelected(QList<LayerId>)),
             _layerListWidget, SLOT(slotSetSelectedLayers(QList<LayerId>)));
     
@@ -338,10 +338,13 @@ MainWindow::onTimeSliderDrag(int seconds)
 }
 
 void
-MainWindow::slotLayerAdded()
+MainWindow::slotLayerAdded(LayerId layerId)
 {
     int dur = _glWidget->getMap()->getDuration();
     _slider->setMaximum(dur);
+    QList<unsigned int> added;
+    added << layerId;
+    slotFrameLayers(added);
 }
 
 void

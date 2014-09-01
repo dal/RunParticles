@@ -20,7 +20,7 @@
 #include <map>
 #include <vector>
 
-#define SELECTION_TOLERANCE_PIXELS 10.0
+#define SELECTION_TOLERANCE_PIXELS 16.
 
 typedef std::shared_ptr<Layer> LayerPtr;
 
@@ -71,7 +71,7 @@ private:
     
 signals:
     
-    void signalLayerAdded();
+    void signalLayerAdded(LayerId);
     
     void signalLayerClicked(LayerId) const;
     

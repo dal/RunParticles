@@ -56,7 +56,7 @@ public slots:
     
     void onTimeSliderDrag(int seconds);
     
-    void slotLayerAdded();
+    void slotLayerAdded(LayerId);
     
     void slotFrameLayers(const QList<LayerId> layerIds);
     

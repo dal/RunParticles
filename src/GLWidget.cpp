@@ -25,19 +25,11 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _lockToLayer(false)
 {
     elapsedTimer.start();
-    // For now center the camera on Oakland
-    MapPoint r = _map->getProjection().toProjection(LonLat(-122.2, 37.81155));
-    MapPoint l = _map->getProjection().toProjection(LonLat(-122.3, 37.81155));
-    float viewheight = (r.x - l.x) * ((float)height() / (float)width());
-    _camera = CameraOrtho(l.x,
-                          r.x,
-                          r.y - viewheight*0.5,
-                          r.y + viewheight*0.5,
-                          -1,
-                          1);
-    _viewCamera = _camera;
-    _mapView.setCurrentCam(_camera);
-    _updateViewCtx();
+    // Center the camera on Oakland, California, USA
+    MapPoint lr = _map->getProjection().toProjection(LonLat(-122.27, 37.73));
+    MapPoint ul = _map->getProjection().toProjection(LonLat(-122.37, 37.93));
+    BoundingBox defBbox(ul, lr);
+    frameBoundingBox(defBbox);
     connect(_map, SIGNAL(signalLayerAdded(LayerId)),
             this, SLOT(updateGL()));
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),

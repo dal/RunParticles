@@ -111,7 +111,6 @@ TcxHandler::characters ( const QString & ch )
         _currentPoint.time = Util::parseTime(ba.constData());
         _foundTime = true;
     } else if (_inId && _currentTrack) {
-        qDebug() << " characters: " << ch;
         _currentTrack->name = QString(ch);
     }
     return true;

@@ -168,24 +168,27 @@ MainWindow::_layout(QWidget *ctr)
         _layout->setColumnStretch(i, 1);
 }
 
-void
+QList<LayerId>
 MainWindow::loadTrackFile(const QString &path)
 {
+    QList<LayerId> added;
     QList<Track*> tracks;
     char* whyNot = (char*)malloc(256);
     TrackFileReader reader;
     bool success = reader.read(path, &tracks, &whyNot);
     if (!success) {
         QMessageBox::critical(this, "Could not load file", QString(whyNot));
-        return;
+    } else {
+        _trackFiles.append(path);
+        Track *thisTrack;
+        foreach(thisTrack, tracks) {
+            TrackLayer *thisLayer = new TrackLayer(thisTrack);
+            added.append(thisLayer->id());
+            _glWidget->getMap()->addLayer(thisLayer);
+            _layerListWidget->addLayer(thisLayer);
+        }
     }
-    _trackFiles.append(path);
-    Track *thisTrack;
-    foreach(thisTrack, tracks) {
-        TrackLayer *thisLayer = new TrackLayer(thisTrack);
-        _glWidget->getMap()->addLayer(thisLayer);
-        _layerListWidget->addLayer(thisLayer);
-    }
+    return added;
 }
 
 bool
@@ -302,10 +305,13 @@ MainWindow::slotAddLayer()
     if (!paths.isEmpty()) {
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
         QString path;
+        QList<LayerId> added;
         foreach(path, paths) {
-            loadTrackFile(path);
+            added << loadTrackFile(path);
             _fileIO->addTrackFile(path);
         }
+        /* frame up the last added layer */
+        slotFrameLayers(added.mid(added.count()-1, -1));
     }
 }
 
@@ -338,13 +344,10 @@ MainWindow::onTimeSliderDrag(int seconds)
 }
 
 void
-MainWindow::slotLayerAdded(LayerId layerId)
+MainWindow::slotLayerAdded(LayerId)
 {
     int dur = _glWidget->getMap()->getDuration();
     _slider->setMaximum(dur);
-    QList<unsigned int> added;
-    added << layerId;
-    slotFrameLayers(added);
 }
 
 void

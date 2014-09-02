@@ -32,6 +32,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _diskCache->setCacheDirectory(cacheDir);
     _networkAccessManager->setCache(_diskCache);
     
+    /* playback controls widget */
+    setWindowTitle("Playback controls");
     QWidget *ctr = new QWidget(this);
     setCentralWidget(ctr);
     _rewindButton = new QPushButton(QString::fromUtf8("\u25C0\u25C0"), ctr);//<<
@@ -52,16 +54,14 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _currentTimeLineEdit->setText("0");
     _currentTimeLineEdit->setAlignment(Qt::AlignRight);
     _layout(ctr);
+    
+    /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
     _newMapAction = new QAction("&New Map", this);
     _openMapFileAction = new QAction("&Open Map. . .", this);
     _saveAsMapFileAction = new QAction("Save Map As. . .", this);
     _saveMapFileAction = new QAction("&Save Map", this);
     _addLayerAction = new QAction("&Add Track File. . .", this);
-    _forwardAction = new QAction("Play", this);
-    _backAction = new QAction("Reverse", this);
-    _rewindAction = new QAction("Rewind", this);
-    _pauseAction = new QAction("Pause", this);
     _fileMenu->addAction(_newMapAction);
     _fileMenu->addAction(_openMapFileAction);
     _fileMenu->addAction(_saveMapFileAction);
@@ -77,6 +77,26 @@ MainWindow::MainWindow(GLWidget *glWidget,
             this, SLOT(slotSaveMapFileAs()));
     connect(_addLayerAction, SIGNAL(triggered(bool)),
             this, SLOT(slotAddLayer()));
+    
+    /* Window menu */
+    QMenu *_windowMenu = _menuBar->addMenu("Window");
+    _playCtrlWindowAction = new QAction("Playback controls", this);
+    _layerListWindowAction = new QAction("Layer list", this);
+    _mapWindowAction = new QAction("Map", this);
+    _windowMenu->addAction(_playCtrlWindowAction);
+    _windowMenu->addAction(_layerListWindowAction);
+    _windowMenu->addAction(_mapWindowAction);
+    connect(_playCtrlWindowAction, SIGNAL(triggered()),
+            SLOT(slotShowPlaybackWidget()));
+    connect(_layerListWindowAction, SIGNAL(triggered()),
+            SLOT(slotShowLayerListWidget()));
+    connect(_mapWindowAction, SIGNAL(triggered()), SLOT(slotShowMapWindow()));
+    
+    _forwardAction = new QAction("Play", this);
+    _backAction = new QAction("Reverse", this);
+    _rewindAction = new QAction("Rewind", this);
+    _pauseAction = new QAction("Pause", this);
+    
     connect(_forwardButton, SIGNAL(clicked(bool)),
             _forwardAction, SLOT(trigger()));
     connect(_backButton, SIGNAL(clicked(bool)),
@@ -368,4 +388,30 @@ MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
     Layer *layer = _glWidget->getMap()->getLayer(layerId);
     if (layer)
         layer->setVisible(visible);
+}
+
+void
+MainWindow::slotShowPlaybackWidget()
+{
+    _showWidget(this);
+}
+
+void
+MainWindow::slotShowLayerListWidget()
+{
+    _showWidget(_layerListWidget);
+}
+
+void
+MainWindow::slotShowMapWindow()
+{
+    _showWidget(_glWidget);
+}
+
+void
+MainWindow::_showWidget(QWidget *widget)
+{
+    widget->show();
+    widget->raise();
+    widget->setWindowState(Qt::WindowActive);
 }

@@ -64,8 +64,16 @@ public slots:
     
     void slotLayerVisibilityChanged(LayerId layerId, bool visible);
     
+    void slotShowPlaybackWidget();
+    
+    void slotShowLayerListWidget();
+    
+    void slotShowMapWindow();
+    
 protected:
     void _loadBaseMap();
+    
+    void _showWidget(QWidget *widget);
     
     MapFileIO *_fileIO;
     
@@ -78,7 +86,8 @@ protected:
     QComboBox *_playSpeedCombo;
     QAction *_newMapAction, *_openMapFileAction, *_saveMapFileAction,
             *_saveAsMapFileAction, *_addLayerAction, *_forwardAction,
-            *_backAction, *_rewindAction, *_pauseAction;
+            *_backAction, *_rewindAction, *_pauseAction,
+            *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut;
     QNetworkAccessManager *_networkAccessManager;

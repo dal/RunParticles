@@ -36,9 +36,6 @@ public:
     
     QString getNetworkCacheDir() const;
     
-protected:
-    void _layout(QWidget*);
-    
 public slots:
     bool slotSaveMapFile();
     
@@ -71,6 +68,10 @@ public slots:
     void slotShowMapWindow();
     
 protected:
+    void _layoutPlaybackControls(QWidget*);
+    
+    void _setupShortcuts();
+    
     void _loadBaseMap();
     
     void _showWidget(QWidget *widget);
@@ -89,7 +90,8 @@ protected:
             *_backAction, *_rewindAction, *_pauseAction,
             *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
-              *_openMapShortcut, *_newMapShortcut;
+              *_openMapShortcut, *_newMapShortcut, *_playShortcut,
+              *_playReverseShortcut, *_pauseShortcut;
     QNetworkAccessManager *_networkAccessManager;
     QNetworkDiskCache *_diskCache;
     QStringList _trackFiles;

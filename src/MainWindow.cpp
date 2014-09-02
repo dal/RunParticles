@@ -53,7 +53,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _currentTimeLineEdit->setReadOnly(true);
     _currentTimeLineEdit->setText("0");
     _currentTimeLineEdit->setAlignment(Qt::AlignRight);
-    _layout(ctr);
+    _layoutPlaybackControls(ctr);
     
     /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
@@ -127,27 +127,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_glWidget, SIGNAL(signalLayersSelected(QList<LayerId>)),
             _layerListWidget, SLOT(slotSetSelectedLayers(QList<LayerId>)));
     
-    // Application-wide shortcuts
-    _playPauseShortcut = new QShortcut(QKeySequence(Qt::Key_Space), this);
-    _playPauseShortcut->setContext(Qt::ApplicationShortcut);
-    connect(_playPauseShortcut, SIGNAL(activated()),
-            _glWidget, SLOT(slotTogglePlayPause()));
-    _addLayerShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_A), this);
-    _addLayerShortcut->setContext(Qt::ApplicationShortcut);
-    connect(_addLayerShortcut, SIGNAL(activated()),
-            _addLayerAction, SLOT(trigger()));
-    _saveMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_S), this);
-    _saveMapShortcut->setContext(Qt::ApplicationShortcut);
-    connect(_saveMapShortcut, SIGNAL(activated()),
-            _saveMapFileAction, SLOT(trigger()));
-    _openMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_O), this);
-    _openMapShortcut->setContext(Qt::ApplicationShortcut);
-    connect(_openMapShortcut, SIGNAL(activated()),
-            _openMapFileAction, SLOT(trigger()));
-    _newMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_N), this);
-    _newMapShortcut->setContext(Qt::ApplicationShortcut);
-    connect(_newMapShortcut, SIGNAL(activated()),
-            _newMapAction, SLOT(trigger()));
+    // Application keyboard shortcuts
+    _setupShortcuts();
     
     // Connect the layer list signals
     connect(_layerListWidget, SIGNAL(signalFrameLayers(QList<LayerId>)),
@@ -174,7 +155,7 @@ MainWindow::~MainWindow()
 }
 
 void
-MainWindow::_layout(QWidget *ctr)
+MainWindow::_layoutPlaybackControls(QWidget *ctr)
 {
     QGridLayout *_layout = new QGridLayout(ctr);
     _layout->addWidget(_rewindButton, 0, 0);
@@ -186,6 +167,52 @@ MainWindow::_layout(QWidget *ctr)
     _layout->addWidget(_currentTimeLineEdit, 1, 4);
     for (int i=0; i < _layout->columnCount(); i++)
         _layout->setColumnStretch(i, 1);
+}
+
+void
+MainWindow::_setupShortcuts()
+{
+    // Application-wide shortcuts
+    // toggle play
+    _playPauseShortcut = new QShortcut(QKeySequence(Qt::Key_Space), this);
+    _playPauseShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_playPauseShortcut, SIGNAL(activated()),
+            _glWidget, SLOT(slotTogglePlayPause()));
+    // play
+    _playShortcut = new QShortcut(QKeySequence(Qt::Key_L), this);
+    _playShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_playShortcut, SIGNAL(activated()),
+            _glWidget, SLOT(slotPlay()));
+    // play in reverse
+    _playReverseShortcut = new QShortcut(QKeySequence(Qt::Key_J), this);
+    _playReverseShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_playReverseShortcut, SIGNAL(activated()),
+            _glWidget, SLOT(slotReverse()));
+    // pause
+    _pauseShortcut = new QShortcut(QKeySequence(Qt::Key_K), this);
+    _pauseShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_pauseShortcut, SIGNAL(activated()),
+            _glWidget, SLOT(slotPause()));
+    // add layer
+    _addLayerShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_A), this);
+    _addLayerShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_addLayerShortcut, SIGNAL(activated()),
+            _addLayerAction, SLOT(trigger()));
+    // save map
+    _saveMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_S), this);
+    _saveMapShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_saveMapShortcut, SIGNAL(activated()),
+            _saveMapFileAction, SLOT(trigger()));
+    // open map
+    _openMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_O), this);
+    _openMapShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_openMapShortcut, SIGNAL(activated()),
+            _openMapFileAction, SLOT(trigger()));
+    // new map
+    _newMapShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_N), this);
+    _newMapShortcut->setContext(Qt::ApplicationShortcut);
+    connect(_newMapShortcut, SIGNAL(activated()),
+            _newMapAction, SLOT(trigger()));
 }
 
 QList<LayerId>

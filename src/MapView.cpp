@@ -9,6 +9,8 @@
 
 #include "MapView.h"
 
+#include <QDebug>
+
 MapView::MapView() :
     mCurrentCam(CameraOrtho()),
     _aspectRatio(1.0)
@@ -20,50 +22,6 @@ MapView::MapView(CameraOrtho &aInitialCam) :
     mCurrentCam(aInitialCam)
 { 
     
-}
-
-void MapView::mouseWheel(const int delta)
-{
-    zoom(delta);
-}
-
-void MapView::mouseDrag(const Vec2f &mouseDelta,
-                        bool leftDown, 
-                        bool middleDown, 
-                        bool rightDown)
-{
-    int action;
-    if ( leftDown || ( leftDown && middleDown ) ) {
-        action = ACTION_PAN;
-    } else if( middleDown || rightDown) {
-        action = ACTION_ZOOM;
-    } else {
-        return;
-    }
-    
-    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
-    mCurrentCam.getFrustum(&oldLeft, 
-                           &oldTop, 
-                           &oldRight, 
-                           &oldBottom, 
-                           &oldNear, 
-                           &oldFar);
-    
-    if( action == ACTION_ZOOM ) { // zooming
-        float size = (oldLeft - oldRight + oldTop - oldBottom);
-        if (size == 0) size = 1.0;
-        float diff = (mouseDelta.x + mouseDelta.y) / size / 2.0;
-        zoom(diff);
-    }
-    else if( action == ACTION_PAN ) { // panning
-        // left, float right, float bottom, float top
-        mCurrentCam.setOrtho(oldLeft+mouseDelta.x,
-                             oldRight+mouseDelta.x,
-                             oldBottom+mouseDelta.y,
-                             oldTop+mouseDelta.y,
-                             -1, 
-                             1);
-    }
 }
 
 void
@@ -89,6 +47,19 @@ MapView::resize(int oldWidth, int oldHeight, int newWidth, int newHeight)
                          1);
 }
 
+void
+MapView::move(const Vec2f &moveVector)
+{
+    float oldLeft, oldTop, oldRight, oldBottom;
+    getFrustum(oldLeft, oldTop, oldRight, oldBottom);
+    mCurrentCam.setOrtho(oldLeft+moveVector.x,
+                         oldRight+moveVector.x,
+                         oldBottom+moveVector.y,
+                         oldTop+moveVector.y,
+                         -1,
+                         1);
+}
+
 const CameraOrtho&
 MapView::getCamera() const
 { 
@@ -110,7 +81,7 @@ MapView::setCurrentCam( CameraOrtho &aCurrentCam )
 }
 
 void
-MapView::zoom(const float amount)
+MapView::zoom(const float size)
 {
     float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
     mCurrentCam.getFrustum(&oldLeft,
@@ -119,7 +90,6 @@ MapView::zoom(const float amount)
                            &oldBottom,
                            &oldNear,
                            &oldFar);
-    float size = (amount == 0) ? 1.0 : 1.0 + amount * 0.002;
     float width = fabsf(oldRight - oldLeft);
     MapPoint ctr((oldLeft+oldRight)*0.5, (oldBottom+oldTop)*0.5);
     float hsize = width * size * 0.5;

@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 
-// This is the total number of meters in the world -180. - 180 W,
 #define MAXLAT 85.0511287798066
 #define MAXLON 180.0
 
@@ -116,8 +115,8 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
         _setup();
 
     OsmIndexSet visibleTiles;
-    for (unsigned int x = upperLeftX; x <= lowerRightX && x < _numEdgeTiles; x++) {
-        for (unsigned int y=upperLeftY; y <= lowerRightY && y < _numEdgeTiles; y++)
+    for (unsigned int x = upperLeftX; x <= lowerRightX+1 && x < _numEdgeTiles; x++) {
+        for (unsigned int y=upperLeftY; y <= lowerRightY+1 && y < _numEdgeTiles; y++)
         {
             OsmIndex idx(x, y, _currentZoom);
             visibleTiles.insert(idx);
@@ -204,7 +203,7 @@ OsmLayer::_getZoomLevel(double resolution) const
 {
     uint i;
     for (i = 1; i <= numZoomLevels && resolution < _resolutions[i]; i++) {}
-    return i-1;
+    return i;
 }
 
 void

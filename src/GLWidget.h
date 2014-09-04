@@ -28,15 +28,15 @@ class GLWidget : public QGLWidget
 
     Q_OBJECT
     
-    enum {
-        Refresh_Interval = 15
-    };
-    
 public:
     
     enum PlayMode {
         PlayMode_Pause,
         PlayMode_Play
+    };
+    
+    enum {
+        Refresh_Interval = 15
     };
 
     
@@ -71,6 +71,19 @@ public:
     Map* getMap() const;
     
     void frameBoundingBox(const BoundingBox &bbox);
+    
+    void mouseWheelZoom(float delta);
+    
+    void mouseDragZoom(const QPoint &screenDelta);
+    
+    /*
+     Scales the viewport by by the specified multiplier amount. Zoom amount 0.9
+     would scale the mapview down by 10%, effectively zooming in. A zoom amount
+     greater than 1.0 represents a zoom out.
+     */
+    void zoom(float amount);
+    
+    void moveView(const QPoint &screenDelta);
     
 public slots:
     

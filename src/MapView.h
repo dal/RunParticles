@@ -24,12 +24,7 @@ public:
     MapView();
     MapView(CameraOrtho&);
     
-    void mouseWheel(const int);
-    
-    void mouseDrag(const Vec2f &mousePos,
-                   bool leftDown, 
-                   bool middleDown, 
-                   bool rightDown );
+    void move(const Vec2f &moveVector);
     void resize(int oldWidth, int oldHieght, int newWidth, int newHeight);
         
     const CameraOrtho& getCamera() const;
@@ -39,8 +34,6 @@ public:
     void getFrustum(float &left, float &top, float &right, float &bottom) const;
         
 private:
-    enum		{ ACTION_NONE, ACTION_ZOOM, ACTION_PAN };
-    
     CameraOrtho	mCurrentCam;
     float _aspectRatio;
 };

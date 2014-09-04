@@ -118,13 +118,13 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() != Qt::NoButton) {
         slotUnlockView();
         QPoint delta = event->pos() - _lastDownPos;
-        MapPoint mapDelta = screenPointToRelativeMapPoint(delta);
-        _mapView.mouseDrag(Vec2f(-mapDelta.x, mapDelta.y),
-                           bool(event->buttons() & Qt::LeftButton),
-                           bool(event->buttons() & Qt::MiddleButton),
-                           bool(event->buttons() & Qt::RightButton));
-        _updateViewCtx();
-        updateGL();
+        if (event->buttons() & Qt::LeftButton) {
+            moveView(delta);
+        } else if (event->buttons() & Qt::MiddleButton ||
+                   event->buttons() & Qt::RightButton)
+        {
+            mouseDragZoom(delta);
+        }
         _lastDownPos = event->pos();
     }
     event->accept();
@@ -133,10 +133,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
 void
 GLWidget::wheelEvent(QWheelEvent *event)
 {
-    _mapView.mouseWheel(-event->delta());
-    _updateViewCtx();
-    updateGL();
-    qDebug("res: %f", _viewCtx.getResolution());
+    mouseWheelZoom(-event->delta());
 }
 
 void
@@ -152,6 +149,34 @@ GLWidget::keyPressEvent(QKeyEvent *event)
             _fullScreen = true;
             this->showFullScreen();
         }
+    } else if (event->key() == Qt::Key_Minus ||
+               event->key() == Qt::Key_Underscore)
+    {
+        zoom(1.2);
+    } else if (event->key() == Qt::Key_Equal ||
+               event->key() == Qt::Key_Plus)
+    {
+        zoom(0.8);
+    } else if (event->key() == Qt::Key_Left) {
+        QPoint amt(width()*0.1, 0);
+        if (event->modifiers() & Qt::ShiftModifier)
+            amt *= 2;
+        moveView(amt);
+    } else if (event->key() == Qt::Key_Right) {
+        QPoint amt(-width()*0.1, 0);
+        if (event->modifiers() & Qt::ShiftModifier)
+            amt *= 2;
+        moveView(amt);
+    } else if (event->key() == Qt::Key_Up) {
+        QPoint amt(0, height()*0.1);
+        if (event->modifiers() & Qt::ShiftModifier)
+            amt *= 2;
+        moveView(amt);
+    } else if (event->key() == Qt::Key_Down) {
+        QPoint amt(0, -height()*0.1);
+        if (event->modifiers() & Qt::ShiftModifier)
+            amt *= 2;
+        moveView(amt);
     }
     QGLWidget::keyPressEvent(event);
 }
@@ -178,14 +203,8 @@ GLWidget::update()
 MapPoint
 GLWidget::screenPointToRelativeMapPoint(const QPoint &pt)
 {
-    float left, top, right, bottom, near, far;
-    // *left, *top, *right, *bottom, *near, *far
-    _camera.getFrustum(&left,
-                       &top,
-                       &right,
-                       &bottom,
-                       &near,
-                       &far);
+    float left, top, right, bottom;
+    _mapView.getFrustum(left, top, right, bottom);
     float xPixelsToMeters = (right - left) / (float)width();
     float yPixelsToMeters = (top - bottom) / (float)height();
     return MapPoint(pt.x()*xPixelsToMeters, pt.y()*yPixelsToMeters);
@@ -238,6 +257,40 @@ GLWidget::frameBoundingBox(const BoundingBox &bbox)
                               1);
     }
     _mapView.setCurrentCam(_camera);
+    _updateViewCtx();
+    updateGL();
+}
+
+void
+GLWidget::mouseWheelZoom(float delta)
+{
+    float size = (delta == 0) ? 1.0 : 1.0 + delta * 0.002;
+    zoom(size);
+}
+
+void
+GLWidget::mouseDragZoom(const QPoint &screenDelta)
+{
+    float size = width() + height();
+    if (size == 0) size = 1.0;
+    float diff = float(screenDelta.x() + screenDelta.y()) / size / 2.0;
+    mouseWheelZoom(diff);
+}
+
+void
+GLWidget::zoom(float amount)
+{
+    _mapView.zoom(amount);
+    _updateViewCtx();
+    updateGL();
+}
+
+void
+GLWidget::moveView(const QPoint &screenDelta)
+{
+    MapPoint mapDelta = screenPointToRelativeMapPoint(screenDelta);
+    Vec2f moveVector(-mapDelta.x, mapDelta.y);
+    _mapView.move(moveVector);
     _updateViewCtx();
     updateGL();
 }
@@ -384,4 +437,3 @@ GLWidget::slotRedrawWhenReady()
     if (!_timer->isActive() && !_idleTimer->isActive())
         _idleTimer->start(0);
 }
-

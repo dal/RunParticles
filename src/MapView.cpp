@@ -11,6 +11,8 @@
 
 #include <QDebug>
 
+#define MAX_WIDTH 1.6e+07
+
 MapView::MapView() :
     mCurrentCam(CameraOrtho()),
     _aspectRatio(1.0)
@@ -25,23 +27,19 @@ MapView::MapView(CameraOrtho &aInitialCam) :
 }
 
 void
-MapView::resize(int oldWidth, int oldHeight, int newWidth, int newHeight)
+MapView::resize(int oldWidth, int /*oldHeight*/, int newWidth, int newHeight)
 {
     _aspectRatio = (float)newWidth / (float)newHeight;
-    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
-    mCurrentCam.getFrustum(&oldLeft,
-                           &oldTop,
-                           &oldRight,
-                           &oldBottom,
-                           &oldNear,
-                           &oldFar);
+    float oldLeft, oldTop, oldRight, oldBottom;
+    getFrustum(oldLeft, oldTop, oldRight, oldBottom);
     float mapWidth = (oldRight - oldLeft);
-    float mapHeight = (oldTop - oldBottom);
-    float hOffset = mapWidth*(float(newWidth)/float(oldWidth)) - mapWidth;
-    float vOffset = mapHeight*(float(newHeight)/float(oldHeight)) - mapHeight;
+    float newMapWidth = mapWidth*(float(newWidth)/float(oldWidth));
+    if (newMapWidth > MAX_WIDTH)
+        newMapWidth = MAX_WIDTH;
+    float newMapHeight = newMapWidth / _aspectRatio;
     mCurrentCam.setOrtho(oldLeft,
-                         oldRight+hOffset,
-                         oldBottom-vOffset,
+                         oldLeft+newMapWidth,
+                         oldTop-newMapHeight,
                          oldTop,
                          -1,
                          1);
@@ -83,16 +81,12 @@ MapView::setCurrentCam( CameraOrtho &aCurrentCam )
 void
 MapView::zoom(const float size)
 {
-    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
-    mCurrentCam.getFrustum(&oldLeft,
-                           &oldTop,
-                           &oldRight,
-                           &oldBottom,
-                           &oldNear,
-                           &oldFar);
+    float oldLeft, oldTop, oldRight, oldBottom;
+    getFrustum(oldLeft, oldTop, oldRight, oldBottom);
     float width = fabsf(oldRight - oldLeft);
     MapPoint ctr((oldLeft+oldRight)*0.5, (oldBottom+oldTop)*0.5);
     float hsize = width * size * 0.5;
+    hsize = (hsize*2. > MAX_WIDTH) ? MAX_WIDTH/2. : hsize;
     float vsize = hsize / _aspectRatio;
     mCurrentCam.setOrtho(ctr.x - hsize,
                          ctr.x + hsize,
@@ -105,14 +99,8 @@ MapView::zoom(const float size)
 void
 MapView::recenter(const MapPoint &position)
 {
-    float oldLeft, oldTop, oldRight, oldBottom, oldNear, oldFar;
-    // *left, *top, *right, *bottom, *near, *far
-    mCurrentCam.getFrustum(&oldLeft,
-                           &oldTop,
-                           &oldRight,
-                           &oldBottom,
-                           &oldNear,
-                           &oldFar);
+    float oldLeft, oldTop, oldRight, oldBottom;
+    getFrustum(oldLeft, oldTop, oldRight, oldBottom);
     float width = (oldRight - oldLeft) * 0.5;
     float height = (oldTop - oldBottom) * 0.5;
     float newLeft = position.x - width;
@@ -125,6 +113,33 @@ MapView::recenter(const MapPoint &position)
                          newTop,
                          -1,
                          1);
+}
+
+void
+MapView::frameBoundingBox(const BoundingBox &bbox)
+{
+    MapPoint center = bbox.center();
+    float bboxWidth = bbox.width();
+    if (bboxWidth > MAX_WIDTH)
+        bboxWidth = MAX_WIDTH;
+    double bboxRatio = bboxWidth / bbox.height();
+    if (bboxRatio > _aspectRatio) {
+        double viewheight = bbox.width() / _aspectRatio;
+        mCurrentCam.setOrtho(bbox.upperLeft.x,
+                             bbox.lowerRight.x,
+                             center.y - viewheight * 0.5,
+                             center.y + viewheight * 0.5,
+                             -1,
+                             1);
+    } else {
+        float viewWidth = bbox.height() * _aspectRatio;
+        mCurrentCam.setOrtho(center.x - viewWidth * 0.5,
+                             center.x + viewWidth * 0.5,
+                             bbox.lowerRight.y,
+                             bbox.upperLeft.y,
+                             -1,
+                             1);
+    }
 }
 
 void

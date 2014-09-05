@@ -236,27 +236,7 @@ GLWidget::getMap() const
 void
 GLWidget::frameBoundingBox(const BoundingBox &bbox)
 {
-    MapPoint center = bbox.center();
-    double bboxRatio = bbox.height() / bbox.width();
-    double viewRatio = ((double)height() / (double)width());
-    if (bboxRatio < viewRatio) {
-        double viewheight = bbox.width() * viewRatio;
-        _camera = CameraOrtho(bbox.upperLeft.x,
-                              bbox.lowerRight.x,
-                              center.y - viewheight * 0.5,
-                              center.y + viewheight * 0.5,
-                              -1,
-                              1);
-    } else {
-        float viewWidth = bbox.height() / viewRatio;
-        _camera = CameraOrtho(center.x - viewWidth * 0.5,
-                              center.x + viewWidth * 0.5,
-                              bbox.lowerRight.y,
-                              bbox.upperLeft.y,
-                              -1,
-                              1);
-    }
-    _mapView.setCurrentCam(_camera);
+    _mapView.frameBoundingBox(bbox);
     _updateViewCtx();
     updateGL();
 }
@@ -288,6 +268,7 @@ GLWidget::zoom(float amount)
 void
 GLWidget::moveView(const QPoint &screenDelta)
 {
+    slotUnlockView();
     MapPoint mapDelta = screenPointToRelativeMapPoint(screenDelta);
     Vec2f moveVector(-mapDelta.x, mapDelta.y);
     _mapView.move(moveVector);

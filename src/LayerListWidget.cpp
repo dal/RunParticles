@@ -51,6 +51,7 @@ LayerListWidget::LayerListWidget(QWidget *parent)
                                         << "Sport" << "Start" << "Duration";
     setHeaderLabels(columns);
     setSortingEnabled(true);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     addAction(_frameLayerAction);
     addAction(_lockViewAction);
     connect(_frameLayerAction, SIGNAL(triggered()),

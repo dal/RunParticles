@@ -31,6 +31,7 @@ public:
     void setCurrentCam( CameraOrtho &aCurrentCam );
     void zoom( const float );
     void recenter(const MapPoint &position);
+    void frameBoundingBox(const BoundingBox &bbox);
     void getFrustum(float &left, float &top, float &right, float &bottom) const;
         
 private:

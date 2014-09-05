@@ -253,8 +253,8 @@ GLWidget::mouseDragZoom(const QPoint &screenDelta)
 {
     float size = width() + height();
     if (size == 0) size = 1.0;
-    float diff = float(screenDelta.x() + screenDelta.y()) / size / 2.0;
-    mouseWheelZoom(diff);
+    float diff = (float(screenDelta.x() + screenDelta.y()) * 1000.0) / size;
+    mouseWheelZoom(-diff);
 }
 
 void

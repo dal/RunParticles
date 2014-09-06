@@ -43,11 +43,10 @@ OsmTileSource::~OsmTileSource()
 }
 
 void
-OsmTileSource::getTile(unsigned int x, unsigned int y, unsigned int z)
+OsmTileSource::getTile(const OsmIndex &index)
 {
-    OsmIndex index = OsmIndex(x, y, z);
     if (_memoryTileCache.find(index) != _memoryTileCache.end()) {
-        emit tileReady(x, y, z);
+        emit tileReady(index);
         return;
     }
     
@@ -55,12 +54,31 @@ OsmTileSource::getTile(unsigned int x, unsigned int y, unsigned int z)
 }
 
 cinder::Surface8u&
-OsmTileSource::retrieveFinishedTile(unsigned int x,
-                                    unsigned int y,
-                                    unsigned int z)
+OsmTileSource::retrieveFinishedTile(const OsmIndex &index)
 {
-    OsmIndex idx(x, y, z);
-    return _memoryTileCache[idx]->getSurface();
+    return _memoryTileCache[index]->getSurface();
+}
+
+void
+OsmTileSource::cancelTileRequest(const OsmIndex &index)
+{
+    OsmIndexSet::const_iterator i = _pendingRequests.find(index);
+    if (i == _pendingRequests.end())
+        return; // it's not a pending request
+    _pendingRequests.erase(i);
+    for (OsmReplyMap::Iterator i=_pendingReplies.begin();
+         i != _pendingReplies.end(); )
+    {
+        if (i.value() == index) {
+            QNetworkReply *reply = i.key();
+            _pendingReplies.remove(reply);
+            reply->abort();
+            break;
+        } else {
+            ++i;
+        }
+    }
+    
 }
 
 void
@@ -78,10 +96,7 @@ OsmTileSource::onRequestFinished()
     reply->deleteLater();
     
     if (!_pendingReplies.contains(reply))
-    {
-        qWarning("Unknown QNetworkReply");
-        return;
-    }
+        return; // likely a canceled request
     
     OsmIndex index = _pendingReplies.take(reply);
     _pendingRequests.erase(index);
@@ -104,13 +119,12 @@ OsmTileSource::onRequestFinished()
     _memoryTileCache.insert(
         std::pair<OsmIndex, OsmTileRef>(index, tileRef));
     _cleanCache();
-    emit tileReady(index.x, index.y, index.z);
+    emit tileReady(index);
 }
 
 void
 OsmTileSource::_requestTile(const OsmIndex index)
 {
-    //qDebug("x %d y %d z %d h %d", index.x, index.y, index.z, index.hash());
     if (_pendingRequests.find(index) != _pendingRequests.end())
         return;
     _pendingRequests.insert(index);

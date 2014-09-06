@@ -60,7 +60,7 @@ public:
     
 public slots:
 
-    void onTileReady(unsigned int x, unsigned int y, unsigned int z);
+    void onTileReady(OsmIndex index);
     
 protected:
     

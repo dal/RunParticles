@@ -108,15 +108,15 @@ public:
     
     ~OsmTileSource();
     
-    void getTile(unsigned int x, unsigned int y, unsigned int z);
+    void getTile(const OsmIndex &index);
     
-    cinder::Surface8u& retrieveFinishedTile(unsigned int x,
-                                      unsigned int y,
-                                      unsigned int z);
+    void cancelTileRequest(const OsmIndex &index);
+    
+    cinder::Surface8u& retrieveFinishedTile(const OsmIndex &index);
     
 signals:
     
-    void tileReady(unsigned int x, unsigned int y, unsigned int z);
+    void tileReady(OsmIndex);
     
 public slots:
     

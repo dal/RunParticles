@@ -46,8 +46,8 @@ OsmLayer::OsmLayer() : Layer(),
     _shader(new QGLShaderProgram),
     _isSetup(false)
 {
-    connect(_tileSource, SIGNAL(tileReady(unsigned int, unsigned int, unsigned int)),
-            SLOT(onTileReady(unsigned int, unsigned int, unsigned int)));
+    connect(_tileSource, SIGNAL(tileReady(OsmIndex)),
+                         SLOT(onTileReady(OsmIndex)));
 }
 
 OsmLayer::~OsmLayer()
@@ -132,7 +132,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
                 newTile->lowerRight.x = newTile->upperLeft.x + _tileSize;
                 newTile->lowerRight.y = newTile->upperLeft.y - _tileSize;
                 _tiles.insert(std::pair<OsmIndex, TileRefPtr>(idx, newTile));
-                _tileSource->getTile(idx.x, idx.y, idx.z);
+                _tileSource->getTile(idx);
                 newTile->draw(viewCtx);
             } else {
                 foundTile->second->draw(viewCtx);
@@ -143,6 +143,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     // clean up tiles we no longer display
     for (TileMap::iterator i=_tiles.begin(); i != _tiles.end();) {
         if (visibleTiles.find(i->first) == visibleTiles.end()) {
+            _tileSource->cancelTileRequest(i->first);
             i = _tiles.erase(i);
         } else {
             ++i;
@@ -163,12 +164,11 @@ OsmLayer::position() const
 }
 
 void
-OsmLayer::onTileReady(unsigned int x, unsigned int y, unsigned int z)
+OsmLayer::onTileReady(OsmIndex index)
 {
-    OsmIndex idx = OsmIndex(x, y, z);
-    TileMap::iterator i = _tiles.find(idx);
+    TileMap::iterator i = _tiles.find(index);
     if (i != _tiles.end()) {
-        i->second->setTexture(_tileSource->retrieveFinishedTile(x, y, z));
+        i->second->setTexture(_tileSource->retrieveFinishedTile(index));
         emit layerUpdated();
     }
 }

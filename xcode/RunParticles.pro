@@ -122,7 +122,65 @@ HEADERS = ../src/BoundingBox.h \
           ../src/Types.h \
           ../src/Util.h \
           ../src/ViewCtx.h \
-          ../src/XmlHandler.h
+          ../src/XmlHandler.h \
+          ../src/fitsdk/fit.hpp \
+          ../src/fitsdk/fit_accumulator.hpp \
+          ../src/fitsdk/fit_accumulated_field.hpp \
+          ../src/fitsdk/fit_activity_mesg.hpp \
+          ../src/fitsdk/fit_config.hpp \
+          ../src/fitsdk/fit_decode.hpp \
+          ../src/fitsdk/fit_factory.hpp \
+          ../src/fitsdk/fit_field.hpp \
+          ../src/fitsdk/fit_field_definition.hpp \
+          ../src/fitsdk/fit_file_id_mesg.hpp \
+          ../src/fitsdk/fit_file_creator_mesg.hpp \
+          ../src/fitsdk/fit_mesg.hpp \
+          ../src/fitsdk/fit_mesg_definition.hpp \
+          ../src/fitsdk/fit_mesg_definition_listener.hpp \
+          ../src/fitsdk/fit_mesg_listener.hpp \
+          ../src/fitsdk/fit_runtime_exception.hpp \
+          ../src/fitsdk/fit_profile.hpp \
+          ../src/fitsdk/fit_unicode.hpp \
+          ../src/fitsdk/fit_slave_device_mesg.hpp \
+          ../src/fitsdk/fit_capabilities_mesg.hpp \
+          ../src/fitsdk/fit_file_capabilities_mesg.hpp \
+          ../src/fitsdk/fit_mesg_capabilities_mesg.hpp \
+          ../src/fitsdk/fit_field_capabilities_mesg.hpp \
+          ../src/fitsdk/fit_device_settings_mesg.hpp \
+          ../src/fitsdk/fit_user_profile_mesg.hpp \
+          ../src/fitsdk/fit_hrm_profile_mesg.hpp \
+          ../src/fitsdk/fit_sdm_profile_mesg.hpp \
+          ../src/fitsdk/fit_bike_profile_mesg.hpp \
+          ../src/fitsdk/fit_zones_target_mesg.hpp \
+          ../src/fitsdk/fit_sport_mesg.hpp \
+          ../src/fitsdk/fit_hr_zone_mesg.hpp \
+          ../src/fitsdk/fit_speed_zone_mesg.hpp \
+          ../src/fitsdk/fit_cadence_zone_mesg.hpp \
+          ../src/fitsdk/fit_power_zone_mesg.hpp \
+          ../src/fitsdk/fit_met_zone_mesg.hpp \
+          ../src/fitsdk/fit_goal_mesg.hpp \
+          ../src/fitsdk/fit_session_mesg.hpp \
+          ../src/fitsdk/fit_lap_mesg.hpp \
+          ../src/fitsdk/fit_length_mesg.hpp \
+          ../src/fitsdk/fit_record_mesg.hpp \
+          ../src/fitsdk/fit_event_mesg.hpp \
+          ../src/fitsdk/fit_device_info_mesg.hpp \
+          ../src/fitsdk/fit_training_file_mesg.hpp \
+          ../src/fitsdk/fit_hrv_mesg.hpp \
+          ../src/fitsdk/fit_course_mesg.hpp \
+          ../src/fitsdk/fit_course_point_mesg.hpp \
+          ../src/fitsdk/fit_workout_mesg.hpp \
+          ../src/fitsdk/fit_workout_step_mesg.hpp \
+          ../src/fitsdk/fit_schedule_mesg.hpp \
+          ../src/fitsdk/fit_totals_mesg.hpp \
+          ../src/fitsdk/fit_weight_scale_mesg.hpp \
+          ../src/fitsdk/fit_blood_pressure_mesg.hpp \
+          ../src/fitsdk/fit_monitoring_info_mesg.hpp \
+          ../src/fitsdk/fit_monitoring_mesg.hpp \
+          ../src/fitsdk/fit_memo_glob_mesg.hpp \
+          ../src/fitsdk/fit_pad_mesg.hpp \
+          ../src/fitsdk/fit_mesg_with_event.hpp \
+          ../src/fitsdk/fit_crc.hpp \
 
 SOURCES = ../src/BoundingBox.cpp \
           ../src/GLWidget.cpp \
@@ -145,5 +203,19 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/TrackLayer.cpp \
           ../src/ViewCtx.cpp \
           ../src/Util.cpp \
-          ../src/XmlHandler.cpp
+          ../src/XmlHandler.cpp \
+          ../src/fitsdk/fit.cpp \
+          ../src/fitsdk/fit_accumulated_field.cpp \
+          ../src/fitsdk/fit_accumulator.cpp \
+          ../src/fitsdk/fit_decode.cpp \
+          ../src/fitsdk/fit_factory.cpp \
+          ../src/fitsdk/fit_field.cpp \
+          ../src/fitsdk/fit_field_definition.cpp \
+          ../src/fitsdk/fit_mesg.cpp \
+          ../src/fitsdk/fit_mesg_definition.cpp \
+          ../src/fitsdk/fit_profile.cpp \
+          ../src/fitsdk/fit_software_mesg.hpp \
+          ../src/fitsdk/fit_unicode.cpp \
+          ../src/fitsdk/fit_crc.cpp
+          
 QT += opengl network xml

@@ -101,6 +101,7 @@ TEMPLATE = app
 ICON = RunParticles.icns
 
 HEADERS = ../src/BoundingBox.h \
+          ../src/FitFileReader.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \
           ../src/Layer.h \
@@ -181,8 +182,15 @@ HEADERS = ../src/BoundingBox.h \
           ../src/fitsdk/fit_pad_mesg.hpp \
           ../src/fitsdk/fit_mesg_with_event.hpp \
           ../src/fitsdk/fit_crc.hpp \
+          ../src/fitsdk/fit_mesg_broadcaster.hpp \
+          ../src/fitsdk/fit_mesg_with_event_broadcaster.hpp \
+          ../src/fitsdk/fit_mesg_with_event_listener.hpp \
+          ../src/fitsdk/fit_activity_mesg_listener.hpp \
+          ../src/fitsdk/fit_lap_mesg_listener.hpp \
+          ../src/fitsdk/fit_file_id_mesg_listener.hpp
 
 SOURCES = ../src/BoundingBox.cpp \
+          ../src/FitFileReader.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \
           ../src/main.cpp \
@@ -216,6 +224,8 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/fitsdk/fit_profile.cpp \
           ../src/fitsdk/fit_software_mesg.hpp \
           ../src/fitsdk/fit_unicode.cpp \
-          ../src/fitsdk/fit_crc.cpp
+          ../src/fitsdk/fit_crc.cpp \
+          ../src/fitsdk/fit_mesg_broadcaster.cpp \
+          ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp
           
 QT += opengl network xml

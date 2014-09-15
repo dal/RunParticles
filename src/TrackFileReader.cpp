@@ -7,6 +7,7 @@
 #include <QXmlSimpleReader>
 #include <QtDebug>
 
+#include "FitFileReader.h"
 #include "XmlHandler.h"
 #include "GpxHandler.h"
 #include "TcxHandler.h"
@@ -21,14 +22,27 @@ TrackFileReader::read(const QString &path,
                       QList<Track*> *tracks,
                       char **whyNot) const
 {
+    bool success = false;
     QFile theFile(path);
     if (!theFile.exists()) {
         if (whyNot) {
             QString tmpWhyNot = QString("'%0' doesn't exist").arg(path);
             *whyNot = tmpWhyNot.toLocal8Bit().data();
         }
-        return false;
+        success = false;
+    } else if (FitFileReader::IsFitFile(path)) {
+        success = _readFit(path, tracks, whyNot);
+    } else {
+        success = _readXml(theFile, tracks, whyNot);
     }
+    return success;
+}
+
+bool
+TrackFileReader::_readXml(QFile &theFile,
+                          QList<Track*> *tracks,
+                          char **whyNot) const
+{
     XmlHandler xmlHandler;
     QXmlSimpleReader reader;
     reader.setContentHandler(&xmlHandler);
@@ -65,5 +79,14 @@ TrackFileReader::read(const QString &path,
     reader.parse(&source, true /*incremental*/);
     while (reader.parseContinue()) { };
     return true;
+}
+
+bool
+TrackFileReader::_readFit(const QString &path,
+                          QList<Track*> *tracks,
+                          char **whyNot) const
+{
+    FitFileReader reader(tracks);
+    return reader.readFile(path, whyNot);
 }
 

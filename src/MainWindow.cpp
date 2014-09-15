@@ -216,17 +216,17 @@ MainWindow::_setupShortcuts()
 }
 
 QList<LayerId>
-MainWindow::loadTrackFile(const QString &path)
+MainWindow::loadTrackFile(const QString &trackFilePath)
 {
     QList<LayerId> added;
     QList<Track*> tracks;
     char* whyNot = (char*)malloc(256);
     TrackFileReader reader;
-    bool success = reader.read(path, &tracks, &whyNot);
+    bool success = reader.read(trackFilePath, &tracks, &whyNot);
     if (!success) {
         QMessageBox::critical(this, "Could not load file", QString(whyNot));
     } else {
-        _trackFiles.append(path);
+        _trackFiles.append(trackFilePath);
         Track *thisTrack;
         foreach(thisTrack, tracks) {
             TrackLayer *thisLayer = new TrackLayer(thisTrack);
@@ -346,9 +346,9 @@ void
 MainWindow::slotAddLayer()
 {
     QStringList paths = QFileDialog::getOpenFileNames(this,
-                                                      "Select track file",
+                                                      "Select track files (.gpx, .tcx, .fit)",
                                                       QString() /*dir*/,
-                                                      "Tracklogs (*.gpx *.tcx)");
+                                                      "Tracklogs (*.gpx *.tcx *.fit)");
     if (!paths.isEmpty()) {
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
         QString path;

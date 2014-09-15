@@ -24,7 +24,7 @@ public:
     MainWindow(GLWidget *glWidget, QWidget * parent = 0, Qt::WindowFlags flags = 0);
     virtual ~MainWindow();
     
-    QList<LayerId> loadTrackFile(const QString &path);
+    QList<LayerId> loadTrackFile(const QString &trackFilePath);
     
     bool loadMapFile(const QString &path);
     

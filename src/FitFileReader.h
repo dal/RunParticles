@@ -9,6 +9,8 @@
 #ifndef __RunParticles__FitFileReader__
 #define __RunParticles__FitFileReader__
 
+#include <QString>
+
 #include "fitsdk/fit_decode.hpp"
 #include "fitsdk/fit_file_id_mesg.hpp"
 #include "fitsdk/fit_file_id_mesg_listener.hpp"
@@ -22,8 +24,9 @@
 
 #include <iostream>
 
+#include "Types.h"
+
 class FitListener : public fit::FileIdMesgListener,
-                    public fit::UserProfileMesgListener,
                     public fit::ActivityMesgListener,
                     public fit::RecordMesgListener,
                     public fit::LapMesgListener,
@@ -31,7 +34,8 @@ class FitListener : public fit::FileIdMesgListener,
 {
 
 public:
-    void OnMesg(fit::Mesg& mesg);
+    
+    FitListener(QList<Track*> *Tracks);
     
     void OnMesg(fit::FileIdMesg& mesg);
     
@@ -41,16 +45,33 @@ public:
     
     void OnMesg(fit::RecordMesg& mesg);
     
+    void OnMesg(fit::Mesg& mesg);
+    
+    bool success;
+    
+    const char* error;
+    
+protected:
+    QList<Track*> *_tracks;
+    
+    Track *_currentTrack;
+    
 };
 
-class FitReader
+class FitFileReader
 {
 public:
-    FitReader();
     
-    ~FitReader() { };
+    static bool IsFitFile(const QString &path);
     
-    void ReadFile(const QString &path);
+    FitFileReader(QList<Track*>*);
+    
+    ~FitFileReader() { };
+    
+    bool readFile(const QString &path, char **whyNot=NULL);
+    
+protected:
+    QList<Track*> *_tracks;
     
 };
 

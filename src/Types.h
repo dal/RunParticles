@@ -42,8 +42,6 @@ typedef Vec2d MapPoint;
 
 struct TrackPoint
 {
-    TrackPoint() {};
-    TrackPoint(const TrackPoint &other) { pos = other.pos; time = other.time; };
     LonLat pos;
     unsigned int time;
 };

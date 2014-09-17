@@ -187,7 +187,49 @@ HEADERS = ../src/BoundingBox.h \
           ../src/fitsdk/fit_mesg_with_event_listener.hpp \
           ../src/fitsdk/fit_activity_mesg_listener.hpp \
           ../src/fitsdk/fit_lap_mesg_listener.hpp \
-          ../src/fitsdk/fit_file_id_mesg_listener.hpp
+          ../src/fitsdk/fit_file_id_mesg_listener.hpp \
+          ../src/fitsdk/fit_buffered_record_mesg_broadcaster.hpp \
+          ../src/fitsdk/fit_buffered_record_mesg_listener.hpp \
+          ../src/fitsdk/fit_buffered_record_mesg.hpp \
+          ../src/fitsdk/fit_record_mesg_listener.hpp \
+          ../src/fitsdk/fit_file_creator_mesg_listener.hpp \
+          ../src/fitsdk/fit_software_mesg_listener.hpp \
+          ../src/fitsdk/fit_slave_device_mesg_listener.hpp \
+          ../src/fitsdk/fit_capabilities_mesg_listener.hpp \
+          ../src/fitsdk/fit_file_capabilities_mesg_listener.hpp \
+          ../src/fitsdk/fit_mesg_capabilities_mesg_listener.hpp \
+          ../src/fitsdk/fit_field_capabilities_mesg_listener.hpp \
+          ../src/fitsdk/fit_device_settings_mesg_listener.hpp \
+          ../src/fitsdk/fit_user_profile_mesg_listener.hpp \
+          ../src/fitsdk/fit_hrm_profile_mesg_listener.hpp \
+          ../src/fitsdk/fit_sdm_profile_mesg_listener.hpp \
+          ../src/fitsdk/fit_bike_profile_mesg_listener.hpp \
+          ../src/fitsdk/fit_zones_target_mesg_listener.hpp \
+          ../src/fitsdk/fit_sport_mesg_listener.hpp \
+          ../src/fitsdk/fit_hr_zone_mesg_listener.hpp \
+          ../src/fitsdk/fit_speed_zone_mesg_listener.hpp \
+          ../src/fitsdk/fit_cadence_zone_mesg_listener.hpp \
+          ../src/fitsdk/fit_power_zone_mesg_listener.hpp \
+          ../src/fitsdk/fit_met_zone_mesg_listener.hpp \
+          ../src/fitsdk/fit_goal_mesg_listener.hpp \
+          ../src/fitsdk/fit_session_mesg_listener.hpp \
+          ../src/fitsdk/fit_length_mesg_listener.hpp \
+          ../src/fitsdk/fit_event_mesg_listener.hpp \
+          ../src/fitsdk/fit_device_info_mesg_listener.hpp \
+          ../src/fitsdk/fit_training_file_mesg_listener.hpp \
+          ../src/fitsdk/fit_hrv_mesg_listener.hpp \
+          ../src/fitsdk/fit_course_mesg_listener.hpp \
+          ../src/fitsdk/fit_course_point_mesg_listener.hpp \
+          ../src/fitsdk/fit_workout_mesg_listener.hpp \
+          ../src/fitsdk/fit_workout_step_mesg_listener.hpp \
+          ../src/fitsdk/fit_schedule_mesg_listener.hpp \
+          ../src/fitsdk/fit_totals_mesg_listener.hpp \
+          ../src/fitsdk/fit_weight_scale_mesg_listener.hpp \
+          ../src/fitsdk/fit_blood_pressure_mesg_listener.hpp \
+          ../src/fitsdk/fit_monitoring_info_mesg_listener.hpp \
+          ../src/fitsdk/fit_monitoring_mesg_listener.hpp \
+          ../src/fitsdk/fit_memo_glob_mesg_listener.hpp \
+          ../src/fitsdk/fit_pad_mesg_listener.hpp
 
 SOURCES = ../src/BoundingBox.cpp \
           ../src/FitFileReader.cpp \
@@ -226,6 +268,7 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/fitsdk/fit_unicode.cpp \
           ../src/fitsdk/fit_crc.cpp \
           ../src/fitsdk/fit_mesg_broadcaster.cpp \
-          ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp
+          ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp \
+          ../src/fitsdk/fit_buffered_record_mesg_broadcaster.cpp
           
 QT += opengl network xml

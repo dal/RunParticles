@@ -136,7 +136,7 @@ TcxHandler::endElement(const QString & /* namespaceURI */,
         _depth -= 1;
         if (_inPoint && _foundLat && _foundLon && _foundTime) {
             if (_currentTrack) {
-                _currentTrack->points.push_back(TrackPoint(_currentPoint));
+                _currentTrack->points.push_back(_currentPoint);
             }
             _inPoint = false;
         }

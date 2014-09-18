@@ -13,6 +13,10 @@
 
 #define SEMICIRCLE_TO_DMS 8.381903171539307e-08
 
+// fit timestamps are expressed in seconds since UTC 00:00 Dec 31 1989
+// or epoch (631094400)
+#define FIT_EPOCH_OFFSET 631094400
+
 FitListener::FitListener(QList<Track*> *tracks) :
     success(true),
     _tracks(tracks),
@@ -45,6 +49,7 @@ FitListener::OnMesg(fit::ActivityMesg& mesg)
         _currentTrack->sport = "Generic";
     else
         _currentTrack->sport = "Unknown";
+    mesg.GetLocalTimestamp
     _tracks->append(_currentTrack);
     _currentTrack = new Track();
 }
@@ -60,8 +65,7 @@ FitListener::OnMesg(fit::RecordMesg& mesg)
 {
     if (!_currentTrack)
         return;
-    // seconds since UTC 00:00 Dec 31 1989 (631094400)
-    FIT_DATE_TIME timestamp = mesg.GetTimestamp() + 631094400;
+    FIT_DATE_TIME timestamp = mesg.GetTimestamp() + FIT_EPOCH_OFFSET;
     FIT_SINT32 lat = mesg.GetPositionLat();
     FIT_SINT32 lng = mesg.GetPositionLong();
     TrackPoint point;
@@ -71,8 +75,11 @@ FitListener::OnMesg(fit::RecordMesg& mesg)
         point.pos.x -= 360.;
     if (point.pos.y > 180.)
         point.pos.y -= 360;
+    if (point.pos.x > 180. || point.pos.x < -180.
+        || point.pos.y > 90. || point.pos.y < -90.)
+        return;
     point.time = timestamp;
-    _currentTrack->points.push_back(TrackPoint(point));
+    _currentTrack->points.push_back(point);
 }
 
 void

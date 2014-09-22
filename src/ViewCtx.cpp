@@ -13,7 +13,8 @@ ViewCtx::ViewCtx()
     : _cameraToWorld(0, 0),
       _width(0),
       _height(0),
-      _resolution(1.)
+      _resolution(1.),
+      _devicePixelRatio(1.)
 {
     
 }
@@ -27,6 +28,18 @@ double
 ViewCtx::getResolution() const
 {
     return _resolution;
+}
+
+double
+ViewCtx::getDevicePixelRatio() const
+{
+    return _devicePixelRatio;
+}
+
+void
+ViewCtx::setDevicePixelRatio(double ratio)
+{
+    _devicePixelRatio = ratio;
 }
 
 void

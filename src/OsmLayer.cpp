@@ -101,7 +101,8 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     
     if (_lastResolution != viewCtx.getResolution()) {
         _lastResolution = viewCtx.getResolution();
-        _currentZoom = _getZoomLevel(viewCtx.getResolution());
+        _currentZoom = _getZoomLevel(viewCtx.getResolution()
+                                     * viewCtx.getDevicePixelRatio());
         _numEdgeTiles = pow(2., _currentZoom);
         _tileSize = _worldSize / _numEdgeTiles;
     }

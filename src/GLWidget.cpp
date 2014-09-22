@@ -38,6 +38,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     connect(_map, SIGNAL(layerUpdated()), SLOT(slotRedrawWhenReady()));
     _timer->setInterval(Refresh_Interval);
     _idleTimer->setSingleShot(true);
+    if (QWindow *window = windowHandle())
+        _viewCtx.setDevicePixelRatio(window->devicePixelRatio());
     connect(_idleTimer, SIGNAL(timeout()), SLOT(updateGL()));
 }
 

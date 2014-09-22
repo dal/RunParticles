@@ -34,6 +34,10 @@ public:
     
     double getResolution() const;
     
+    double getDevicePixelRatio() const;
+    
+    void setDevicePixelRatio(double ratio);
+    
     BoundingBox getBoundingBox() const;
     
     void setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
@@ -62,6 +66,8 @@ protected:
     int _width, _height;
     
     double _resolution;
+    
+    double _devicePixelRatio;
     
 };
 

@@ -320,10 +320,10 @@ MainWindow::slotOpenMapFile()
     if (!confirmAbandonMap())
         return false;
     QString path = QFileDialog::getOpenFileName(this, "Select map file");
-    if (path.isEmpty())
-        return false;
     /* pump the event loop once to let the dialog disappear */
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    if (path.isEmpty())
+        return false;
     clearMap();
     return loadMapFile(path);
 }
@@ -346,11 +346,11 @@ void
 MainWindow::slotAddLayer()
 {
     QStringList paths = QFileDialog::getOpenFileNames(this,
-                                                      "Select track files (.gpx, .tcx, .fit)",
-                                                      QString() /*dir*/,
-                                                      "Tracklogs (*.gpx *.tcx *.fit)");
+                                        "Select track files (.gpx, .tcx, .fit)",
+                                        QString() /*dir*/,
+                                        "Tracklogs (*.gpx *.tcx *.fit)");
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     if (!paths.isEmpty()) {
-        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
         QString path;
         QList<LayerId> added;
         foreach(path, paths) {

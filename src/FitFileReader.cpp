@@ -32,24 +32,51 @@ FitListener::OnMesg(fit::FileIdMesg& mesg)
 }
 
 void
-FitListener::OnMesg(fit::ActivityMesg& mesg)
+FitListener::OnMesg(fit::SessionMesg& mesg)
 {
-    FIT_ACTIVITY_TYPE type = mesg.GetType();
-    if (type == FIT_ACTIVITY_TYPE_RUNNING)
+    FIT_SPORT sport = mesg.GetSport();
+    if (sport == FIT_SPORT_RUNNING)
         _currentTrack->sport = "Running";
-    else if (type == FIT_ACTIVITY_TYPE_CYCLING)
+    else if (sport == FIT_SPORT_CYCLING)
         _currentTrack->sport = "Cycling";
-    else if (type == FIT_ACTIVITY_TYPE_SWIMMING)
+    else if (sport == FIT_SPORT_SWIMMING)
         _currentTrack->sport = "Swimming";
-    else if (type == FIT_ACTIVITY_TYPE_TRANSITION)
+    else if (sport == FIT_SPORT_TRANSITION)
         _currentTrack->sport = "Transition";
-    else if (type == FIT_ACTIVITY_TYPE_WALKING)
+    else if (sport == FIT_SPORT_FITNESS_EQUIPMENT)
+        _currentTrack->sport = "Fitness equipment";
+    else if (sport == FIT_SPORT_WALKING)
         _currentTrack->sport = "Walking";
-    else if (type == FIT_ACTIVITY_TYPE_GENERIC)
+    else if (sport == FIT_SPORT_GENERIC)
         _currentTrack->sport = "Generic";
+    else if (sport == FIT_SPORT_WALKING)
+        _currentTrack->sport = "Walking";
+    else if (sport == FIT_SPORT_CROSS_COUNTRY_SKIING)
+        _currentTrack->sport = "Cross country skiing";
+    else if (sport == FIT_SPORT_ALPINE_SKIING)
+        _currentTrack->sport = "Alpine skiing";
+    else if (sport == FIT_SPORT_SNOWBOARDING)
+        _currentTrack->sport = "Snowboarding";
+    else if (sport == FIT_SPORT_ROWING)
+        _currentTrack->sport = "Rowing";
+    else if (sport == FIT_SPORT_MOUNTAINEERING)
+        _currentTrack->sport = "Mountaineering";
+    else if (sport == FIT_SPORT_HIKING)
+        _currentTrack->sport = "Hiking";
+    else if (sport == FIT_SPORT_MULTISPORT)
+        _currentTrack->sport = "Multisport";
+    else if (sport == FIT_SPORT_PADDLING)
+        _currentTrack->sport = "Paddling";
+    else if (sport == FIT_SPORT_ALL)
+        _currentTrack->sport = "All";
     else
         _currentTrack->sport = "Unknown";
-    mesg.GetLocalTimestamp
+    
+    // Set the name from the timestamp
+    FIT_DATE_TIME tstmp = mesg.GetStartTime() + FIT_EPOCH_OFFSET;
+    _currentTrack->name = QDateTime::fromTime_t(tstmp)
+                          .toString("yyyy-MM-ddThh:mm:ssZ");
+    
     _tracks->append(_currentTrack);
     _currentTrack = new Track();
 }
@@ -134,7 +161,7 @@ FitFileReader::readFile(const QString &path, char **whyNot)
     }
     
     broadcaster.AddListener((fit::FileIdMesgListener &)listener);
-    broadcaster.AddListener((fit::ActivityMesgListener &)listener);
+    broadcaster.AddListener((fit::SessionMesgListener &)listener);
     broadcaster.AddListener((fit::LapMesgListener &)listener);
     broadcaster.AddListener((fit::RecordMesgListener &)listener);
     

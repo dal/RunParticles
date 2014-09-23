@@ -4,17 +4,25 @@
 #include <QFile>
 #include <QList>
 #include <QString>
+#include <QObject>
 
 #include "Types.h"
 
-class TrackFileReader 
+class TrackFileReader : public QObject
 {
+    
+    Q_OBJECT
+    
 public:
-    TrackFileReader();
+    TrackFileReader(QObject *parent=NULL);
     
     bool read(const QString &path,
               QList<Track*> *tracks,
               std::string *whyNot=NULL) const;
+    
+signals:
+    
+    void signalReady(const QString);
     
 protected:
     bool _readXml(QFile &theFile,

@@ -12,7 +12,8 @@
 #include "GpxHandler.h"
 #include "TcxHandler.h"
 
-TrackFileReader::TrackFileReader()
+TrackFileReader::TrackFileReader(QObject *parent) :
+    QObject(parent)
 {
     
 }

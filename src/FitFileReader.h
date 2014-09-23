@@ -30,9 +30,7 @@
 
 class FitListener : public fit::FileIdMesgListener,
                     public fit::RecordMesgListener,
-                    public fit::LapMesgListener,
-                    public fit::SessionMesgListener,
-                    public fit::MesgListener
+                    public fit::SessionMesgListener
 {
 
 public:
@@ -41,13 +39,9 @@ public:
     
     void OnMesg(fit::FileIdMesg& mesg);
     
-    void OnMesg(fit::LapMesg& mesg);
-    
     void OnMesg(fit::RecordMesg& mesg);
     
     void OnMesg(fit::SessionMesg& mesg);
-    
-    void OnMesg(fit::Mesg& mesg);
     
     bool success;
     
@@ -70,7 +64,7 @@ public:
     
     ~FitFileReader() { };
     
-    bool readFile(const QString &path, char **whyNot=NULL);
+    bool readFile(const QString &path, std::string *whyNot=NULL);
     
 protected:
     QList<Track*> *_tracks;

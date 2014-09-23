@@ -220,11 +220,13 @@ MainWindow::loadTrackFile(const QString &trackFilePath)
 {
     QList<LayerId> added;
     QList<Track*> tracks;
-    char* whyNot = (char*)malloc(256);
+    std::string *whyNot = new std::string();
     TrackFileReader reader;
-    bool success = reader.read(trackFilePath, &tracks, &whyNot);
+    bool success = reader.read(trackFilePath, &tracks, whyNot);
     if (!success) {
-        QMessageBox::critical(this, "Could not load file", QString(whyNot));
+        QMessageBox::critical(this,
+                              "Could not load file",
+                              QString::fromStdString(*whyNot));
     } else {
         _trackFiles.append(trackFilePath);
         Track *thisTrack;

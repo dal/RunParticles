@@ -28,7 +28,8 @@ FitListener::FitListener(QList<Track*> *tracks) :
 void
 FitListener::OnMesg(fit::FileIdMesg& mesg)
 {
-    
+    if (mesg.GetType() != FIT_FILE_ACTIVITY)
+        throw fit::RuntimeException("File is not a FIT activity file");
 }
 
 void
@@ -82,12 +83,6 @@ FitListener::OnMesg(fit::SessionMesg& mesg)
 }
 
 void
-FitListener::OnMesg(fit::LapMesg& mesg)
-{
-    
-}
-
-void
 FitListener::OnMesg(fit::RecordMesg& mesg)
 {
     if (!_currentTrack)
@@ -107,12 +102,6 @@ FitListener::OnMesg(fit::RecordMesg& mesg)
         return;
     point.time = timestamp;
     _currentTrack->points.push_back(point);
-}
-
-void
-FitListener::OnMesg(fit::Mesg &mesg)
-{
-    
 }
 
 bool
@@ -136,7 +125,7 @@ FitFileReader::FitFileReader(QList<Track*>*tracks) :
 }
 
 bool
-FitFileReader::readFile(const QString &path, char **whyNot)
+FitFileReader::readFile(const QString &path, std::string *whyNot)
 {
     std::fstream file;
     fit::Decode decode;
@@ -149,29 +138,29 @@ FitFileReader::readFile(const QString &path, char **whyNot)
     if (!file.is_open())
     {
         if (whyNot)
-            sprintf(*whyNot, "Error opening file");
+            *whyNot = "Error opening file";
         return false;
     }
     
     if (!decode.CheckIntegrity(file))
     {
         if (whyNot)
-            sprintf(*whyNot, "FIT file integrity failed");
+            *whyNot = "FIT file integrity failed";
         return false;
     }
     
     broadcaster.AddListener((fit::FileIdMesgListener &)listener);
     broadcaster.AddListener((fit::SessionMesgListener &)listener);
-    broadcaster.AddListener((fit::LapMesgListener &)listener);
     broadcaster.AddListener((fit::RecordMesgListener &)listener);
     
     try
     {
         broadcaster.Run(file);
-    }
-    catch (const fit::RuntimeException& e)
-    {
-        sprintf(*whyNot, "Exception decoding file: %s\n", e.what());
+    } catch (const fit::RuntimeException& e) {
+        if (whyNot) {
+            *whyNot = "Exception decoding file: ";
+            whyNot->append(e.what());
+        }
         return false;
     }
     

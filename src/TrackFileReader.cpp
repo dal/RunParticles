@@ -20,14 +20,14 @@ TrackFileReader::TrackFileReader()
 bool
 TrackFileReader::read(const QString &path, 
                       QList<Track*> *tracks,
-                      char **whyNot) const
+                      std::string *whyNot) const
 {
     bool success = false;
     QFile theFile(path);
     if (!theFile.exists()) {
         if (whyNot) {
             QString tmpWhyNot = QString("'%0' doesn't exist").arg(path);
-            *whyNot = tmpWhyNot.toLocal8Bit().data();
+            *whyNot = tmpWhyNot.toStdString();
         }
         success = false;
     } else if (FitFileReader::IsFitFile(path)) {
@@ -41,7 +41,7 @@ TrackFileReader::read(const QString &path,
 bool
 TrackFileReader::_readXml(QFile &theFile,
                           QList<Track*> *tracks,
-                          char **whyNot) const
+                          std::string *whyNot) const
 {
     XmlHandler xmlHandler;
     QXmlSimpleReader reader;
@@ -70,7 +70,7 @@ TrackFileReader::_readXml(QFile &theFile,
         }
     default:
         {
-        sprintf(*whyNot, "Unrecognized file type");
+        *whyNot = "Unrecognized file type";
         return false;
         break;
         }
@@ -84,7 +84,7 @@ TrackFileReader::_readXml(QFile &theFile,
 bool
 TrackFileReader::_readFit(const QString &path,
                           QList<Track*> *tracks,
-                          char **whyNot) const
+                          string *whyNot) const
 {
     FitFileReader reader(tracks);
     return reader.readFile(path, whyNot);

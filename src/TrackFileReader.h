@@ -14,16 +14,16 @@ public:
     
     bool read(const QString &path,
               QList<Track*> *tracks,
-              char **whyNot=NULL) const;
+              std::string *whyNot=NULL) const;
     
 protected:
     bool _readXml(QFile &theFile,
                  QList<Track*> *tracks,
-                 char **whyNot=NULL) const;
+                 std::string *whyNot=NULL) const;
 
     bool _readFit(const QString &path,
                  QList<Track*> *tracks,
-                 char **whyNot=NULL) const;
+                 std::string *whyNot=NULL) const;
 };
 
 #endif

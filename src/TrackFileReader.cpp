@@ -6,16 +6,77 @@
 #include <QXmlInputSource>
 #include <QXmlSimpleReader>
 #include <QtDebug>
+#include <QThread>
+#include <QMutex>
 
 #include "FitFileReader.h"
 #include "XmlHandler.h"
 #include "GpxHandler.h"
 #include "TcxHandler.h"
 
-TrackFileReader::TrackFileReader(QObject *parent) :
-    QObject(parent)
+typedef QPair<QString, QList<Track*>*> WorkPair;
+typedef QList<WorkPair> WorkList;
+
+class TrackFileReaderWorker : public QThread
 {
+    Q_OBJECT
     
+public:
+    TrackFileReaderWorker(TrackFileReader *parent=NULL) : QThread(parent),
+        _reader(parent)
+    {
+        
+    };
+    
+    void run() Q_DECL_OVERRIDE {
+        while (true) {
+            WorkPair work;
+            _inMutex.lock();
+            if (!_input.isEmpty()) {
+                work = _input.first();
+                _input.pop_front();
+            } else {
+                _inMutex.unlock();
+                break;
+            }
+            _inMutex.unlock();
+            std::string whyNot;
+            if (!_reader->read(work.first, work.second, &whyNot)) {
+                QString error = QString::fromStdString(whyNot);
+                emit signalError(work.first, error);
+            } else {
+                emit signalReady(work.first, work.second);
+            }
+        }
+    };
+    
+    void read(const QString &path, QList<Track*> *tracks) {
+        QMutexLocker locker(&_inMutex);
+        _input.append(WorkPair(path, tracks));
+        start();
+    };
+    
+signals:
+    void signalReady(const QString&, QList<Track*>*);
+    
+    void signalError(const QString&, const QString&);
+    
+protected:
+    QMutex _inMutex;
+                   
+    WorkList _input;
+    
+    TrackFileReader *_reader;
+};
+
+TrackFileReader::TrackFileReader(QObject *parent) :
+    QObject(parent),
+    _worker(new TrackFileReaderWorker(this))
+{
+    connect(_worker, &TrackFileReaderWorker::signalReady,
+            this, &TrackFileReader::signalReady);
+    connect(_worker, &TrackFileReaderWorker::signalError,
+            this, &TrackFileReader::signalError);
 }
 
 bool

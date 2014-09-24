@@ -8,6 +8,8 @@
 
 #include "Types.h"
 
+class TrackFileReaderWorker;
+
 class TrackFileReader : public QObject
 {
     
@@ -20,9 +22,13 @@ public:
               QList<Track*> *tracks,
               std::string *whyNot=NULL) const;
     
+    bool readDeferred(const QString &path, QList<Track*> *tracks);
+    
 signals:
     
-    void signalReady(const QString);
+    void signalReady(const QString&, QList<Track*>*);
+    
+    void signalError(const QString&, const QString&);
     
 protected:
     bool _readXml(QFile &theFile,
@@ -32,6 +38,8 @@ protected:
     bool _readFit(const QString &path,
                  QList<Track*> *tracks,
                  std::string *whyNot=NULL) const;
+    
+    TrackFileReaderWorker *_worker;
 };
 
 #endif

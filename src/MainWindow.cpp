@@ -438,6 +438,18 @@ MainWindow::slotShowMapWindow()
 }
 
 void
+MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> tracks)
+{
+    // TODO
+}
+
+void
+MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
+{
+    // TODO
+}
+
+void
 MainWindow::_showWidget(QWidget *widget)
 {
     widget->show();

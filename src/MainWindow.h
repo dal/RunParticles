@@ -67,6 +67,10 @@ public slots:
     
     void slotShowMapWindow();
     
+    void slotTrackFileLoaded(const QString &path, QList<Track*> tracks);
+    
+    void slotTrackFileLoadError(const QString &path, const QString &what);
+    
 protected:
     void _layoutPlaybackControls(QWidget*);
     

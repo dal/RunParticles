@@ -6,29 +6,21 @@
 #include <QXmlInputSource>
 #include <QXmlSimpleReader>
 #include <QtDebug>
-#include <QThread>
-#include <QMutex>
 
 #include "FitFileReader.h"
 #include "XmlHandler.h"
 #include "GpxHandler.h"
 #include "TcxHandler.h"
 
-typedef QPair<QString, QList<Track*>*> WorkPair;
-typedef QList<WorkPair> WorkList;
-
-class TrackFileReaderWorker : public QThread
+TrackFileReaderWorker::TrackFileReaderWorker(TrackFileReader *parent) :
+    QThread(parent),
+    _reader(parent)
 {
-    Q_OBJECT
-    
-public:
-    TrackFileReaderWorker(TrackFileReader *parent=NULL) : QThread(parent),
-        _reader(parent)
-    {
         
-    };
+};
     
-    void run() Q_DECL_OVERRIDE {
+void
+TrackFileReaderWorker::run() {
         while (true) {
             WorkPair work;
             _inMutex.lock();
@@ -50,23 +42,11 @@ public:
         }
     };
     
-    void read(const QString &path, QList<Track*> *tracks) {
-        QMutexLocker locker(&_inMutex);
-        _input.append(WorkPair(path, tracks));
-        start();
-    };
-    
-signals:
-    void signalReady(const QString&, QList<Track*>*);
-    
-    void signalError(const QString&, const QString&);
-    
-protected:
-    QMutex _inMutex;
-                   
-    WorkList _input;
-    
-    TrackFileReader *_reader;
+void
+TrackFileReaderWorker::read(const QString &path, QList<Track*> *tracks) {
+    QMutexLocker locker(&_inMutex);
+    _input.append(WorkPair(path, tracks));
+    start();
 };
 
 TrackFileReader::TrackFileReader(QObject *parent) :

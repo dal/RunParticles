@@ -5,10 +5,42 @@
 #include <QList>
 #include <QString>
 #include <QObject>
+#include <QThread>
+#include <QMutex>
 
 #include "Types.h"
 
-class TrackFileReaderWorker;
+typedef QPair<QString, QList<Track*>*> WorkPair;
+typedef QList<WorkPair> WorkList;
+
+class TrackFileReader;
+
+class TrackFileReaderWorker : public QThread
+{
+    Q_OBJECT
+    
+public:
+    TrackFileReaderWorker(TrackFileReader *parent=NULL);
+    
+    virtual ~TrackFileReaderWorker() { };
+    
+    void run();
+    
+    void read(const QString &path, QList<Track*> *tracks);
+    
+signals:
+    void signalReady(const QString&, QList<Track*>*);
+    
+    void signalError(const QString&, const QString&);
+    
+protected:
+    QMutex _inMutex;
+    
+    WorkList _input;
+    
+    TrackFileReader *_reader;
+    
+};
 
 class TrackFileReader : public QObject
 {

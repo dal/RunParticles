@@ -15,6 +15,7 @@
 #include "GLWidget.h"
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
+#include "TrackFileReader.h"
 
 class MainWindow : public QMainWindow
 {
@@ -24,7 +25,7 @@ public:
     MainWindow(GLWidget *glWidget, QWidget * parent = 0, Qt::WindowFlags flags = 0);
     virtual ~MainWindow();
     
-    QList<LayerId> loadTrackFile(const QString &trackFilePath);
+    void loadTrackFile(const QString &trackFilePath);
     
     bool loadMapFile(const QString &path);
     
@@ -67,7 +68,7 @@ public slots:
     
     void slotShowMapWindow();
     
-    void slotTrackFileLoaded(const QString &path, QList<Track*> tracks);
+    void slotTrackFileLoaded(const QString &path, QList<Track*> *tracks);
     
     void slotTrackFileLoadError(const QString &path, const QString &what);
     
@@ -99,6 +100,7 @@ protected:
     QNetworkAccessManager *_networkAccessManager;
     QNetworkDiskCache *_diskCache;
     QStringList _trackFiles;
+    TrackFileReader *_trackFileReader;
 };
 
 #endif

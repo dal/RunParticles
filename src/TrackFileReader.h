@@ -54,7 +54,7 @@ public:
               QList<Track*> *tracks,
               std::string *whyNot=NULL) const;
     
-    bool readDeferred(const QString &path, QList<Track*> *tracks);
+    void readDeferred(const QString &path, QList<Track*> *tracks);
     
 signals:
     

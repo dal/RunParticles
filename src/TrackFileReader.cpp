@@ -80,6 +80,12 @@ TrackFileReader::read(const QString &path,
     return success;
 }
 
+void
+TrackFileReader::readDeferred(const QString &path, QList<Track *> *tracks)
+{
+    _worker->read(path, tracks);
+}
+
 bool
 TrackFileReader::_readXml(QFile &theFile,
                           QList<Track*> *tracks,

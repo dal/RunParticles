@@ -13,7 +13,6 @@
 #include "MapFileIO.h"
 #include "OsmLayer.h"
 #include "TrackLayer.h"
-#include "TrackFileReader.h"
 #include "Util.h"
 
 MainWindow::MainWindow(GLWidget *glWidget,
@@ -23,7 +22,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _fileIO(new MapFileIO(this)),
     _menuBar(new QMenuBar(0)),
     _glWidget(glWidget),
-    _layerListWidget(new LayerListWidget())
+    _layerListWidget(new LayerListWidget()),
+    _trackFileReader(new TrackFileReader(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -31,6 +31,11 @@ MainWindow::MainWindow(GLWidget *glWidget,
     QString cacheDir = getNetworkCacheDir();
     _diskCache->setCacheDirectory(cacheDir);
     _networkAccessManager->setCache(_diskCache);
+    
+    connect(_trackFileReader, &TrackFileReader::signalReady,
+            this, &MainWindow::slotTrackFileLoaded);
+    connect(_trackFileReader, &TrackFileReader::signalError,
+            this, &MainWindow::slotTrackFileLoadError);
     
     /* playback controls widget */
     setWindowTitle("Playback controls");
@@ -215,29 +220,11 @@ MainWindow::_setupShortcuts()
             _newMapAction, SLOT(trigger()));
 }
 
-QList<LayerId>
+void
 MainWindow::loadTrackFile(const QString &trackFilePath)
 {
-    QList<LayerId> added;
-    QList<Track*> tracks;
-    std::string *whyNot = new std::string();
-    TrackFileReader reader;
-    bool success = reader.read(trackFilePath, &tracks, whyNot);
-    if (!success) {
-        QMessageBox::critical(this,
-                              "Could not load file",
-                              QString::fromStdString(*whyNot));
-    } else {
-        _trackFiles.append(trackFilePath);
-        Track *thisTrack;
-        foreach(thisTrack, tracks) {
-            TrackLayer *thisLayer = new TrackLayer(thisTrack);
-            added.append(thisLayer->id());
-            _glWidget->getMap()->addLayer(thisLayer);
-            _layerListWidget->addLayer(thisLayer);
-        }
-    }
-    return added;
+    QList<Track*> *tracks = new QList<Track*>();
+    _trackFileReader->readDeferred(trackFilePath, tracks);
 }
 
 bool
@@ -354,13 +341,10 @@ MainWindow::slotAddLayer()
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     if (!paths.isEmpty()) {
         QString path;
-        QList<LayerId> added;
         foreach(path, paths) {
-            added << loadTrackFile(path);
+            loadTrackFile(path);
             _fileIO->addTrackFile(path);
         }
-        /* frame up the last added layer */
-        slotFrameLayers(added.mid(added.count()-1, -1));
     }
 }
 
@@ -438,15 +422,26 @@ MainWindow::slotShowMapWindow()
 }
 
 void
-MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> tracks)
+MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
 {
-    // TODO
+    _trackFiles.append(path);
+    Track *thisTrack;
+    QList<LayerId> added;
+    foreach(thisTrack, *tracks) {
+        TrackLayer *thisLayer = new TrackLayer(thisTrack);
+        added.append(thisLayer->id());
+        _glWidget->getMap()->addLayer(thisLayer);
+        _layerListWidget->addLayer(thisLayer);
+    }
+    /* frame up the last added layer */
+    slotFrameLayers(added.mid(added.count()-1, -1));
 }
 
 void
 MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 {
-    // TODO
+    QString err = QString("Error loading file '%0': %1").arg(path).arg(what);
+    QMessageBox::critical(this, "Could not load file", err);
 }
 
 void

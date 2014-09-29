@@ -169,8 +169,10 @@ OsmLayer::onTileReady(OsmIndex index)
 {
     TileMap::iterator i = _tiles.find(index);
     if (i != _tiles.end()) {
-        i->second->setTexture(_tileSource->retrieveFinishedTile(index));
-        emit layerUpdated();
+        if (_tileSource->hasFinishedTile(index)) {
+            i->second->setTexture(_tileSource->retrieveFinishedTile(index));
+            emit layerUpdated();
+        }
     }
 }
 

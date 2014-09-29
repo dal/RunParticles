@@ -53,6 +53,12 @@ OsmTileSource::getTile(const OsmIndex &index)
     _requestTile(index);
 }
 
+bool
+OsmTileSource::hasFinishedTile(const OsmIndex &index) const
+{
+    return _memoryTileCache.find(index) != _memoryTileCache.end();
+}
+
 cinder::Surface8u&
 OsmTileSource::retrieveFinishedTile(const OsmIndex &index)
 {

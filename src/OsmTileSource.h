@@ -112,6 +112,8 @@ public:
     
     void cancelTileRequest(const OsmIndex &index);
     
+    bool hasFinishedTile(const OsmIndex &index) const;
+    
     cinder::Surface8u& retrieveFinishedTile(const OsmIndex &index);
     
 signals:

@@ -133,7 +133,6 @@ protected:
     
     qint64 _currentSeconds;
     
-    CameraOrtho _camera;
     CameraOrtho _viewCamera;
     
     QPoint _lastDownPos;

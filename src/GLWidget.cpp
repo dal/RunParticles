@@ -52,7 +52,6 @@ GLWidget::initializeGL()
 void
 GLWidget::paintGL()
 {
-    _camera = _mapView.getCamera();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glPushMatrix();
@@ -205,26 +204,20 @@ GLWidget::update()
 MapPoint
 GLWidget::screenPointToRelativeMapPoint(const QPoint &pt)
 {
-    float left, top, right, bottom;
+    double left, top, right, bottom;
     _mapView.getFrustum(left, top, right, bottom);
-    float xPixelsToMeters = (right - left) / (float)width();
-    float yPixelsToMeters = (top - bottom) / (float)height();
+    double xPixelsToMeters = (right - left) / (double)width();
+    double yPixelsToMeters = (top - bottom) / (double)height();
     return MapPoint(pt.x()*xPixelsToMeters, pt.y()*yPixelsToMeters);
 }
 
 MapPoint
 GLWidget::screenPointToMapPoint(const QPoint &pt)
 {
-    float left, top, right, bottom, near, far;
-    // *left, *top, *right, *bottom, *near, *far
-    _camera.getFrustum(&left,
-                       &top,
-                       &right,
-                       &bottom,
-                       &near,
-                       &far);
-    float xPixelsToMeters = (right - left) / (float)width();
-    float yPixelsToMeters = (top - bottom) / (float)height();
+    double left, top, right, bottom;
+    _mapView.getFrustum(left, top, right, bottom);
+    double xPixelsToMeters = (right - left) / (double)width();
+    double yPixelsToMeters = (top - bottom) / (double)height();
     return MapPoint(left + pt.x()*xPixelsToMeters,
                     bottom + pt.y()*yPixelsToMeters);
 }
@@ -384,7 +377,7 @@ GLWidget::slotUnlockView()
 void
 GLWidget::_updateViewCtx()
 {
-    float left, top, right, bottom;
+    double left, top, right, bottom;
     qreal pixelRatio = windowHandle()->devicePixelRatio();
     _mapView.getFrustum(left, top, right, bottom);
     _viewCtx.setViewport(MapPoint(left, top),

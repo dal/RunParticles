@@ -7,6 +7,7 @@
 
 #include "cinder/gl/gl.h"
 #include <QString>
+#include <QOpenGLShaderProgram>
 
 class TrackLayer : public Layer
 {
@@ -50,11 +51,14 @@ public:
     MapPoint position() const;
     
     bool ephemeral() const;
+    
 protected:
     
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
     
     void _drawParticle(const ViewCtx &viewCtx) const;
+    
+    static void _setup();
     
     float _particleRadius;
     
@@ -75,6 +79,16 @@ protected:
     QDateTime _startTime;
     
     float *_pathBuffer;
+    
+    static QOpenGLShaderProgram *_shader;
+    
+    static bool _isSetup, _particlesDrawn, _selectedParticlesDrawn;
+    
+    static QList<Vec2d> _particleDrawList, _selectedParticleDrawList;
+    
+    static void _drawParticles();
+    
+    static void _drawSelectedParticles();
     
 };
 

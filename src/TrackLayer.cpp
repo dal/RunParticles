@@ -15,6 +15,24 @@ const Color TrackLayer::RunColor = Color( 1, 0, 0 );
 const Color TrackLayer::OtherColor = Color( 0.3, 0.3, 1 );
 const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
+QOpenGLShaderProgram* TrackLayer::_shader;
+bool TrackLayer::_isSetup = false;
+bool TrackLayer::_particlesDrawn = false;
+bool TrackLayer::_selectedParticlesDrawn = false;
+
+void
+TrackLayer::_setup()
+{
+    _shader = new QOpenGLShaderProgram();
+    /*
+    _shader->addShaderFromSourceCode(QOpenGLShader::Vertex, "\
+                                     ");
+    _shader->addShaderFromSourceCode(QOpenGLShader::Fragment, "\
+                                     ");
+    */
+    _isSetup = true;
+}
+
 TrackLayer::TrackLayer(const Track *track) : Layer(),
 _particleRadius(PARTICLE_RADIUS),
 _mediumLodRes(MEDIUM_LOD_RES),
@@ -22,6 +40,8 @@ _loLodRes(LO_LOD_RES),
 _track(track),
 _duration(0)
 {
+    if (!_isSetup)
+        _setup();
     int numPts = track->points.size();
     if (numPts > 0)
         _startTime = QDateTime::fromTime_t(track->points[0].time);
@@ -231,4 +251,16 @@ bool
 TrackLayer::ephemeral() const
 {
     return false;
+}
+
+void
+TrackLayer::_drawParticles()
+{
+    _particlesDrawn = true;
+}
+
+void
+TrackLayer::_drawSelectedParticles()
+{
+    _selectedParticlesDrawn = true;
 }

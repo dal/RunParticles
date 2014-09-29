@@ -22,20 +22,19 @@ using namespace cinder;
 class MapView {
 public:
     MapView();
-    MapView(CameraOrtho&);
     
-    void move(const Vec2f &moveVector);
+    void move(const Vec2d &moveVector);
     void resize(int oldWidth, int oldHieght, int newWidth, int newHeight);
-        
-    const CameraOrtho& getCamera() const;
+    
     void setCurrentCam( CameraOrtho &aCurrentCam );
     void zoom( const float );
     void recenter(const MapPoint &position);
     void frameBoundingBox(const BoundingBox &bbox);
-    void getFrustum(float &left, float &top, float &right, float &bottom) const;
+    void getFrustum(double &left, double &top, double &right, double &bottom) const;
+    void setFrustum(double left, double top, double right, double bottom);
         
 private:
-    CameraOrtho	mCurrentCam;
+    double _left, _top, _right, _bottom;
     float _aspectRatio;
 };
 

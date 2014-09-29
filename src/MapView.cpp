@@ -78,15 +78,12 @@ MapView::zoom(const float size)
 void
 MapView::recenter(const MapPoint &position)
 {
-    double oldLeft, oldTop, oldRight, oldBottom;
-    getFrustum(oldLeft, oldTop, oldRight, oldBottom);
-    float width = (oldRight - oldLeft) * 0.5;
-    float height = (oldTop - oldBottom) * 0.5;
-    float newLeft = position.x - width;
-    float newRight = position.x + width;
-    float newTop = position.y + height;
-    float newBottom = position.y - height;
-    setFrustum(newLeft, newTop, newRight, newBottom);
+    double width = (_right - _left) * 0.5;
+    double height = (_top - _bottom) * 0.5;
+    _left = position.x - width;
+    _right = position.x + width;
+    _top = position.y + height;
+    _bottom = position.y - height;
 }
 
 void

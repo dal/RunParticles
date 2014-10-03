@@ -299,6 +299,7 @@ TrackLayer::_drawParticles(const ViewCtx &viewCtx)
     glDrawArrays( GL_POINTS, 0, bufferIndex/2 );
     glDisableClientState( GL_VERTEX_ARRAY );
     _shader->release();
+    free(_particleBuffer);
 }
 
 void

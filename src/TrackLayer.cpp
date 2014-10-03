@@ -1,5 +1,7 @@
 #include "TrackLayer.h"
 
+#include <QColor>
+
 #include "PathUtil.h"
 #include "Projection.h"
 #include "Types.h"
@@ -52,6 +54,10 @@ TrackLayer::_setup()
         "    float t = smoothstep(disc_radius+border_size, disc_radius-border_size, dist);\n"
         "    gl_FragColor = mix(bkg_color, disc_color, t);\n"
         "}\n");
+    _shader->link();
+    _shader->setUniformValue(_shader->uniformLocation("disc_radius"), (float)14.0 );
+    _shader->setUniformValue(_shader->uniformLocation("disc_color"), QColor(1,1,1) );
+    _shader->setUniformValue(_shader->uniformLocation("disc_center"), QVector2D(0.5, 0.5) );
     _isSetup = true;
 }
 

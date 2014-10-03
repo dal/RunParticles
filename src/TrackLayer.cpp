@@ -19,6 +19,9 @@ QOpenGLShaderProgram* TrackLayer::_shader;
 bool TrackLayer::_isSetup = false;
 bool TrackLayer::_particlesDrawn = false;
 bool TrackLayer::_selectedParticlesDrawn = false;
+QList<Vec2d> TrackLayer::_particleDrawList;
+QList<Vec2d> TrackLayer::_selectedParticleDrawList;
+float TrackLayer::_particleRadius = PARTICLE_RADIUS;
 
 void
 TrackLayer::_setup()
@@ -32,32 +35,27 @@ TrackLayer::_setup()
         "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
         "    gl_TexCoord[0] = gl_MultiTexCoord0;\n"
         "}\n");
-    _shader->addShaderFromSourceCode(QOpenGLShader::Fragment, "\
-                                     #version 120
-                                     uniform sampler2D tex0;
-                                     uniform float border_size; // 0.01
-                                     uniform float disc_radius; // 0.5
-                                     uniform vec4 disc_color; // vec4(1.0, 1.0, 1.0, 1.0)
-                                     uniform vec2 disc_center; // vec2(0.5, 0.5)
-                                     void main (void)
-    {
-        vec2 uv = gl_TexCoord[0].xy;
-        
-        vec4 bkg_color = texture2D(tex0,uv * vec2(1.0, -1.0));
-        
-        // Offset uv with the center of the circle.
-        uv -= disc_center;
-        
-        float dist = sqrt(dot(uv, uv));
-        float t = smoothstep(disc_radius+border_size, disc_radius-border_size, dist);
-        gl_FragColor = mix(bkg_color, disc_color, t);
-    }
-                                     ");
+    _shader->addShaderFromSourceCode(QOpenGLShader::Fragment,
+        "#version 120\n"
+        "uniform sampler2D tex0;\n"
+        "uniform float border_size; // 0.01\n"
+        "uniform float disc_radius; // 0.5\n"
+        "uniform vec4 disc_color; // vec4(1.0, 1.0, 1.0, 1.0)\n"
+        "uniform vec2 disc_center; // vec2(0.5, 0.5)\n"
+        "void main (void)\n"
+        "{\n"
+        "    vec2 uv = gl_TexCoord[0].xy;\n\n"
+        "    vec4 bkg_color = texture2D(tex0,uv * vec2(1.0, -1.0));\n"
+        "    // Offset uv with the center of the circle.\n"
+        "    uv -= disc_center;\n"
+        "    float dist = sqrt(dot(uv, uv));\n"
+        "    float t = smoothstep(disc_radius+border_size, disc_radius-border_size, dist);\n"
+        "    gl_FragColor = mix(bkg_color, disc_color, t);\n"
+        "}\n");
     _isSetup = true;
 }
 
 TrackLayer::TrackLayer(const Track *track) : Layer(),
-_particleRadius(PARTICLE_RADIUS),
 _mediumLodRes(MEDIUM_LOD_RES),
 _loLodRes(LO_LOD_RES),
 _track(track),
@@ -104,7 +102,7 @@ TrackLayer::passes() const
     PassMap layers;
     layers.insert(Pass_UnselectedPath);
     layers.insert(Pass_SelectedPath);
-    layers.insert(Pass_Particle);
+    layers.insert(Pass_Particles);
     return layers;
 }
 
@@ -169,13 +167,14 @@ TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         case Pass_UnselectedPath:
             if (!selected)
                 _drawPath(viewCtx, timeCtx);
+            _pushParticle(viewCtx);
             break;
         case Pass_SelectedPath:
             if (selected)
                 _drawPath(viewCtx, timeCtx);
             break;
-        case Pass_Particle:
-            _drawParticle(viewCtx);
+        case Pass_Particles:
+            _drawParticles(viewCtx);
             break;
     };
 }
@@ -241,14 +240,16 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 }
 
 void
-TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
-{;
-    gl::color( Color( 1, 1, 1 ) );
-    float radius = _particleRadius;
-    if (radius < viewCtx.getResolution()*2.)
-        radius = viewCtx.getResolution()*2.;
+TrackLayer::_pushParticle(const ViewCtx &viewCtx) const
+{
+    _particlesDrawn = false;
     // transform to camera space
     const Vec2d particlePosCamera = viewCtx.getWorldToCamera() + _particlePos;
+    if (viewCtx.isSelected(id()))
+        _selectedParticleDrawList.append(particlePosCamera);
+    else
+        _particleDrawList.append(particlePosCamera);
+    /*
     gl::drawSolidCircle( particlePosCamera, radius);
     if (viewCtx.isSelected(id())) {
         gl::drawStrokedCircle(particlePosCamera, radius*1.5);
@@ -256,6 +257,7 @@ TrackLayer::_drawParticle(const ViewCtx &viewCtx) const
     }
     gl::color( Color( 0.3, 0.3, 0.3 ) );
     gl::drawStrokedCircle(particlePosCamera, radius);
+    */
 }
 
 BoundingBox
@@ -277,13 +279,30 @@ TrackLayer::ephemeral() const
 }
 
 void
-TrackLayer::_drawParticles()
+TrackLayer::_drawParticles(const ViewCtx &viewCtx)
 {
     _particlesDrawn = true;
+    Vec2d particle;
+    size_t numParticles = _particleDrawList.count();
+    float *_particleBuffer = (float*)malloc(sizeof(float)*2*numParticles);
+    size_t bufferIndex = 0;
+    foreach(particle, _particleDrawList) {
+        _particleBuffer[bufferIndex++] = particle.x;
+        _particleBuffer[bufferIndex++] = particle.y;
+    }
+    float radius = _particleRadius;
+    if (radius < viewCtx.getResolution()*2.)
+        radius = viewCtx.getResolution()*2.;
+    _shader->bind();
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glVertexPointer( 2, GL_FLOAT, 0, _particleBuffer );
+    glDrawArrays( GL_POINTS, 0, bufferIndex/2 );
+    glDisableClientState( GL_VERTEX_ARRAY );
+    _shader->release();
 }
 
 void
-TrackLayer::_drawSelectedParticles()
+TrackLayer::_drawSelectedParticles(const ViewCtx &viewCtx)
 {
     _selectedParticlesDrawn = true;
 }

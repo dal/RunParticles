@@ -16,7 +16,7 @@ public:
     enum TrackLayerPasses {
         Pass_UnselectedPath = PassLayer_MidGround + 1,
         Pass_SelectedPath = PassLayer_MidGround + 4,
-        Pass_Particle = PassLayer_Foreground + 1,
+        Pass_Particles = PassLayer_Foreground + 1,
         Pass_Count
     };
     
@@ -34,7 +34,7 @@ public:
     
     /*
      * TrackLayers require three passes: 
-     *  top Draws the track particle.
+     *  top Draws all the track particles.
      *  mid Draws the path if it is selected
      *  bottom Draws the path if it is not currently selected
      */
@@ -56,11 +56,12 @@ protected:
     
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
     
-    void _drawParticle(const ViewCtx &viewCtx) const;
+    /* Pushes the particle onto the list to be drawn */
+    void _pushParticle(const ViewCtx &viewCtx) const;
     
     static void _setup();
     
-    float _particleRadius;
+    static float _particleRadius;
     
     float _mediumLodRes;
     
@@ -86,9 +87,9 @@ protected:
     
     static QList<Vec2d> _particleDrawList, _selectedParticleDrawList;
     
-    static void _drawParticles();
+    static void _drawParticles(const ViewCtx &viewCtx);
     
-    static void _drawSelectedParticles();
+    static void _drawSelectedParticles(const ViewCtx &viewCtx);
     
 };
 

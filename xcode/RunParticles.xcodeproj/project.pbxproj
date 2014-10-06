@@ -30,6 +30,21 @@
 					);
 			};
 		};
+		58B7D9C526E6EF45DC28578D = {
+			isa = PBXFileReference;
+			path = "../src/FitFileReader.cpp";
+			name = "FitFileReader.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		CD6D89FE53345F50C5E06134 = {
+			fileRef = "58B7D9C526E6EF45DC28578D";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		EB45FA7039E876081F0B08DB = {
 			isa = PBXFileReference;
 			path = "../src/GLWidget.cpp";
@@ -345,6 +360,236 @@
 					);
 			};
 		};
+		428CAA8BF1810B5759018E9E = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit.cpp";
+			name = "fit.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		0E13EE4F0BCCC6F36A33BB2B = {
+			fileRef = "428CAA8BF1810B5759018E9E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		CF3B99BE488412D69E171738 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_accumulated_field.cpp";
+			name = "fit_accumulated_field.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		B9CCC66F736AD2BF1CB821FB = {
+			fileRef = "CF3B99BE488412D69E171738";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		4E2901BC597F06DA76ADEE01 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_accumulator.cpp";
+			name = "fit_accumulator.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		DF2B7780BEEC4AEC3EDEBF8F = {
+			fileRef = "4E2901BC597F06DA76ADEE01";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		16DFA6EE289969A64B2FB518 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_decode.cpp";
+			name = "fit_decode.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		04D63D4E758A69AE2C8FC2AE = {
+			fileRef = "16DFA6EE289969A64B2FB518";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		D6FBC3C7153C24CDFD4D2266 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_factory.cpp";
+			name = "fit_factory.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		63314BB1B6F4401BF78ECFC6 = {
+			fileRef = "D6FBC3C7153C24CDFD4D2266";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		63CA6B6B3D8B72C41E8E56F5 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_field.cpp";
+			name = "fit_field.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		2FAC8A448BF22192C4AEBC5D = {
+			fileRef = "63CA6B6B3D8B72C41E8E56F5";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		E1F2F0C784C67F32FF34D849 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_field_definition.cpp";
+			name = "fit_field_definition.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		9F9761EB68B2B7D291351255 = {
+			fileRef = "E1F2F0C784C67F32FF34D849";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		6F02375E1E602C3FA842EA3E = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg.cpp";
+			name = "fit_mesg.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		C469CD77923DDCE71804BC87 = {
+			fileRef = "6F02375E1E602C3FA842EA3E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		69D63F937050183794A62137 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_definition.cpp";
+			name = "fit_mesg_definition.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		F199EF9EBAD885E932B6D116 = {
+			fileRef = "69D63F937050183794A62137";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		9C3487947A46396148CF3B9C = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_profile.cpp";
+			name = "fit_profile.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		F9CFE45D42F2243FDADCE47A = {
+			fileRef = "9C3487947A46396148CF3B9C";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		C7344B3EB8D85F365CDA46F1 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_unicode.cpp";
+			name = "fit_unicode.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		039DC94CDA44A3DC8563CA81 = {
+			fileRef = "C7344B3EB8D85F365CDA46F1";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		96BCE0AAC0C8007B74E2BF08 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_crc.cpp";
+			name = "fit_crc.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		329AC0440F5A7E31703F429E = {
+			fileRef = "96BCE0AAC0C8007B74E2BF08";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		AF04F8411AF19603B941AC0E = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_broadcaster.cpp";
+			name = "fit_mesg_broadcaster.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		D37F0180244B59BC5508A189 = {
+			fileRef = "AF04F8411AF19603B941AC0E";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		84B0FFF95BBA3CF66D80247A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_with_event_broadcaster.cpp";
+			name = "fit_mesg_with_event_broadcaster.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		F4861EA61FB5213FE2333A47 = {
+			fileRef = "84B0FFF95BBA3CF66D80247A";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		563B9DB77F00DB7C596B8F25 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_buffered_record_mesg_broadcaster.cpp";
+			name = "fit_buffered_record_mesg_broadcaster.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		0DBD53C95648964A5F4BD8FD = {
+			fileRef = "563B9DB77F00DB7C596B8F25";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		3F88336947B303E2708C000A = {
+			isa = PBXFileReference;
+			path = "RunParticles.icns";
+			sourceTree = "<absolute>";
+		};
 		728734BB4FDF06F5EB24A8BC = {
 			isa = PBXFileReference;
 			path = "moc_GLWidget.cpp";
@@ -457,10 +702,31 @@
 					);
 			};
 		};
+		52F4B3BCD60E59740C24DAEE = {
+			isa = PBXFileReference;
+			path = "moc_TrackFileReader.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		E094ABD96B9687FBA062285A = {
+			fileRef = "52F4B3BCD60E59740C24DAEE";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		D90C4EF3101EDFB1AA31B07E = {
 			isa = PBXFileReference;
 			path = "../src/BoundingBox.h";
 			name = "BoundingBox.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B702B99370D1E8B7507E1FD6 = {
+			isa = PBXFileReference;
+			path = "../src/FitFileReader.h";
+			name = "FitFileReader.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
@@ -615,6 +881,748 @@
 			isa = PBXFileReference;
 			path = "../src/XmlHandler.h";
 			name = "XmlHandler.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		13F732DD625CF21A7190029A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit.hpp";
+			name = "fit.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		2A06AD2441877A3C0F368326 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_accumulator.hpp";
+			name = "fit_accumulator.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		FDFD118CD7A399698CED2874 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_accumulated_field.hpp";
+			name = "fit_accumulated_field.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		5D1DDD48D4D85516DD0E36A4 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_activity_mesg.hpp";
+			name = "fit_activity_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		A89A7D1A167A4E1A60920860 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_config.hpp";
+			name = "fit_config.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		1E08AAFB9623548D776F2F98 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_decode.hpp";
+			name = "fit_decode.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		5ECBF457B0CE319163D2A459 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_factory.hpp";
+			name = "fit_factory.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		ADCE098F22CED9C9249B6C85 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_field.hpp";
+			name = "fit_field.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		0D3F4AB6CBECA3054C6C1E53 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_field_definition.hpp";
+			name = "fit_field_definition.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		C7EC69BC2D1094F55175C590 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_file_id_mesg.hpp";
+			name = "fit_file_id_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		CE1FAD7D1AC23F0B48C89BD9 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_file_creator_mesg.hpp";
+			name = "fit_file_creator_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		927D3E9F299606F296021244 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg.hpp";
+			name = "fit_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		314E3FEEDA1BBDC81CC3589A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_definition.hpp";
+			name = "fit_mesg_definition.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		265462681E93C880AD9D1674 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_definition_listener.hpp";
+			name = "fit_mesg_definition_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		1D1DCD101A6B8B2CE5A5CC0B = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_listener.hpp";
+			name = "fit_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B46E64196FC1BA8E1B15F24D = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_runtime_exception.hpp";
+			name = "fit_runtime_exception.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		15C1CF4BD3F9F98096275B44 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_profile.hpp";
+			name = "fit_profile.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		BFF6D8F5D5763E6AEA714A11 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_unicode.hpp";
+			name = "fit_unicode.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		D366F98C8E1C7000CE1EF482 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_slave_device_mesg.hpp";
+			name = "fit_slave_device_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		01D46FEBFC2F3126E1914EE1 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_capabilities_mesg.hpp";
+			name = "fit_capabilities_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		5C2F2A2108C4390C83D12315 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_file_capabilities_mesg.hpp";
+			name = "fit_file_capabilities_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		9E73C1601FA76DAF0CEA3273 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_capabilities_mesg.hpp";
+			name = "fit_mesg_capabilities_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B759814D9C5B958A5FDCE835 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_field_capabilities_mesg.hpp";
+			name = "fit_field_capabilities_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		4BA07CF4BE96BCBE6298E810 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_device_settings_mesg.hpp";
+			name = "fit_device_settings_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		166CFD99F1BE97CEA51E85D5 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_user_profile_mesg.hpp";
+			name = "fit_user_profile_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		0C1DD9D55F913D54C73CBBDB = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_hrm_profile_mesg.hpp";
+			name = "fit_hrm_profile_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		E22930B9DE645BC65D2FDBD9 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_sdm_profile_mesg.hpp";
+			name = "fit_sdm_profile_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		BAD4BD65DEBF68CB7BBEB1E2 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_bike_profile_mesg.hpp";
+			name = "fit_bike_profile_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		DEC4EB8D4C5873B47229FFF8 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_zones_target_mesg.hpp";
+			name = "fit_zones_target_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		820BA01CA07F895C77802E5D = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_sport_mesg.hpp";
+			name = "fit_sport_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		3D1FB11352CA273192AC6CA2 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_hr_zone_mesg.hpp";
+			name = "fit_hr_zone_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		7E81E969D064A03B62B3A9A0 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_speed_zone_mesg.hpp";
+			name = "fit_speed_zone_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		DC01D6C8E706077B87201D91 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_cadence_zone_mesg.hpp";
+			name = "fit_cadence_zone_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		2602A82816CDAF20524F4255 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_power_zone_mesg.hpp";
+			name = "fit_power_zone_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		3CCDE5B008F391A1EE06F40A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_met_zone_mesg.hpp";
+			name = "fit_met_zone_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		A0C37A6435E795F1A84991BE = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_goal_mesg.hpp";
+			name = "fit_goal_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		5C479AD99961DDC012BDF9AE = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_session_mesg.hpp";
+			name = "fit_session_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		7B07B4D37289D082691CC657 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_lap_mesg.hpp";
+			name = "fit_lap_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		047E7C3D0C7142F790E37B82 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_length_mesg.hpp";
+			name = "fit_length_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		BA8414B394903335A076BB32 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_record_mesg.hpp";
+			name = "fit_record_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		2228D92EB6EE53A7378F62EB = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_event_mesg.hpp";
+			name = "fit_event_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		CE91F1FFB238422A70B64E27 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_device_info_mesg.hpp";
+			name = "fit_device_info_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		9C804DA32B7938564271EEF5 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_training_file_mesg.hpp";
+			name = "fit_training_file_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		8F4C4895096D6A54D1E29FC1 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_hrv_mesg.hpp";
+			name = "fit_hrv_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		D54612E30368FBB8F78319BC = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_course_mesg.hpp";
+			name = "fit_course_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		2417CE128B9218F07B1669CF = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_course_point_mesg.hpp";
+			name = "fit_course_point_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		8F0ECF6C23EFC9353D126F24 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_workout_mesg.hpp";
+			name = "fit_workout_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		E800EFAA9A2357BAC116A721 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_workout_step_mesg.hpp";
+			name = "fit_workout_step_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		705D5B59C5C32C17FEA88797 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_schedule_mesg.hpp";
+			name = "fit_schedule_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		F834E6BB477D8539F866EC25 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_totals_mesg.hpp";
+			name = "fit_totals_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		19C644DBB52A13B80A1502AE = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_weight_scale_mesg.hpp";
+			name = "fit_weight_scale_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		88C5578A9596590DDB790885 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_blood_pressure_mesg.hpp";
+			name = "fit_blood_pressure_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		487892B5C2FF5FBCAA1127C9 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_monitoring_info_mesg.hpp";
+			name = "fit_monitoring_info_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		103CA1C36A377B3883F5F973 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_monitoring_mesg.hpp";
+			name = "fit_monitoring_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		873E3373406250A62DE6EF19 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_memo_glob_mesg.hpp";
+			name = "fit_memo_glob_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		12BA7DDA852B94E5F45B069F = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_pad_mesg.hpp";
+			name = "fit_pad_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		E4D6CE8AC7ECBD656F7D360B = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_with_event.hpp";
+			name = "fit_mesg_with_event.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		37572656C1A162C62DEBFBA1 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_crc.hpp";
+			name = "fit_crc.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		08304A6616124B65950CE051 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_broadcaster.hpp";
+			name = "fit_mesg_broadcaster.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		DB2BAE631431A8FE098A4F99 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_with_event_broadcaster.hpp";
+			name = "fit_mesg_with_event_broadcaster.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		D5EB63D2C968A9E6763CC1DF = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_with_event_listener.hpp";
+			name = "fit_mesg_with_event_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		A1DB9EC1560A00280CA5D4B4 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_activity_mesg_listener.hpp";
+			name = "fit_activity_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		ED59454FA4BF3FD0FCC11E07 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_lap_mesg_listener.hpp";
+			name = "fit_lap_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		E278679570BFD438C6ADEC7D = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_file_id_mesg_listener.hpp";
+			name = "fit_file_id_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		13B47E4E042B3E141DD5F219 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_buffered_record_mesg_broadcaster.hpp";
+			name = "fit_buffered_record_mesg_broadcaster.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		21EC00A2374D24466D6E28C4 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_buffered_record_mesg_listener.hpp";
+			name = "fit_buffered_record_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		DED0C0CE98F5F5047B3EA91E = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_buffered_record_mesg.hpp";
+			name = "fit_buffered_record_mesg.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		89EF88023D9BAE4C3DC8C518 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_record_mesg_listener.hpp";
+			name = "fit_record_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		DCEE65CE590A98A6153286D6 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_file_creator_mesg_listener.hpp";
+			name = "fit_file_creator_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		F5BC11181463C74AAC4CA36C = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_software_mesg_listener.hpp";
+			name = "fit_software_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		11377E19386D93C5A9E7B5AF = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_slave_device_mesg_listener.hpp";
+			name = "fit_slave_device_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B1C5F465EFAFC77C1C9317E8 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_capabilities_mesg_listener.hpp";
+			name = "fit_capabilities_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		CDE413549AC7091394F1EAED = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_file_capabilities_mesg_listener.hpp";
+			name = "fit_file_capabilities_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		AA9DD6A5EC09E3605963BD36 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_mesg_capabilities_mesg_listener.hpp";
+			name = "fit_mesg_capabilities_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		6A9A71BDE18AC6B88ECE4761 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_field_capabilities_mesg_listener.hpp";
+			name = "fit_field_capabilities_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		9225ABE9073C9E97ACB5B3FA = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_device_settings_mesg_listener.hpp";
+			name = "fit_device_settings_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		C33C73574E2FC7B678A6FDE1 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_user_profile_mesg_listener.hpp";
+			name = "fit_user_profile_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		02A613A21995054B4613515D = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_hrm_profile_mesg_listener.hpp";
+			name = "fit_hrm_profile_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		AC2B494093EC6F8625CF4E63 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_sdm_profile_mesg_listener.hpp";
+			name = "fit_sdm_profile_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		5B208C9E39BB08C0BB36BC98 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_bike_profile_mesg_listener.hpp";
+			name = "fit_bike_profile_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		4983C72510565280D4B8C2BD = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_zones_target_mesg_listener.hpp";
+			name = "fit_zones_target_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		090F1C412283E6151A09047A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_sport_mesg_listener.hpp";
+			name = "fit_sport_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		8644A4187EE87F6BD89EDBAB = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_hr_zone_mesg_listener.hpp";
+			name = "fit_hr_zone_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		2E90CB08C802E02E85469898 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_speed_zone_mesg_listener.hpp";
+			name = "fit_speed_zone_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		C77F052D0B6201EB3116BB9C = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_cadence_zone_mesg_listener.hpp";
+			name = "fit_cadence_zone_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		011FB526D5DF9ACF4FD7CC77 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_power_zone_mesg_listener.hpp";
+			name = "fit_power_zone_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		0BA191EA2E78859BBFB79935 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_met_zone_mesg_listener.hpp";
+			name = "fit_met_zone_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		EF8D520A6C9896BC2F202B11 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_goal_mesg_listener.hpp";
+			name = "fit_goal_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B6696E4B9D5371E58836E908 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_session_mesg_listener.hpp";
+			name = "fit_session_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		C082E8479F515AF395CD7F99 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_length_mesg_listener.hpp";
+			name = "fit_length_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		A266E302DBAD167A0918D93A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_event_mesg_listener.hpp";
+			name = "fit_event_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B6ED5E1D599B41C6892A2729 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_device_info_mesg_listener.hpp";
+			name = "fit_device_info_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		3ED87E12217896ED3C330649 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_training_file_mesg_listener.hpp";
+			name = "fit_training_file_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		A4819430BC018E5FC0F08E7E = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_hrv_mesg_listener.hpp";
+			name = "fit_hrv_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		F33391D97F44F00FC8AF51F6 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_course_mesg_listener.hpp";
+			name = "fit_course_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		304955E14E59954C77A9EF70 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_course_point_mesg_listener.hpp";
+			name = "fit_course_point_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		2662B5F6AFFD69DFA33D2B09 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_workout_mesg_listener.hpp";
+			name = "fit_workout_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		F0B2DA1435FC3511F18EE6CD = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_workout_step_mesg_listener.hpp";
+			name = "fit_workout_step_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		9EE2FE309B87092413C87FA1 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_schedule_mesg_listener.hpp";
+			name = "fit_schedule_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		60082121987070EEB07C5EBD = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_totals_mesg_listener.hpp";
+			name = "fit_totals_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		EDBDF09A3A312559BA18B34A = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_weight_scale_mesg_listener.hpp";
+			name = "fit_weight_scale_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		E5D91C17C27DACA062DC9DAC = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_blood_pressure_mesg_listener.hpp";
+			name = "fit_blood_pressure_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		F8C0B3D7D60043460C7436A6 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_monitoring_info_mesg_listener.hpp";
+			name = "fit_monitoring_info_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		0903642BEF5A461100DC51C6 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_monitoring_mesg_listener.hpp";
+			name = "fit_monitoring_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		5C29EEBE2C815D007652D10E = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_memo_glob_mesg_listener.hpp";
+			name = "fit_memo_glob_mesg_listener.hpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		A17AA9C237793E5C156401E6 = {
+			isa = PBXFileReference;
+			path = "../src/fitsdk/fit_pad_mesg_listener.hpp";
+			name = "fit_pad_mesg_listener.hpp";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
@@ -1084,7 +2092,8 @@
 				"47FFAD3FF3BD5B6415E28B3B",
 				"013B133ED758257DFC0CFC53",
 				"F2F1FB00C901BF2BE7ED1223",
-				"488EFBEF1EE8C560ADF03F36");
+				"488EFBEF1EE8C560ADF03F36",
+				"52F4B3BCD60E59740C24DAEE");
 			name = "Generated Sources";
 			sourceTree = "<Group>";
 		};
@@ -1099,6 +2108,7 @@
 			isa = PBXGroup;
 			children = (
 				"29072F3FEF13327AFC28B543",
+				"58B7D9C526E6EF45DC28578D",
 				"EB45FA7039E876081F0B08DB",
 				"7A31C475F53D2535E8198E19",
 				"E19CCA6A3EB579FDF66B47D2",
@@ -1120,7 +2130,9 @@
 				"17517045A3D82C8A79B4BFFD",
 				"0DC79AFB554894D76325313B",
 				"18D173CC430833F7998F0527",
+				"6288DBAB301D36E70BCE2D51",
 				"D90C4EF3101EDFB1AA31B07E",
+				"B702B99370D1E8B7507E1FD6",
 				"143A93E78B3B20A501AD1EB9",
 				"2D2CE9A227235FEF277531E4",
 				"658102940265952E430CECD2",
@@ -1146,10 +2158,138 @@
 			name = "src";
 			sourceTree = "<Group>";
 		};
+		6288DBAB301D36E70BCE2D51 = {
+			isa = PBXGroup;
+			children = (
+				"428CAA8BF1810B5759018E9E",
+				"CF3B99BE488412D69E171738",
+				"4E2901BC597F06DA76ADEE01",
+				"16DFA6EE289969A64B2FB518",
+				"D6FBC3C7153C24CDFD4D2266",
+				"63CA6B6B3D8B72C41E8E56F5",
+				"E1F2F0C784C67F32FF34D849",
+				"6F02375E1E602C3FA842EA3E",
+				"69D63F937050183794A62137",
+				"9C3487947A46396148CF3B9C",
+				"C7344B3EB8D85F365CDA46F1",
+				"96BCE0AAC0C8007B74E2BF08",
+				"AF04F8411AF19603B941AC0E",
+				"84B0FFF95BBA3CF66D80247A",
+				"563B9DB77F00DB7C596B8F25",
+				"13F732DD625CF21A7190029A",
+				"2A06AD2441877A3C0F368326",
+				"FDFD118CD7A399698CED2874",
+				"5D1DDD48D4D85516DD0E36A4",
+				"A89A7D1A167A4E1A60920860",
+				"1E08AAFB9623548D776F2F98",
+				"5ECBF457B0CE319163D2A459",
+				"ADCE098F22CED9C9249B6C85",
+				"0D3F4AB6CBECA3054C6C1E53",
+				"C7EC69BC2D1094F55175C590",
+				"CE1FAD7D1AC23F0B48C89BD9",
+				"927D3E9F299606F296021244",
+				"314E3FEEDA1BBDC81CC3589A",
+				"265462681E93C880AD9D1674",
+				"1D1DCD101A6B8B2CE5A5CC0B",
+				"B46E64196FC1BA8E1B15F24D",
+				"15C1CF4BD3F9F98096275B44",
+				"BFF6D8F5D5763E6AEA714A11",
+				"D366F98C8E1C7000CE1EF482",
+				"01D46FEBFC2F3126E1914EE1",
+				"5C2F2A2108C4390C83D12315",
+				"9E73C1601FA76DAF0CEA3273",
+				"B759814D9C5B958A5FDCE835",
+				"4BA07CF4BE96BCBE6298E810",
+				"166CFD99F1BE97CEA51E85D5",
+				"0C1DD9D55F913D54C73CBBDB",
+				"E22930B9DE645BC65D2FDBD9",
+				"BAD4BD65DEBF68CB7BBEB1E2",
+				"DEC4EB8D4C5873B47229FFF8",
+				"820BA01CA07F895C77802E5D",
+				"3D1FB11352CA273192AC6CA2",
+				"7E81E969D064A03B62B3A9A0",
+				"DC01D6C8E706077B87201D91",
+				"2602A82816CDAF20524F4255",
+				"3CCDE5B008F391A1EE06F40A",
+				"A0C37A6435E795F1A84991BE",
+				"5C479AD99961DDC012BDF9AE",
+				"7B07B4D37289D082691CC657",
+				"047E7C3D0C7142F790E37B82",
+				"BA8414B394903335A076BB32",
+				"2228D92EB6EE53A7378F62EB",
+				"CE91F1FFB238422A70B64E27",
+				"9C804DA32B7938564271EEF5",
+				"8F4C4895096D6A54D1E29FC1",
+				"D54612E30368FBB8F78319BC",
+				"2417CE128B9218F07B1669CF",
+				"8F0ECF6C23EFC9353D126F24",
+				"E800EFAA9A2357BAC116A721",
+				"705D5B59C5C32C17FEA88797",
+				"F834E6BB477D8539F866EC25",
+				"19C644DBB52A13B80A1502AE",
+				"88C5578A9596590DDB790885",
+				"487892B5C2FF5FBCAA1127C9",
+				"103CA1C36A377B3883F5F973",
+				"873E3373406250A62DE6EF19",
+				"12BA7DDA852B94E5F45B069F",
+				"E4D6CE8AC7ECBD656F7D360B",
+				"37572656C1A162C62DEBFBA1",
+				"08304A6616124B65950CE051",
+				"DB2BAE631431A8FE098A4F99",
+				"D5EB63D2C968A9E6763CC1DF",
+				"A1DB9EC1560A00280CA5D4B4",
+				"ED59454FA4BF3FD0FCC11E07",
+				"E278679570BFD438C6ADEC7D",
+				"13B47E4E042B3E141DD5F219",
+				"21EC00A2374D24466D6E28C4",
+				"DED0C0CE98F5F5047B3EA91E",
+				"89EF88023D9BAE4C3DC8C518",
+				"DCEE65CE590A98A6153286D6",
+				"F5BC11181463C74AAC4CA36C",
+				"11377E19386D93C5A9E7B5AF",
+				"B1C5F465EFAFC77C1C9317E8",
+				"CDE413549AC7091394F1EAED",
+				"AA9DD6A5EC09E3605963BD36",
+				"6A9A71BDE18AC6B88ECE4761",
+				"9225ABE9073C9E97ACB5B3FA",
+				"C33C73574E2FC7B678A6FDE1",
+				"02A613A21995054B4613515D",
+				"AC2B494093EC6F8625CF4E63",
+				"5B208C9E39BB08C0BB36BC98",
+				"4983C72510565280D4B8C2BD",
+				"090F1C412283E6151A09047A",
+				"8644A4187EE87F6BD89EDBAB",
+				"2E90CB08C802E02E85469898",
+				"C77F052D0B6201EB3116BB9C",
+				"011FB526D5DF9ACF4FD7CC77",
+				"0BA191EA2E78859BBFB79935",
+				"EF8D520A6C9896BC2F202B11",
+				"B6696E4B9D5371E58836E908",
+				"C082E8479F515AF395CD7F99",
+				"A266E302DBAD167A0918D93A",
+				"B6ED5E1D599B41C6892A2729",
+				"3ED87E12217896ED3C330649",
+				"A4819430BC018E5FC0F08E7E",
+				"F33391D97F44F00FC8AF51F6",
+				"304955E14E59954C77A9EF70",
+				"2662B5F6AFFD69DFA33D2B09",
+				"F0B2DA1435FC3511F18EE6CD",
+				"9EE2FE309B87092413C87FA1",
+				"60082121987070EEB07C5EBD",
+				"EDBDF09A3A312559BA18B34A",
+				"E5D91C17C27DACA062DC9DAC",
+				"F8C0B3D7D60043460C7436A6",
+				"0903642BEF5A461100DC51C6",
+				"5C29EEBE2C815D007652D10E",
+				"A17AA9C237793E5C156401E6");
+			name = "fitsdk";
+			sourceTree = "<Group>";
+		};
 		2EB56BE3C2D93CDAB0C52E67 = {
 			isa = PBXGroup;
 			children = (
-				"5ADDF1BA7F6260E6AA5739ED");
+				"5ADDF1BA7F6260E6AA5739ED",
+				"3F88336947B303E2708C000A");
 			name = "Sources";
 			sourceTree = "<Group>";
 		};
@@ -1264,6 +2404,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				"DBEE92E3CB64A5C0F62AC60B",
+				"CD6D89FE53345F50C5E06134",
 				"A0C87B5105D2FEA9C5E389DC",
 				"7BBA13B516213F357479F8A9",
 				"C3C2F0FD0C5F121C7CE45E01",
@@ -1285,6 +2426,21 @@
 				"AACEA93FB877DFE6DEF5FBEF",
 				"70EEAFFAA7F7C116CF5263E9",
 				"2CD3AEE7139DD1BDD888B278",
+				"0E13EE4F0BCCC6F36A33BB2B",
+				"B9CCC66F736AD2BF1CB821FB",
+				"DF2B7780BEEC4AEC3EDEBF8F",
+				"04D63D4E758A69AE2C8FC2AE",
+				"63314BB1B6F4401BF78ECFC6",
+				"2FAC8A448BF22192C4AEBC5D",
+				"9F9761EB68B2B7D291351255",
+				"C469CD77923DDCE71804BC87",
+				"F199EF9EBAD885E932B6D116",
+				"F9CFE45D42F2243FDADCE47A",
+				"039DC94CDA44A3DC8563CA81",
+				"329AC0440F5A7E31703F429E",
+				"D37F0180244B59BC5508A189",
+				"F4861EA61FB5213FE2333A47",
+				"0DBD53C95648964A5F4BD8FD",
 				"4FB1C9C214450AFA20E4F137",
 				"CD697CDC605931FD2D2A9573",
 				"07DDFCCE39681C458D59536F",
@@ -1292,7 +2448,8 @@
 				"2DEA6EF101F05F1898C69D46",
 				"AA8C4C856160FD224CB57A4C",
 				"CB3117BC7DAFA6785082E3EC",
-				"045E7FED3E354C82E8351D3D");
+				"045E7FED3E354C82E8351D3D",
+				"E094ABD96B9687FBA062285A");
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Compile Sources";

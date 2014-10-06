@@ -6,6 +6,7 @@
 #include "Types.h"
 
 #include "cinder/gl/gl.h"
+#include "cinder/gl/DisplayList.h"
 #include <QString>
 #include <QOpenGLShaderProgram>
 
@@ -56,8 +57,7 @@ protected:
     
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
     
-    /* Pushes the particle onto the list to be drawn */
-    void _pushParticle(const ViewCtx &viewCtx) const;
+    void _drawParticle(const ViewCtx &viewCtx);
     
     static void _setup();
     
@@ -81,15 +81,9 @@ protected:
     
     float *_pathBuffer;
     
-    static QOpenGLShaderProgram *_shader;
+    static bool _isSetup;
     
-    static bool _isSetup, _particlesDrawn, _selectedParticlesDrawn;
-    
-    static QList<Vec2d> _particleDrawList, _selectedParticleDrawList;
-    
-    static void _drawParticles(const ViewCtx &viewCtx);
-    
-    static void _drawSelectedParticles(const ViewCtx &viewCtx);
+    static gl::DisplayList _particle, _selectedParticle;
     
 };
 

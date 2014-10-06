@@ -17,47 +17,19 @@ const Color TrackLayer::RunColor = Color( 1, 0, 0 );
 const Color TrackLayer::OtherColor = Color( 0.3, 0.3, 1 );
 const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
-QOpenGLShaderProgram* TrackLayer::_shader;
 bool TrackLayer::_isSetup = false;
-bool TrackLayer::_particlesDrawn = false;
-bool TrackLayer::_selectedParticlesDrawn = false;
-QList<Vec2d> TrackLayer::_particleDrawList;
-QList<Vec2d> TrackLayer::_selectedParticleDrawList;
+gl::DisplayList TrackLayer::_particle;
 float TrackLayer::_particleRadius = PARTICLE_RADIUS;
 
 void
 TrackLayer::_setup()
 {
-    _shader = new QOpenGLShaderProgram();
-    // shaders from http://www.geeks3d.com/20130705/shader-library-circle-disc-fake-sphere-in-glsl-opengl-glslhacker/3/
-    _shader->addShaderFromSourceCode(QOpenGLShader::Vertex,
-        "#version 120\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-        "    gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-        "}\n");
-    _shader->addShaderFromSourceCode(QOpenGLShader::Fragment,
-        "#version 120\n"
-        "uniform sampler2D tex0;\n"
-        "uniform float border_size; // 0.01\n"
-        "uniform float disc_radius; // 0.5\n"
-        "uniform vec4 disc_color; // vec4(1.0, 1.0, 1.0, 1.0)\n"
-        "uniform vec2 disc_center; // vec2(0.5, 0.5)\n"
-        "void main (void)\n"
-        "{\n"
-        "    vec2 uv = gl_TexCoord[0].xy;\n\n"
-        "    vec4 bkg_color = texture2D(tex0,uv * vec2(1.0, -1.0));\n"
-        "    // Offset uv with the center of the circle.\n"
-        "    uv -= disc_center;\n"
-        "    float dist = sqrt(dot(uv, uv));\n"
-        "    float t = smoothstep(disc_radius+border_size, disc_radius-border_size, dist);\n"
-        "    gl_FragColor = mix(bkg_color, disc_color, t);\n"
-        "}\n");
-    _shader->link();
-    _shader->setUniformValue(_shader->uniformLocation("disc_radius"), (float)14.0 );
-    _shader->setUniformValue(_shader->uniformLocation("disc_color"), QColor(1,1,1) );
-    _shader->setUniformValue(_shader->uniformLocation("disc_center"), QVector2D(0.5, 0.5) );
+    _particle = gl::DisplayList(GL_COMPILE);
+    _particle.newList();
+    gl::drawSolidCircle( Vec2d(0.f, 0.f), 10.);
+    gl::color( Color( 0.3, 0.3, 0.3 ) );
+    gl::drawStrokedCircle( Vec2d(0.f, 0.f), 10.);
+    _particle.endList();
     _isSetup = true;
 }
 
@@ -173,14 +145,13 @@ TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         case Pass_UnselectedPath:
             if (!selected)
                 _drawPath(viewCtx, timeCtx);
-            _pushParticle(viewCtx);
             break;
         case Pass_SelectedPath:
             if (selected)
                 _drawPath(viewCtx, timeCtx);
             break;
         case Pass_Particles:
-            _drawParticles(viewCtx);
+            _drawParticle(viewCtx);
             break;
     };
 }
@@ -246,24 +217,24 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 }
 
 void
-TrackLayer::_pushParticle(const ViewCtx &viewCtx) const
+TrackLayer::_drawParticle(const ViewCtx &viewCtx)
 {
-    _particlesDrawn = false;
     // transform to camera space
+    float radius = _particleRadius;
+    if (radius < viewCtx.getResolution()*2.)
+        radius = viewCtx.getResolution()*2.;
     const Vec2d particlePosCamera = viewCtx.getWorldToCamera() + _particlePos;
-    if (viewCtx.isSelected(id()))
-        _selectedParticleDrawList.append(particlePosCamera);
-    else
-        _particleDrawList.append(particlePosCamera);
-    /*
-    gl::drawSolidCircle( particlePosCamera, radius);
+    gl::color(1.0, 1.0, 1.0);
+    glPushMatrix();
+    glTranslated(particlePosCamera.x, particlePosCamera.y, 0.0);
+    glScalef(radius/10., radius/10., 1.0);
+    _particle.draw();
+    glPopMatrix();
     if (viewCtx.isSelected(id())) {
+        gl::color(SelectedColor);
         gl::drawStrokedCircle(particlePosCamera, radius*1.5);
         gl::drawStrokedCircle(particlePosCamera, radius*2.0);
     }
-    gl::color( Color( 0.3, 0.3, 0.3 ) );
-    gl::drawStrokedCircle(particlePosCamera, radius);
-    */
 }
 
 BoundingBox
@@ -282,35 +253,4 @@ bool
 TrackLayer::ephemeral() const
 {
     return false;
-}
-
-void
-TrackLayer::_drawParticles(const ViewCtx &viewCtx)
-{
-    _particlesDrawn = true;
-    Vec2d particle;
-    size_t numParticles = _particleDrawList.count();
-    float *_particleBuffer = (float*)malloc(sizeof(float)*2*numParticles);
-    size_t bufferIndex = 0;
-    foreach(particle, _particleDrawList) {
-        _particleBuffer[bufferIndex++] = particle.x;
-        _particleBuffer[bufferIndex++] = particle.y;
-    }
-    float radius = _particleRadius;
-    if (radius < viewCtx.getResolution()*2.)
-        radius = viewCtx.getResolution()*2.;
-    _shader->bind();
-    glEnableClientState( GL_VERTEX_ARRAY );
-    glVertexPointer( 2, GL_FLOAT, 0, _particleBuffer );
-    glDrawArrays( GL_POINTS, 0, bufferIndex/2 );
-    glDisableClientState( GL_VERTEX_ARRAY );
-    _shader->release();
-    free(_particleBuffer);
-    _particleDrawList.clear();
-}
-
-void
-TrackLayer::_drawSelectedParticles(const ViewCtx &viewCtx)
-{
-    _selectedParticlesDrawn = true;
 }

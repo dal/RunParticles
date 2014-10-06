@@ -61,7 +61,7 @@ protected:
     
     static void _setup();
     
-    static float _particleRadius;
+    float _particleRadius;
     
     float _mediumLodRes;
     

@@ -19,7 +19,6 @@ const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
 bool TrackLayer::_isSetup = false;
 gl::DisplayList TrackLayer::_particle;
-float TrackLayer::_particleRadius = PARTICLE_RADIUS;
 
 void
 TrackLayer::_setup()
@@ -34,6 +33,7 @@ TrackLayer::_setup()
 }
 
 TrackLayer::TrackLayer(const Track *track) : Layer(),
+_particleRadius(PARTICLE_RADIUS),
 _mediumLodRes(MEDIUM_LOD_RES),
 _loLodRes(LO_LOD_RES),
 _track(track),
@@ -220,7 +220,7 @@ void
 TrackLayer::_drawParticle(const ViewCtx &viewCtx)
 {
     // transform to camera space
-    float radius = _particleRadius;
+    float radius = _particleRadius * viewCtx.getDevicePixelRatio();
     if (radius < viewCtx.getResolution()*2.)
         radius = viewCtx.getResolution()*2.;
     const Vec2d particlePosCamera = viewCtx.getWorldToCamera() + _particlePos;

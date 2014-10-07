@@ -89,8 +89,7 @@ OsmLayer::project(const Projection &projection)
     _worldLowerRight = projection.toProjection(LonLat(MAXLON, -MAXLAT));
     _worldSize = _worldTopLeft.y - _worldLowerRight.y;
     for (int i = 0; i < numZoomLevels; i++)
-        _resolutions[i] = (_worldSize / (1 << i)) / pixelsPerTile
-                          * 1.5; // settle somewhere in the middle
+        _resolutions[i] = (_worldSize / (1 << i)) / pixelsPerTile;
 }
 
 void

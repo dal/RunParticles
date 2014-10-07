@@ -114,6 +114,16 @@ GLWidget::mouseReleaseEvent(QMouseEvent *event)
 }
 
 void
+GLWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    MapPoint mapPoint = screenPointToMapPoint(QPoint(event->x(),
+                                                     height() - event->y()));
+    _mapView.recenter(mapPoint);
+    zoom(0.5);
+    event->accept();
+}
+
+void
 GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() != Qt::NoButton) {

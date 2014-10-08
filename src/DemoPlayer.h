@@ -25,21 +25,10 @@ class DemoPlayer : public QObject
 public:
     DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget);
     
-    virtual ~DemoPlayer();
-    
 protected:
     void _copyResources();
     
     void _cleanupResources();
-    
-    MainWindow *_mainWindow;
-    
-    GLWidget *_glWidget;
-    
-    DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget);
-    
-protected:
-    void _copyResources();
     
     MainWindow *_mainWindow;
     

@@ -447,18 +447,6 @@ MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 }
 
 void
-MainWindow::slotMaximizeGLWidget()
-{
-    _glWidget->showMaximized();
-}
-
-void
-MainWindow::slotPlay()
-{
-    _glWidget->slotPlay();
-}
-
-void
 MainWindow::_showWidget(QWidget *widget)
 {
     widget->show();

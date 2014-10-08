@@ -7,6 +7,7 @@
 //
 
 #include <QApplication>
+#include "DemoPlayer.h"
 #include "GLWidget.h"
 #include "MainWindow.h"
 #include "Map.h"
@@ -23,6 +24,8 @@ int main(int argc, char **argv)
     GLWidget *glwidget = new GLWidget(map);
     
     MainWindow *main = new MainWindow(glwidget);
+    
+    new DemoPlayer(main);
     
     glwidget->show();
     main->show();

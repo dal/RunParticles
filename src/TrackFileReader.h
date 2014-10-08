@@ -33,6 +33,8 @@ signals:
     
     void signalError(const QString&, const QString&);
     
+    void signalDone();
+    
 protected:
     QMutex _inMutex;
     
@@ -61,6 +63,8 @@ signals:
     void signalReady(const QString&, QList<Track*>*);
     
     void signalError(const QString&, const QString&);
+    
+    void signalDone();
     
 protected:
     bool _readXml(QFile &theFile,

@@ -36,6 +36,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
             this, &MainWindow::slotTrackFileLoaded);
     connect(_trackFileReader, &TrackFileReader::signalError,
             this, &MainWindow::slotTrackFileLoadError);
+    connect(_trackFileReader, &TrackFileReader::signalDone,
+            this, &MainWindow::signalDoneReading);
     
     /* playback controls widget */
     setWindowTitle("Playback controls");
@@ -442,6 +444,18 @@ MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 {
     QString err = QString("Error loading file '%0': %1").arg(path).arg(what);
     QMessageBox::critical(this, "Could not load file", err);
+}
+
+void
+MainWindow::slotMaximizeGLWidget()
+{
+    _glWidget->showMaximized();
+}
+
+void
+MainWindow::slotPlay()
+{
+    _glWidget->slotPlay();
 }
 
 void

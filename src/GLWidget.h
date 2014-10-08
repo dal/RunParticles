@@ -87,6 +87,8 @@ public:
     
     void moveView(const QPoint &screenDelta);
     
+    void recenter(const LonLat &pt);
+    
 public slots:
     
     void update();

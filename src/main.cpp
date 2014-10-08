@@ -31,5 +31,7 @@ int main(int argc, char **argv)
     main->show();
     
     app.exec();
+    
+    delete main;
 }
 

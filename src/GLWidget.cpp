@@ -282,6 +282,16 @@ GLWidget::moveView(const QPoint &screenDelta)
 }
 
 void
+GLWidget::recenter(const LonLat &pt)
+{
+    slotUnlockView();
+    MapPoint mapPt = _map->getProjection().toProjection(pt);
+    _mapView.recenter(mapPt);
+    _updateViewCtx();
+    updateGL();
+}
+
+void
 GLWidget::slotPlay()
 {
     if (_timeCtx.getPlaybackRate() <= 0)

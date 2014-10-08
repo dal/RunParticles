@@ -72,6 +72,13 @@ public slots:
     
     void slotTrackFileLoadError(const QString &path, const QString &what);
     
+    void slotMaximizeGLWidget();
+    
+    void slotPlay();
+    
+signals:
+    void signalDoneReading();
+    
 protected:
     void _layoutPlaybackControls(QWidget*);
     

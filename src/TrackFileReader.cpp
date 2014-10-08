@@ -29,6 +29,7 @@ TrackFileReaderWorker::run() {
                 _input.pop_front();
             } else {
                 _inMutex.unlock();
+                emit signalDone();
                 break;
             }
             _inMutex.unlock();
@@ -57,6 +58,8 @@ TrackFileReader::TrackFileReader(QObject *parent) :
             this, &TrackFileReader::signalReady);
     connect(_worker, &TrackFileReaderWorker::signalError,
             this, &TrackFileReader::signalError);
+    connect(_worker, &TrackFileReaderWorker::signalDone,
+            this, &TrackFileReader::signalDone);
 }
 
 bool

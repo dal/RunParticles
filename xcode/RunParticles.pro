@@ -101,6 +101,7 @@ TEMPLATE = app
 ICON = RunParticles.icns
 
 HEADERS = ../src/BoundingBox.h \
+          ../src/DemoPlayer.h \
           ../src/FitFileReader.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \
@@ -232,6 +233,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/fitsdk/fit_pad_mesg_listener.hpp
 
 SOURCES = ../src/BoundingBox.cpp \
+          ../src/DemoPlayer.cpp \
           ../src/FitFileReader.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \
@@ -271,4 +273,6 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp \
           ../src/fitsdk/fit_buffered_record_mesg_broadcaster.cpp
           
-QT += opengl network xml
+RESOURCES = ../resources/resources.qrc
+          
+QT += multimedia opengl network xml

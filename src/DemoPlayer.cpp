@@ -35,7 +35,7 @@ DemoPlayer::~DemoPlayer()
 {
     _cleanupResources();
 }
-               
+
 void
 DemoPlayer::_copyResources()
 {
@@ -129,12 +129,10 @@ DemoPlayer::play()
             break;
             
     };
-    if (_interval > 0) {
+    if (_interval > 0)
         _timer->start(_interval);
-        _timer->setInterval(_interval);
-    } else {
+    else
         _timer->stop();
-    }
     _position++;
 }
 

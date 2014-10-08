@@ -15,16 +15,22 @@
 
 class MainWindow;
 
+class GLWidget;
+
 class DemoPlayer : public QObject
 {
     
     Q_OBJECT
     
 public:
-    DemoPlayer(MainWindow *mainWindow);
+    DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget);
     
 protected:
+    void _copyResources();
+    
     MainWindow *_mainWindow;
+    
+    GLWidget *_glWidget;
     
     QTimer *_timer;
     

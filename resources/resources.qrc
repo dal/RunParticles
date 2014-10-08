@@ -1,5 +1,10 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
     <file alias="music">../resources/tontura.mp3</file>
+    <file>../resources/map.xml</file>
+    <file>../resources/all2013.tcx</file>
+    <file>../resources/all2012.tcx</file>
+    <file>../resources/all2011.tcx</file>
+    <file>../resources/all2010.tcx</file>
 </qresource>
 </RCC>

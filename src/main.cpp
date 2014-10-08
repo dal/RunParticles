@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     
     MainWindow *main = new MainWindow(glwidget);
     
-    new DemoPlayer(main);
+    new DemoPlayer(main, glwidget);
     
     glwidget->show();
     main->show();

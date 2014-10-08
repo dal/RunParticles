@@ -30,6 +30,21 @@
 					);
 			};
 		};
+		9A750F875B642A28B5B7AFA6 = {
+			isa = PBXFileReference;
+			path = "../src/DemoPlayer.cpp";
+			name = "DemoPlayer.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		1CEFA483861E4E66F34545AC = {
+			fileRef = "9A750F875B642A28B5B7AFA6";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		58B7D9C526E6EF45DC28578D = {
 			isa = PBXFileReference;
 			path = "../src/FitFileReader.cpp";
@@ -590,6 +605,34 @@
 			path = "RunParticles.icns";
 			sourceTree = "<absolute>";
 		};
+		B6332CE6B3399115AD5D7562 = {
+			isa = PBXFileReference;
+			path = "qrc_resources.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		CDEE11F2F6164D3D47FF69C9 = {
+			fileRef = "B6332CE6B3399115AD5D7562";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		F77695470203905388A672FE = {
+			isa = PBXFileReference;
+			path = "moc_DemoPlayer.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		0287FB11C92FF38668F1B94E = {
+			fileRef = "F77695470203905388A672FE";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		728734BB4FDF06F5EB24A8BC = {
 			isa = PBXFileReference;
 			path = "moc_GLWidget.cpp";
@@ -720,6 +763,13 @@
 			isa = PBXFileReference;
 			path = "../src/BoundingBox.h";
 			name = "BoundingBox.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		87BD11C57EF471A348FB30DB = {
+			isa = PBXFileReference;
+			path = "../src/DemoPlayer.h";
+			name = "DemoPlayer.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
@@ -2082,9 +2132,25 @@
 			path = ".qmake.stash";
 			sourceTree = "<absolute>";
 		};
+		E562089B6BDEF8C422635B4E = {
+			isa = PBXFileReference;
+			path = "../resources/resources.qrc";
+			name = "resources.qrc";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "text";
+		};
+		E562089B6BDEF8C422635B4E = {
+			isa = PBXFileReference;
+			path = "../resources/resources.qrc";
+			name = "resources.qrc";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "text";
+		};
 		25B08E2869634E9BCBA333A2 = {
 			isa = PBXGroup;
 			children = (
+				"B6332CE6B3399115AD5D7562",
+				"F77695470203905388A672FE",
 				"728734BB4FDF06F5EB24A8BC",
 				"74E13A7671F16777899854ED",
 				"7869A011A5328AED84BC88A3",
@@ -2095,6 +2161,20 @@
 				"488EFBEF1EE8C560ADF03F36",
 				"52F4B3BCD60E59740C24DAEE");
 			name = "Generated Sources";
+			sourceTree = "<Group>";
+		};
+		8DFAB9C8B16410B121704055 = {
+			isa = PBXGroup;
+			children = (
+				"14AD0E04B9F3B4A76724C138");
+			name = "..";
+			sourceTree = "<Group>";
+		};
+		14AD0E04B9F3B4A76724C138 = {
+			isa = PBXGroup;
+			children = (
+				"E562089B6BDEF8C422635B4E");
+			name = "resources";
 			sourceTree = "<Group>";
 		};
 		5ADDF1BA7F6260E6AA5739ED = {
@@ -2108,6 +2188,7 @@
 			isa = PBXGroup;
 			children = (
 				"29072F3FEF13327AFC28B543",
+				"9A750F875B642A28B5B7AFA6",
 				"58B7D9C526E6EF45DC28578D",
 				"EB45FA7039E876081F0B08DB",
 				"7A31C475F53D2535E8198E19",
@@ -2132,6 +2213,7 @@
 				"18D173CC430833F7998F0527",
 				"6288DBAB301D36E70BCE2D51",
 				"D90C4EF3101EDFB1AA31B07E",
+				"87BD11C57EF471A348FB30DB",
 				"B702B99370D1E8B7507E1FD6",
 				"143A93E78B3B20A501AD1EB9",
 				"2D2CE9A227235FEF277531E4",
@@ -2285,6 +2367,27 @@
 			name = "fitsdk";
 			sourceTree = "<Group>";
 		};
+		A3E1AA9917EC82D3446C262A = {
+			isa = PBXGroup;
+			children = (
+				"5D0E032054E018CC1FBC5319");
+			name = "..";
+			sourceTree = "<Group>";
+		};
+		5D0E032054E018CC1FBC5319 = {
+			isa = PBXGroup;
+			children = (
+				"E562089B6BDEF8C422635B4E");
+			name = "resources";
+			sourceTree = "<Group>";
+		};
+		87DF60DE337FB58864343E39 = {
+			isa = PBXGroup;
+			children = (
+				"8DFAB9C8B16410B121704055");
+			name = "Resources";
+			sourceTree = "<Group>";
+		};
 		2EB56BE3C2D93CDAB0C52E67 = {
 			isa = PBXGroup;
 			children = (
@@ -2386,7 +2489,8 @@
 				"C933C2F8B41CBD4E4E39F30C",
 				"81724E7EF22F4E7E348F05E3",
 				"FC8B1819634F1A0306D1F056",
-				"AB745978DF0F41D1801ABDA6");
+				"AB745978DF0F41D1801ABDA6",
+				"A3E1AA9917EC82D3446C262A");
 			name = "Supporting Files";
 			sourceTree = "<Group>";
 		};
@@ -2404,6 +2508,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				"DBEE92E3CB64A5C0F62AC60B",
+				"1CEFA483861E4E66F34545AC",
 				"CD6D89FE53345F50C5E06134",
 				"A0C87B5105D2FEA9C5E389DC",
 				"7BBA13B516213F357479F8A9",
@@ -2441,6 +2546,8 @@
 				"D37F0180244B59BC5508A189",
 				"F4861EA61FB5213FE2333A47",
 				"0DBD53C95648964A5F4BD8FD",
+				"CDEE11F2F6164D3D47FF69C9",
+				"0287FB11C92FF38668F1B94E",
 				"4FB1C9C214450AFA20E4F137",
 				"CD697CDC605931FD2D2A9573",
 				"07DDFCCE39681C458D59536F",
@@ -2769,16 +2876,16 @@
 			settings = {
 			};
 		};
-		228A1D5AE3537AB55D342685 = {
+		A4B25C264647547DE39B22E4 = {
 			isa = PBXFileReference;
-			name = "QtXml.framework";
-			path = "/usr/local/Qt-5.3.1/lib/QtXml.framework";
+			name = "QtMultimedia.framework";
+			path = "/usr/local/Qt-5.3.1/lib/QtMultimedia.framework";
 			refType = 0;
 			sourceTree = "<absolute>";
 			lastKnownFileType = "wrapper.framework";
 		};
-		32FF24C1F9250F05E1F7D31C = {
-			fileRef = "228A1D5AE3537AB55D342685";
+		E956F02269E33E54B1883B4E = {
+			fileRef = "A4B25C264647547DE39B22E4";
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2793,6 +2900,20 @@
 		};
 		065B1245A513B5AFC408B764 = {
 			fileRef = "31BDF7051A5D0220C2936C97";
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		228A1D5AE3537AB55D342685 = {
+			isa = PBXFileReference;
+			name = "QtXml.framework";
+			path = "/usr/local/Qt-5.3.1/lib/QtXml.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+			lastKnownFileType = "wrapper.framework";
+		};
+		32FF24C1F9250F05E1F7D31C = {
+			fileRef = "228A1D5AE3537AB55D342685";
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2836,8 +2957,9 @@
 				"E7CD85CF55D0C5BB90703B01",
 				"671A39BF973C2FA9FAB29AE9",
 				"C64D4D97C3FA9E3ABAF89A19",
-				"228A1D5AE3537AB55D342685",
+				"A4B25C264647547DE39B22E4",
 				"31BDF7051A5D0220C2936C97",
+				"228A1D5AE3537AB55D342685",
 				"8D9815BDB5BD9F90D2BC05C5");
 			isa = PBXGroup;
 			name = "Frameworks";
@@ -2869,8 +2991,9 @@
 				"36E1B0A2116A4531E021583E",
 				"25A50AF045078E48232F7A2A",
 				"81EFD76148A475BA4582B3E5",
-				"32FF24C1F9250F05E1F7D31C",
+				"E956F02269E33E54B1883B4E",
 				"065B1245A513B5AFC408B764",
+				"32FF24C1F9250F05E1F7D31C",
 				"E45E51A644D5FC9F942ECE55");
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2895,6 +3018,7 @@
 				"2EB56BE3C2D93CDAB0C52E67",
 				"25B08E2869634E9BCBA333A2",
 				"74B182DB50CB5611B5C1C297",
+				"87DF60DE337FB58864343E39",
 				"AF39DD055C3EF8226FBE929D",
 				"FE0A091FDBFB3E9C31B7A1BD");
 			isa = PBXGroup;
@@ -2956,6 +3080,7 @@
 					"/usr/local/cinder_0.8.5_mac/boost",
 					"/usr/local/cinder_0.8.5_mac/boost/boost",
 					"/usr/local/Qt-5.3.1/lib/QtOpenGL.framework/Versions/5/Headers",
+					"/usr/local/Qt-5.3.1/lib/QtMultimedia.framework/Versions/5/Headers",
 					"/usr/local/Qt-5.3.1/lib/QtWidgets.framework/Versions/5/Headers",
 					"/usr/local/Qt-5.3.1/lib/QtXml.framework/Versions/5/Headers",
 					"/usr/local/Qt-5.3.1/lib/QtNetwork.framework/Versions/5/Headers",
@@ -2993,6 +3118,7 @@
 					"-W",
 					"-fPIE",
 					"-DQT_OPENGL_LIB",
+					"-DQT_MULTIMEDIA_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
 					"-DQT_NETWORK_LIB",
@@ -3009,6 +3135,7 @@
 					"-W",
 					"-fPIE",
 					"-DQT_OPENGL_LIB",
+					"-DQT_MULTIMEDIA_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
 					"-DQT_NETWORK_LIB",
@@ -3070,6 +3197,7 @@
 					"/usr/local/cinder_0.8.5_mac/boost",
 					"/usr/local/cinder_0.8.5_mac/boost/boost",
 					"/usr/local/Qt-5.3.1/lib/QtOpenGL.framework/Versions/5/Headers",
+					"/usr/local/Qt-5.3.1/lib/QtMultimedia.framework/Versions/5/Headers",
 					"/usr/local/Qt-5.3.1/lib/QtWidgets.framework/Versions/5/Headers",
 					"/usr/local/Qt-5.3.1/lib/QtXml.framework/Versions/5/Headers",
 					"/usr/local/Qt-5.3.1/lib/QtNetwork.framework/Versions/5/Headers",
@@ -3107,6 +3235,7 @@
 					"-W",
 					"-fPIE",
 					"-DQT_OPENGL_LIB",
+					"-DQT_MULTIMEDIA_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
 					"-DQT_NETWORK_LIB",
@@ -3123,6 +3252,7 @@
 					"-W",
 					"-fPIE",
 					"-DQT_OPENGL_LIB",
+					"-DQT_MULTIMEDIA_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
 					"-DQT_NETWORK_LIB",

@@ -126,12 +126,14 @@ RunParticles.xcodeproj/project.pbxproj: RunParticles.pro /usr/local/Qt-5.3.1/mks
 		/usr/local/Qt-5.3.1/mkspecs/features/yacc.prf \
 		/usr/local/Qt-5.3.1/mkspecs/features/lex.prf \
 		RunParticles.pro \
+		../resources/resources.qrc \
 		/usr/local/Qt-5.3.1/lib/QtOpenGL.framework/QtOpenGL.prl \
 		/usr/local/Qt-5.3.1/lib/QtWidgets.framework/QtWidgets.prl \
 		/usr/local/Qt-5.3.1/lib/QtGui.framework/QtGui.prl \
 		/usr/local/Qt-5.3.1/lib/QtCore.framework/QtCore.prl \
-		/usr/local/Qt-5.3.1/lib/QtXml.framework/QtXml.prl \
-		/usr/local/Qt-5.3.1/lib/QtNetwork.framework/QtNetwork.prl
+		/usr/local/Qt-5.3.1/lib/QtMultimedia.framework/QtMultimedia.prl \
+		/usr/local/Qt-5.3.1/lib/QtNetwork.framework/QtNetwork.prl \
+		/usr/local/Qt-5.3.1/lib/QtXml.framework/QtXml.prl
 	$(QMAKE) -spec macx-xcode -o RunParticles.xcodeproj/project.pbxproj RunParticles.pro
 /usr/local/Qt-5.3.1/mkspecs/features/spec_pre.prf:
 /usr/local/Qt-5.3.1/mkspecs/qdevice.pri:
@@ -250,12 +252,14 @@ RunParticles.xcodeproj/project.pbxproj: RunParticles.pro /usr/local/Qt-5.3.1/mks
 /usr/local/Qt-5.3.1/mkspecs/features/yacc.prf:
 /usr/local/Qt-5.3.1/mkspecs/features/lex.prf:
 RunParticles.pro:
+../resources/resources.qrc:
 /usr/local/Qt-5.3.1/lib/QtOpenGL.framework/QtOpenGL.prl:
 /usr/local/Qt-5.3.1/lib/QtWidgets.framework/QtWidgets.prl:
 /usr/local/Qt-5.3.1/lib/QtGui.framework/QtGui.prl:
 /usr/local/Qt-5.3.1/lib/QtCore.framework/QtCore.prl:
-/usr/local/Qt-5.3.1/lib/QtXml.framework/QtXml.prl:
+/usr/local/Qt-5.3.1/lib/QtMultimedia.framework/QtMultimedia.prl:
 /usr/local/Qt-5.3.1/lib/QtNetwork.framework/QtNetwork.prl:
+/usr/local/Qt-5.3.1/lib/QtXml.framework/QtXml.prl:
 qmake: FORCE
 	@$(QMAKE) -spec macx-xcode -o RunParticles.xcodeproj/project.pbxproj RunParticles.pro
 

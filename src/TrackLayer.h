@@ -8,7 +8,6 @@
 #include "cinder/gl/gl.h"
 #include "cinder/gl/DisplayList.h"
 #include <QString>
-#include <QOpenGLShaderProgram>
 
 class TrackLayer : public Layer
 {

@@ -30,12 +30,6 @@ double tiley2lat(int y, int z)
 	return 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
 }
 
-void _drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight)
-{
-    gl::drawSolidRect(Rectf(upperLeft.x, upperLeft.y,
-                            lowerRight.x, lowerRight.y));
-}
-
 OsmLayer::OsmLayer() : Layer(),
     _tileSource(new OsmTileSource()),
     _worldSize(0.0),
@@ -48,6 +42,11 @@ OsmLayer::OsmLayer() : Layer(),
 {
     connect(_tileSource, SIGNAL(tileReady(OsmIndex)),
                          SLOT(onTileReady(OsmIndex)));
+    _quad = gl::DisplayList(GL_COMPILE);
+    _quad.newList();
+    gl::drawSolidRect(Rectf(0., 10.0,
+                            10.0, 0.0));
+    _quad.endList();
 }
 
 OsmLayer::~OsmLayer()
@@ -122,7 +121,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
             visibleTiles.insert(idx);
             TileMap::iterator foundTile = _tiles.find(idx);
             if (foundTile == _tiles.end()) {
-                TileRefPtr newTile = std::make_shared<Tile>();
+                TileRefPtr newTile = std::make_shared<Tile>(&_quad);
                 newTile->shader = _shader;
                 newTile->index = idx;
                 newTile->upperLeft.x = _worldTopLeft.x +
@@ -175,7 +174,10 @@ OsmLayer::onTileReady(OsmIndex index)
     }
 }
 
-OsmLayer::Tile::Tile() : texture(NULL), shader(NULL)
+OsmLayer::Tile::Tile(gl::DisplayList *quad) :
+    quadDisplayList(quad),
+    texture(NULL),
+    shader(NULL)
 {
     
 }
@@ -192,6 +194,19 @@ OsmLayer::Tile::draw(const ViewCtx &viewCtx)
         texture->unbind();
         shader->release();
     }
+}
+
+void
+OsmLayer::Tile::_drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight)
+{
+    gl::drawSolidRect(Rectf(upperLeft.x, upperLeft.y,
+                            lowerRight.x, lowerRight.y));
+    glPushMatrix();
+    glTranslated(upperLeft.x, lowerRight.y, 0.0);
+    float width = lowerRight.x - upperLeft.x;
+    glScalef(width/10., width/10., 1.0);
+    quadDisplayList->draw();
+    glPopMatrix();
 }
 
 void

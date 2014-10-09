@@ -9,6 +9,7 @@
 #include "boost/shared_ptr.hpp"
 
 #include "cinder/gl/gl.h"
+#include "cinder/gl/DisplayList.h"
 #include "cinder/ImageIo.h"
 #include "cinder/CinderResources.h"
 #include "cinder/gl/Texture.h"
@@ -66,7 +67,8 @@ protected:
     
     struct Tile
     {
-        Tile();
+        Tile(gl::DisplayList *quad);
+        gl::DisplayList *quadDisplayList;
         gl::Texture *texture;
         OsmIndex index;
         MapPoint upperLeft;
@@ -76,6 +78,8 @@ protected:
         void setTexture(const Surface8u &surface);
         
         void draw(const ViewCtx &viewCtx);
+        
+        void _drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight);
     };
     
     typedef std::shared_ptr<Tile> TileRefPtr;
@@ -85,6 +89,8 @@ protected:
     OsmTileSource *_tileSource;
     
     TileMap _tiles;
+    
+    gl::DisplayList _quad;
     
     uint _getZoomLevel(double resolution) const;
     

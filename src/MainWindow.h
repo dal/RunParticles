@@ -15,6 +15,7 @@
 #include "GLWidget.h"
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
+#include "OsmTileSource.h"
 #include "TrackFileReader.h"
 
 class MainWindow : public QMainWindow
@@ -72,6 +73,8 @@ public slots:
     
     void slotTrackFileLoadError(const QString &path, const QString &what);
     
+    void cacheTiles(const QList<OsmIndex> &tiles);
+    
 signals:
     void signalDoneReading();
     
@@ -104,6 +107,7 @@ protected:
     QNetworkDiskCache *_diskCache;
     QStringList _trackFiles;
     TrackFileReader *_trackFileReader;
+    OsmTileSource *_tileSource;
 };
 
 #endif

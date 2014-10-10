@@ -23,7 +23,8 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _menuBar(new QMenuBar(0)),
     _glWidget(glWidget),
     _layerListWidget(new LayerListWidget()),
-    _trackFileReader(new TrackFileReader(this))
+    _trackFileReader(new TrackFileReader(this)),
+    _tileSource(new OsmTileSource())
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -330,7 +331,7 @@ MainWindow::slotNewMap()
 void
 MainWindow::_loadBaseMap()
 {
-    _glWidget->getMap()->addLayer(new OsmLayer());
+    _glWidget->getMap()->addLayer(new OsmLayer(_tileSource));
 }
 
 void
@@ -444,6 +445,15 @@ MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 {
     QString err = QString("Error loading file '%0': %1").arg(path).arg(what);
     QMessageBox::critical(this, "Could not load file", err);
+}
+
+void
+MainWindow::cacheTiles(const QList<OsmIndex> &tiles)
+{
+    OsmIndex index;
+    foreach(index, tiles) {
+        _tileSource->getTile(index);
+    }
 }
 
 void

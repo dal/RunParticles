@@ -13,6 +13,8 @@
 #include <QObject>
 #include <QTimer>
 
+#include "OsmTileSource.h"
+
 class MainWindow;
 
 class GLWidget;
@@ -39,6 +41,8 @@ protected:
     unsigned int _position;
     
     QMediaPlayer *_audioPlayer;
+    
+    static QList<OsmIndex> cacheList1, cacheList2, cacheList3;
     
 protected slots:
     void play();

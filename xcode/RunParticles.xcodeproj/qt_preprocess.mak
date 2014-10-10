@@ -4472,6 +4472,8 @@ moc_OsmLayer.cpp: ../src/Layer.h \
 		/usr/local/cinder_0.8.5_mac/include/cinder/PolyLine.h \
 		/usr/local/cinder_0.8.5_mac/include/cinder/AxisAlignedBox.h \
 		/usr/local/cinder_0.8.5_mac/include/cinder/Ray.h \
+		/usr/local/cinder_0.8.5_mac/include/cinder/gl/DisplayList.h \
+		/usr/local/cinder_0.8.5_mac/include/cinder/gl/Material.h \
 		/usr/local/cinder_0.8.5_mac/include/cinder/ImageIo.h \
 		/usr/local/cinder_0.8.5_mac/include/cinder/DataTarget.h \
 		/usr/local/cinder_0.8.5_mac/include/cinder/CinderResources.h \

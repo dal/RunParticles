@@ -6,6 +6,7 @@
 //
 //
 
+<<<<<<< HEAD
 #include <QApplication>
 #include <QFile>
 
@@ -18,6 +19,17 @@ DemoPlayer::DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget) :
     QObject(mainWindow),
     _mainWindow(mainWindow),
     _glWidget(glWidget),
+=======
+#include <QFile>
+
+#include "DemoPlayer.h"
+#include "MainWindow.h"
+
+
+DemoPlayer::DemoPlayer(MainWindow *mainWindow) :
+    QObject(mainWindow),
+    _mainWindow(mainWindow),
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
     _timer(new QTimer(this)),
     _position(0),
     _audioPlayer(new QMediaPlayer(this))
@@ -28,6 +40,7 @@ DemoPlayer::DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget) :
     _timer->setSingleShot(true);
     _timer->setInterval(1000);
     _timer->start();
+<<<<<<< HEAD
     _copyResources();
 }
 
@@ -56,6 +69,8 @@ DemoPlayer::_cleanupResources()
     QFile::remove("/tmp/all2011.tcx");
     QFile::remove("/tmp/all2012.tcx");
     QFile::remove("/tmp/all2013.tcx");
+=======
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
 }
 
 void
@@ -65,14 +80,21 @@ DemoPlayer::play()
     switch (_position)
     {
         case 0:
+<<<<<<< HEAD
             //_glWidget->showMaximized();
             _glWidget->showFullScreen();
             _mainWindow->slotPlaybackRateChanged("64x");
             _mainWindow->loadMapFile("/tmp/map.xml");
+=======
+            _mainWindow->slotMaximizeGLWidget();
+            _mainWindow->slotPlaybackRateChanged("64x");
+            _mainWindow->loadMapFile("/Users/dal/tmp/helloWorld");
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
             _interval = -1;
             break;
         case 1:
             playMusic();
+<<<<<<< HEAD
             _glWidget->slotPlay();
             _interval = 4000;
             break;
@@ -126,11 +148,18 @@ DemoPlayer::play()
         case 13:
             //qApp->quit();
             _interval = -1;
+=======
+            _mainWindow->slotPlay();
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
             break;
             
     };
     if (_interval > 0)
+<<<<<<< HEAD
         _timer->start(_interval);
+=======
+        _timer->setInterval(_interval);
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
     else
         _timer->stop();
     _position++;
@@ -138,6 +167,10 @@ DemoPlayer::play()
 
 void DemoPlayer::playMusic()
 {
+<<<<<<< HEAD
+=======
+    QFile::copy(":/music" , "/tmp/tontura.mp3");
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
     _audioPlayer->setMedia(QUrl::fromLocalFile("/tmp/tontura.mp3"));
     _audioPlayer->setVolume(50);
     _audioPlayer->play();

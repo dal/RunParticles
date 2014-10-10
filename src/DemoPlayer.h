@@ -15,14 +15,18 @@
 
 class MainWindow;
 
+<<<<<<< HEAD
 class GLWidget;
 
+=======
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
 class DemoPlayer : public QObject
 {
     
     Q_OBJECT
     
 public:
+<<<<<<< HEAD
     DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget);
     
     virtual ~DemoPlayer();
@@ -36,6 +40,13 @@ protected:
     
     GLWidget *_glWidget;
     
+=======
+    DemoPlayer(MainWindow *mainWindow);
+    
+protected:
+    MainWindow *_mainWindow;
+    
+>>>>>>> Added DemoPlayer class and methods to play back some silly music.
     QTimer *_timer;
     
     unsigned int _position;

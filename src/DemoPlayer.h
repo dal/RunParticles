@@ -27,6 +27,8 @@ class DemoPlayer : public QObject
 public:
     DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget);
     
+    virtual ~DemoPlayer();
+    
 protected:
     void _copyResources();
     

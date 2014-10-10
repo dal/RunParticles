@@ -41,9 +41,6 @@ TcxHandler::startElement(const QString& /* namespaceURI */,
                       const QXmlAttributes & atts )
 {
     if (localName == "Activity") {
-        if (_depth != 0) {
-            qWarning("Nested activites!");
-        }
         int sportIdx = atts.index(QString(""), "Sport");
         if (sportIdx != -1) {
             QString mysport = atts.value(sportIdx);

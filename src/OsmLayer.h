@@ -39,7 +39,7 @@ public:
         numZoomLevels = 19
     };
     
-    OsmLayer();
+    OsmLayer(OsmTileSource *tileSource);
     
     virtual ~OsmLayer();
     

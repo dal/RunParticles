@@ -9,6 +9,8 @@
 
 #include "Map.h"
 
+#include <QDebug>
+
 Map::Map(QObject *parent)
 : QObject(parent),
 _projection(Projection()),
@@ -79,6 +81,7 @@ Map::onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const
                 closestDistance = myDist;
                 closestId = (*it)->id();
                 found = true;
+                qDebug() << "selected " << (*it)->id();
             }
         }
     }

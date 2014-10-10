@@ -30,8 +30,8 @@ double tiley2lat(int y, int z)
 	return 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
 }
 
-OsmLayer::OsmLayer() : Layer(),
-    _tileSource(new OsmTileSource()),
+OsmLayer::OsmLayer(OsmTileSource *tileSource) : Layer(),
+    _tileSource(tileSource),
     _worldSize(0.0),
     _tileSize(1.0),
     _currentZoom(0),
@@ -51,7 +51,6 @@ OsmLayer::OsmLayer() : Layer(),
 
 OsmLayer::~OsmLayer()
 {
-    delete _tileSource;
     delete _shader;
 }
 

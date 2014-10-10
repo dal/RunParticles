@@ -124,7 +124,7 @@ OsmTileSource::onRequestFinished()
     OsmTileRef tileRef = OsmTileRef(new OsmTile(index, surf));
     _memoryTileCache.insert(
         std::pair<OsmIndex, OsmTileRef>(index, tileRef));
-    _cleanCache();
+    // Demo party: Never clean the cache _cleanCache();
     emit tileReady(index);
 }
 
@@ -144,7 +144,7 @@ OsmTileSource::_requestTile(const OsmIndex index)
                  QNetworkRequest::PreferCache);
     QNetworkAccessManager *network =
         Singleton<QNetworkAccessManager>::Instance();
-    qDebug() << "GET " << host << url;
+    qDebug() << " OsmIndex(" << index.x << ", " << index.y << ", " << index.z << ");";
     QNetworkReply *reply = network->get(request);
     _pendingReplies.insert(reply, index);
     QObject::connect(reply,

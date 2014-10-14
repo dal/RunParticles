@@ -2225,13 +2225,13 @@ DemoPlayer::DemoPlayer(MainWindow *mainWindow, GLWidget *glWidget) :
     << OsmIndex( 332 ,  793 ,  11 )
     << OsmIndex( 332 ,  794 ,  11 );
 
+    _copyResources();
     connect(_timer, &QTimer::timeout, this, &DemoPlayer::play);
     connect(_mainWindow, &MainWindow::signalDoneReading,
             this, &DemoPlayer::play);
     _timer->setSingleShot(true);
     _timer->setInterval(1000);
     _timer->start();
-    _copyResources();
 }
 
 DemoPlayer::~DemoPlayer()

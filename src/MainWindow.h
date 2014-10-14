@@ -75,6 +75,8 @@ public slots:
     
     void cacheTiles(const QList<OsmIndex> &tiles);
     
+    void onTileReady(OsmIndex);
+    
 signals:
     void signalDoneReading();
     
@@ -108,6 +110,7 @@ protected:
     QStringList _trackFiles;
     TrackFileReader *_trackFileReader;
     OsmTileSource *_tileSource;
+    QList<OsmIndex> cacheList;
 };
 
 #endif

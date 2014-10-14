@@ -72,14 +72,10 @@ TcxHandler::startElement(const QString& /* namespaceURI */,
     } else if (localName == "LatitudeDegrees") {
         if (_inPoint) {
             _inLatitudeDegrees = true;
-        } else {
-            qWarning("Found LatitudeDegrees outside TrackPoint");
         }
     } else if (localName == "LongitudeDegrees") {
         if (_inPoint) {
             _inLongitudeDegrees = true;
-        } else {
-            qWarning("Found LongitudeDegrees outside TrackPoint");
         }
     }
     return true;

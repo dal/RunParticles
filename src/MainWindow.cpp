@@ -33,6 +33,9 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _diskCache->setCacheDirectory(cacheDir);
     _networkAccessManager->setCache(_diskCache);
     
+    connect(_tileSource, &OsmTileSource::tileReady,
+            this, &MainWindow::onTileReady);
+    
     connect(_trackFileReader, &TrackFileReader::signalReady,
             this, &MainWindow::slotTrackFileLoaded);
     connect(_trackFileReader, &TrackFileReader::signalError,
@@ -450,8 +453,14 @@ MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 void
 MainWindow::cacheTiles(const QList<OsmIndex> &tiles)
 {
-    OsmIndex index;
-    foreach(index, tiles) {
+    cacheList << tiles;
+}
+
+void
+MainWindow::onTileReady(OsmIndex)
+{
+    if (!cacheList.empty()) {
+        OsmIndex index = cacheList.takeFirst();
         _tileSource->getTile(index);
     }
 }

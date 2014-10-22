@@ -74,6 +74,13 @@ BoundingBox::operator+=(const BoundingBox other)
     return *this;
 }
 
+BoundingBox
+BoundingBox::expand(double amt)
+{
+    return BoundingBox(MapPoint(upperLeft.x-amt, upperLeft.y+amt),
+                       MapPoint(lowerRight.x+amt, lowerRight.y-amt));
+}
+
 double
 BoundingBox::width() const
 {

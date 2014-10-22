@@ -182,7 +182,8 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     for(int i=0; i < currentPath->count(); i++) {
         PathPoint *pt = &(*currentPath)[i];
         MapPoint *thisMapPt = &(pt->pos);
-        bool inbounds = viewCtx.getBoundingBox().contains(*thisMapPt);
+        bool inbounds = viewCtx.getBoundingBox().expand(_particleRadius*2.)
+                                                .contains(*thisMapPt);
         if (i == 0 || pt->time < timeCtx.getMapSeconds()) {
             if (i > 0 && (inbounds || lastInbounds)) {
                 _pathBuffer[bufferIndex++] = w2c.x + lastMapPt->x;

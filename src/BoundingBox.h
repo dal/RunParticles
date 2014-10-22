@@ -21,6 +21,8 @@ struct BoundingBox
     
     BoundingBox& operator+=(const BoundingBox other);
     
+    BoundingBox expand(double);
+    
     double width() const;
     
     double height() const;

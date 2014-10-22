@@ -401,6 +401,7 @@ MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
     Layer *layer = _glWidget->getMap()->getLayer(layerId);
     if (layer)
         layer->setVisible(visible);
+    _glWidget->update();
 }
 
 void

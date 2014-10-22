@@ -104,7 +104,7 @@ void
 LayerListWidget::itemChecked(LayerListWidgetItem *which, int column)
 {
     if (column == ColumnVisible) {
-        LayerId layerId = which->data(LayerIdRole, ColumnName).toUInt();
+        LayerId layerId = which->data(ColumnName, LayerIdRole).toUInt();
         emit signalLayerVisibilityChanged(layerId,
                                       which->checkState(column) == Qt::Checked);
     }

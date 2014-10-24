@@ -11,6 +11,8 @@
 #define MAP_H
 
 #include <QObject>
+#include <QThread>
+#include <QMutex>
 
 #include "Layer.h"
 #include "Projection.h"
@@ -27,6 +29,35 @@ typedef std::shared_ptr<Layer> LayerPtr;
 typedef std::vector<LayerPtr> LayerPtrList;
 
 typedef std::map<LayerId, LayerPtr> LayerMap;
+
+class Map;
+
+class MapProjectorWorker : public QThread
+{
+    Q_OBJECT
+    
+public:
+    MapProjectorWorker(Map *parent=NULL);
+    
+    virtual ~MapProjectorWorker() { };
+    
+    void run();
+    
+    void project(LayerPtr);
+    
+signals:
+    void signalReady(LayerPtr);
+    
+    void signalError(LayerId, const QString&);
+    
+protected:
+    QMutex _inMutex;
+    
+    QList<LayerPtr> _input;
+    
+    Map *_map;
+    
+};
 
 class Map : public QObject
 {

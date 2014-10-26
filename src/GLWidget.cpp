@@ -101,7 +101,8 @@ void
 GLWidget::mousePressEvent(QMouseEvent *event)
 {
     _in_mouseClick = true;
-    _lastDownPos = event->pos();
+    _lastMovePos = event->pos();
+    _lastDownPos = _lastMovePos;
     event->accept();
 }
 
@@ -110,7 +111,7 @@ GLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if (_in_mouseClick && event->pos() == _lastDownPos) {
         _in_mouseClick = false;
-        _onMouseClicked(QPoint(_lastDownPos.x(), height() - _lastDownPos.y()));
+        _onMouseClicked(QPoint(_lastMovePos.x(), height() - _lastMovePos.y()));
     }
     event->accept();
 }
@@ -130,7 +131,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() != Qt::NoButton) {
         slotUnlockView();
-        QPoint delta = event->pos() - _lastDownPos;
+        QPoint delta = event->pos() - _lastMovePos;
         if (event->buttons() & Qt::LeftButton) {
             moveView(delta);
         } else if (event->buttons() & Qt::MiddleButton ||
@@ -138,7 +139,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
         {
             mouseDragZoom(delta);
         }
-        _lastDownPos = event->pos();
+        _lastMovePos = event->pos();
     }
     event->accept();
 }

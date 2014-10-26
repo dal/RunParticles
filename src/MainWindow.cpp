@@ -12,13 +12,12 @@
 #include "OsmLayer.h"
 #include "TrackLayer.h"
 
-MainWindow::MainWindow(GLWidget *glWidget,
-                       QWidget * parent,
+MainWindow::MainWindow(QWidget * parent,
                        Qt::WindowFlags flags) :
     QMainWindow::QMainWindow(parent, flags),
     _fileIO(new MapFileIO(this)),
     _menuBar(new QMenuBar(0)),
-    _glWidget(glWidget),
+    _glWidget(new GLWidget()),
     _playbackWidget(new PlaybackWidget()),
     _layerListWidget(new LayerListWidget()),
     _trackFileReader(new TrackFileReader(this))
@@ -34,8 +33,12 @@ MainWindow::MainWindow(GLWidget *glWidget,
             this, &MainWindow::slotTrackFileLoaded);
     connect(_trackFileReader, &TrackFileReader::signalError,
             this, &MainWindow::slotTrackFileLoadError);
+    connect(_trackFileReader, &TrackFileReader::signalUpdate,
+            _playbackWidget, &PlaybackWidget::updateStatus);
+    connect(_trackFileReader, &TrackFileReader::signalDone,
+            _playbackWidget, &PlaybackWidget::hideProgress);
     
-    setCentralWidget(_glWidget);
+    setCentralWidget(_playbackWidget);
     
     /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
@@ -128,6 +131,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     slotTimeChanged(0);
     _layerListWidget->show();
     _playbackWidget->show();
+    _glWidget->show();
     
     _loadBaseMap();
 }

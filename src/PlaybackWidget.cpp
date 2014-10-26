@@ -9,6 +9,7 @@
 #include "PlaybackWidget.h"
 
 #include <QGridLayout>
+#include <QVBoxLayout>
 
 #include "Util.h"
 
@@ -33,6 +34,10 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) :
     _currentTimeLineEdit->setReadOnly(true);
     _currentTimeLineEdit->setText("0");
     _currentTimeLineEdit->setAlignment(Qt::AlignRight);
+    _statusBar = new QStatusBar(this);
+    _progressBar = new QProgressBar();
+    _statusBar->addPermanentWidget(_progressBar);
+    _statusBar->show();
     _layoutPlaybackControls();
     
     /* connect the buttons up to relay signals */
@@ -45,6 +50,7 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) :
     connect(_slider, SIGNAL(valueChanged(int)),
             SIGNAL(signalTimeSliderChanged(int)));
     setTimeSliderMaximum(1800);
+    hideProgress();
 }
 
 void
@@ -64,21 +70,42 @@ PlaybackWidget::setTimeSliderMaximum(int max)
 }
 
 void
+PlaybackWidget::updateStatus(const QString &message, int total, int done)
+{
+    if (done < total)
+        _progressBar->show();
+    _statusBar->showMessage(message);
+    _progressBar->setMaximum(total);
+    _progressBar->setValue(done);
+}
+
+void
+PlaybackWidget::hideProgress()
+{
+    _progressBar->hide();
+    _statusBar->clearMessage();
+}
+
+void
 PlaybackWidget::_layoutPlaybackControls()
 {
-    QGridLayout *_layout = new QGridLayout(this);
-    _layout->setMargin(8);
-    _layout->addWidget(_rewindButton, 0, 0);
-    _layout->addWidget(_backButton, 0, 1);
-    _layout->addWidget(_pauseButton, 0, 2);
-    _layout->addWidget(_forwardButton, 0, 3);
-    _layout->addWidget(_playSpeedCombo, 0, 4);
-    _layout->addWidget(_slider, 1, 0, 1, 4);
-    _layout->addWidget(_currentTimeLineEdit, 1, 4);
-    for (int i=0; i < _layout->columnCount()-1; i++)
-        _layout->setColumnStretch(i, 1);
-    _layout->setColumnMinimumWidth(4, 100);
-    _layout->setRowStretch(0, 2);
+    QVBoxLayout *mainCol = new QVBoxLayout(this);
+    mainCol->setMargin(0);
+    mainCol->setSpacing(2);
+    QGridLayout *layout = new QGridLayout();
+    layout->setMargin(8);
+    layout->setSpacing(8);
+    layout->addWidget(_rewindButton, 0, 0);
+    layout->addWidget(_backButton, 0, 1);
+    layout->addWidget(_pauseButton, 0, 2);
+    layout->addWidget(_forwardButton, 0, 3);
+    layout->addWidget(_playSpeedCombo, 0, 4);
+    layout->addWidget(_slider, 1, 0, 1, 4);
+    layout->addWidget(_currentTimeLineEdit, 1, 4);
+    for (int i=0; i < layout->columnCount()-1; i++)
+        layout->setColumnStretch(i, 1);
+    layout->setColumnMinimumWidth(4, 100);
+    layout->setRowStretch(0, 2);
     /* make the buttons expand vertically */
     _rewindButton->setSizePolicy(QSizePolicy::Preferred,
                                  QSizePolicy::Expanding);
@@ -86,4 +113,6 @@ PlaybackWidget::_layoutPlaybackControls()
     _pauseButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
     _forwardButton->setSizePolicy(QSizePolicy::Preferred,
                                   QSizePolicy::Expanding);
+    mainCol->addLayout(layout);
+    mainCol->addWidget(_statusBar);
 }

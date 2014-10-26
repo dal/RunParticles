@@ -24,6 +24,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _fullScreen(false),
     _lockToLayer(false)
 {
+    if (_map == NULL)
+        _map = new Map();
     elapsedTimer.start();
     // Center the camera on Oakland, California, USA
     MapPoint lr = _map->getProjection().toProjection(LonLat(-122.27, 37.73));

@@ -40,7 +40,7 @@ public:
     };
 
     
-    GLWidget(Map *map, QWidget *parent=0);
+    GLWidget(Map *map=NULL, QWidget *parent=0);
     
     virtual ~GLWidget();
     

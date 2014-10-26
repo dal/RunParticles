@@ -12,8 +12,10 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QWidget>
+#include <QProgressBar>
 #include <QPushButton>
 #include <QSlider>
+#include <QStatusBar>
 
 class PlaybackWidget : public QWidget
 {
@@ -27,6 +29,8 @@ public:
 public slots:
     void setTime(double);
     void setTimeSliderMaximum(int);
+    void updateStatus(const QString &message, int total, int done);
+    void hideProgress();
     
 signals:
     void signalRewind();
@@ -43,6 +47,8 @@ protected:
     QSlider *_slider;
     QLineEdit *_currentTimeLineEdit;
     QComboBox *_playSpeedCombo;
+    QStatusBar *_statusBar;
+    QProgressBar *_progressBar;
 
 };
 

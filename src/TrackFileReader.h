@@ -27,11 +27,19 @@ public:
     void run();
     
     void read(const QString &path, QList<Track*> *tracks);
+
+public slots:
+    
+    void cancel();
     
 signals:
     void signalReady(const QString&, QList<Track*>*);
     
     void signalError(const QString&, const QString&);
+    
+    void signalUpdate(const QString& what, int total, int done);
+    
+    void signalDone();
     
 protected:
     QMutex _inMutex;
@@ -39,6 +47,10 @@ protected:
     WorkList _input;
     
     TrackFileReader *_reader;
+    
+    int _workCount;
+    
+    bool _cancelRequested;
     
 };
 
@@ -49,6 +61,8 @@ class TrackFileReader : public QObject
     
 public:
     TrackFileReader(QObject *parent=NULL);
+    
+    virtual ~TrackFileReader();
     
     bool read(const QString &path,
               QList<Track*> *tracks,
@@ -61,6 +75,10 @@ signals:
     void signalReady(const QString&, QList<Track*>*);
     
     void signalError(const QString&, const QString&);
+    
+    void signalUpdate(const QString&, int, int);
+    
+    void signalDone();
     
 protected:
     bool _readXml(QFile &theFile,

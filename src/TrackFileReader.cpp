@@ -14,20 +14,26 @@
 
 TrackFileReaderWorker::TrackFileReaderWorker(TrackFileReader *parent) :
     QThread(parent),
-    _reader(parent)
+    _reader(parent),
+    _workCount(0),
+    _cancelRequested(false)
 {
         
 };
     
 void
 TrackFileReaderWorker::run() {
-    while (true) {
+    while (!_cancelRequested) {
         WorkPair work;
         _inMutex.lock();
         if (!_input.isEmpty()) {
             work = _input.first();
             _input.pop_front();
+            QString what = QString("Parsing %0").arg(work.first);
+            emit signalUpdate(what, _workCount, _workCount - _input.length());
         } else {
+            _workCount = 0;
+            emit signalDone();
             _inMutex.unlock();
             break;
         }
@@ -45,9 +51,20 @@ TrackFileReaderWorker::run() {
 void
 TrackFileReaderWorker::read(const QString &path, QList<Track*> *tracks) {
     QMutexLocker locker(&_inMutex);
+    if (_input.length() == 0)
+        _workCount = 0;
     _input.append(WorkPair(path, tracks));
+    _workCount++;
     start();
 };
+
+void
+TrackFileReaderWorker::cancel()
+{
+    _cancelRequested = true;
+    wait();
+    _input.clear();
+}
 
 TrackFileReader::TrackFileReader(QObject *parent) :
     QObject(parent),
@@ -57,6 +74,14 @@ TrackFileReader::TrackFileReader(QObject *parent) :
             this, &TrackFileReader::signalReady);
     connect(_worker, &TrackFileReaderWorker::signalError,
             this, &TrackFileReader::signalError);
+    connect(_worker, SIGNAL(signalUpdate(const QString&, int, int)),
+            SIGNAL(signalUpdate(const QString&, int, int)));
+    connect(_worker, SIGNAL(signalDone()), SIGNAL(signalDone()));
+}
+
+TrackFileReader::~TrackFileReader()
+{
+    _worker->cancel();
 }
 
 bool

@@ -18,14 +18,9 @@ int main(int argc, char **argv)
     app.setOrganizationDomain("renderfast.com");
     app.setOrganizationName("Renderfast");
     
-    Map *map = new Map();
+    MainWindow mainWindow;
     
-    GLWidget *glwidget = new GLWidget(map);
-    
-    MainWindow *main = new MainWindow(glwidget);
-    
-    glwidget->show();
-    main->show();
+    mainWindow.show();
     
     app.exec();
 }

@@ -94,6 +94,9 @@ OsmLayer::project(const Projection &projection)
 void
 OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
 {
+    if (!_visible)
+        return;
+    
     if (pass != Pass_BaseMap)
         return;
     

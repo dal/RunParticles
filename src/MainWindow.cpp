@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget * parent,
     _glWidget(new GLWidget()),
     _playbackWidget(new PlaybackWidget()),
     _layerListWidget(new LayerListWidget()),
-    _trackFileReader(new TrackFileReader(this))
+    _trackFileReader(new TrackFileReader(this)),
+    _numPendingLayers(0)
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget * parent,
     _diskCache->setCacheDirectory(cacheDir);
     _networkAccessManager->setCache(_diskCache);
     
+    /* The trackFileReader reads tracks in the background */
     connect(_trackFileReader, &TrackFileReader::signalReady,
             this, &MainWindow::slotTrackFileLoaded);
     connect(_trackFileReader, &TrackFileReader::signalError,
@@ -305,12 +307,14 @@ MainWindow::slotAddLayer()
                                         "Select track files (.gpx, .tcx, .fit)",
                                         QString() /*dir*/,
                                         "Tracklogs (*.gpx *.tcx *.fit)");
-    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     if (!paths.isEmpty()) {
         QString path;
         foreach(path, paths) {
             loadTrackFile(path);
             _fileIO->addTrackFile(path);
+            /* remember the last layer path explicitly added because we'll 
+               frame up all tracks in it when the map is ready */
+            _lastLayerPathAdded = path;
         }
     }
 }
@@ -340,15 +344,37 @@ MainWindow::onTimeSliderDrag(int seconds)
 }
 
 void
-MainWindow::slotLayerAdded(LayerId)
+MainWindow::slotLayerAdded(LayerId layerId)
 {
     int dur = _glWidget->getMap()->getDuration();
     if (dur > 0)
         _playbackWidget->setTimeSliderMaximum(dur);
+    Layer *layer = _glWidget->getMap()->getLayer(layerId);
+    if (layer) {
+        _layerListWidget->addLayer(layer);
+        
+        if (!_lastLayerPathAdded.isEmpty() &&
+            layer->sourceFilePath() == _lastLayerPathAdded)
+            _layersToFrame.append(layer->id());
+    }
+    
+    /* If the user explicitly added a path and the map is done projecting,
+       frame all the layers that came from that path.
+     */
+    if (!_layersToFrame.empty() && _layersToFrame.length() == _numPendingLayers)
+    {
+        slotFrameLayers(_layersToFrame);
+        _layerListWidget->slotSetSelectedLayers(_layersToFrame);
+        _lastLayerPathAdded.clear();
+        _layersToFrame.clear();
+        _numPendingLayers = 0;
+    }
+    /* pump the event loop */
+    qApp->processEvents();
 }
 
 void
-MainWindow::slotFrameLayers(const QList<unsigned int> layerIds)
+MainWindow::slotFrameLayers(const QList<LayerId> layerIds)
 {
     _glWidget->slotFrameLayers(layerIds);
 }
@@ -391,14 +417,17 @@ MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
 {
     _trackFiles.append(path);
     Track *thisTrack;
-    QList<LayerId> added;
+    QList<Layer*> trackLayers;
     foreach(thisTrack, *tracks) {
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
-        added.append(thisLayer->id());
-        _glWidget->getMap()->addLayer(thisLayer);
-        _layerListWidget->addLayer(thisLayer);
+        // See if the layer came from an explicitly-added path
+        if (!_lastLayerPathAdded.isEmpty() &&
+            thisLayer->sourceFilePath() == _lastLayerPathAdded)
+            _numPendingLayers++;
+        trackLayers.append(thisLayer);
         qApp->processEvents();
     }
+    _glWidget->getMap()->addLayers(trackLayers);
 }
 
 void

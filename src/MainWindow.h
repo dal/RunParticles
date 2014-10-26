@@ -73,6 +73,7 @@ public slots:
     void slotTrackFileLoadError(const QString &path, const QString &what);
     
 protected:
+    
     void _layoutPlaybackControls(QWidget*);
     
     void _setupShortcuts();
@@ -98,6 +99,9 @@ protected:
     QNetworkDiskCache *_diskCache;
     QStringList _trackFiles;
     TrackFileReader *_trackFileReader;
+    QString _lastLayerPathAdded;
+    QList<LayerId> _layersToFrame;
+    int _numPendingLayers;
 };
 
 #endif

@@ -51,6 +51,7 @@ TrackFileReaderWorker::run() {
 void
 TrackFileReaderWorker::read(const QString &path, QList<Track*> *tracks) {
     QMutexLocker locker(&_inMutex);
+    _cancelRequested = false;
     if (_input.length() == 0)
         _workCount = 0;
     _input.append(WorkPair(path, tracks));
@@ -102,6 +103,14 @@ TrackFileReader::read(const QString &path,
     } else {
         success = _readXml(theFile, tracks, whyNot);
     }
+    
+    /* Make sure all the tracks return their source file path */
+    if (success) {
+        Track *track;
+        foreach(track, *tracks)
+            track->sourceFilePath = path;
+    }
+    
     return success;
 }
 

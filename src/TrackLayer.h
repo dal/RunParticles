@@ -28,6 +28,8 @@ public:
     
     QString name() const;
     
+    QString sourceFilePath() const;
+    
     QString sport() const;
     
     QDateTime startTime() const;

@@ -46,6 +46,8 @@ public:
     
     virtual QString name() const = 0;
     
+    virtual QString sourceFilePath() const { return QString(); };
+    
     virtual QString sport() const = 0;
     
     virtual QDateTime startTime() const = 0;
@@ -81,6 +83,7 @@ protected:
     LayerId _id;
     
     bool _visible;
+
 };
 
 #endif

@@ -52,6 +52,7 @@ struct Track
 {
     QString sport;
     QString name;
+    QString sourceFilePath;
     TrackPath points;
 };
 

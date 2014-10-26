@@ -19,6 +19,7 @@ const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
 bool TrackLayer::_isSetup = false;
 gl::DisplayList TrackLayer::_particle;
+gl::DisplayList TrackLayer::_selectedParticle;
 
 void
 TrackLayer::_setup()
@@ -29,6 +30,14 @@ TrackLayer::_setup()
     gl::color( Color( 0.3, 0.3, 0.3 ) );
     gl::drawStrokedCircle( Vec2d(0.f, 0.f), 10.);
     _particle.endList();
+    
+    _selectedParticle = gl::DisplayList(GL_COMPILE);
+    _selectedParticle.newList();
+    gl::color(SelectedColor);
+    gl::drawStrokedCircle(Vec2d(0.f, 0.f), 15.);
+    gl::drawStrokedCircle(Vec2d(0.f, 0.f), 20.);
+    _selectedParticle.endList();
+    
     _isSetup = true;
 }
 
@@ -60,6 +69,12 @@ QString
 TrackLayer::name() const
 {
     return _track->name;
+}
+
+QString
+TrackLayer::sourceFilePath() const
+{
+    return _track->sourceFilePath;
 }
 
 QString
@@ -222,13 +237,12 @@ TrackLayer::_drawParticle(const ViewCtx &viewCtx)
     glPushMatrix();
     glTranslated(particlePosCamera.x, particlePosCamera.y, 0.0);
     glScalef(radius/10., radius/10., 1.0);
+    
     _particle.draw();
-    glPopMatrix();
     if (viewCtx.isSelected(id())) {
-        gl::color(SelectedColor);
-        gl::drawStrokedCircle(particlePosCamera, radius*1.5);
-        gl::drawStrokedCircle(particlePosCamera, radius*2.0);
+        _selectedParticle.draw();
     }
+    glPopMatrix();
 }
 
 BoundingBox

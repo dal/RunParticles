@@ -5,15 +5,12 @@
 #include <QDir>
 #include <QEventLoop>
 #include <QFileDialog>
-#include <QGridLayout>
 #include <QMenu>
 #include <QMessageBox>
-#include <QWidget>
 
 #include "MapFileIO.h"
 #include "OsmLayer.h"
 #include "TrackLayer.h"
-#include "Util.h"
 
 MainWindow::MainWindow(GLWidget *glWidget,
                        QWidget * parent,
@@ -22,6 +19,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _fileIO(new MapFileIO(this)),
     _menuBar(new QMenuBar(0)),
     _glWidget(glWidget),
+    _playbackWidget(new PlaybackWidget()),
     _layerListWidget(new LayerListWidget()),
     _trackFileReader(new TrackFileReader(this))
 {
@@ -37,28 +35,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_trackFileReader, &TrackFileReader::signalError,
             this, &MainWindow::slotTrackFileLoadError);
     
-    /* playback controls widget */
-    setWindowTitle("Playback controls");
-    QWidget *ctr = new QWidget(this);
-    setCentralWidget(ctr);
-    _rewindButton = new QPushButton(QString::fromUtf8("\u25C0\u25C0"), ctr);//<<
-    _backButton = new QPushButton(QString::fromUtf8("\u25C0"), ctr); // <
-    _pauseButton = new QPushButton(QString::fromUtf8("\u2588"),ctr); // [ ]
-    _forwardButton = new QPushButton(QString::fromUtf8("\u25BA"), ctr); // >
-    _playSpeedCombo = new QComboBox(ctr);
-    _playSpeedCombo->addItem("1x");
-    _playSpeedCombo->addItem("2x");
-    _playSpeedCombo->addItem("4x");
-    _playSpeedCombo->addItem("8x");
-    _playSpeedCombo->addItem("16x");
-    _playSpeedCombo->addItem("32x");
-    _playSpeedCombo->addItem("64x");
-    _slider = new QSlider(Qt::Horizontal, ctr);
-    _currentTimeLineEdit = new QLineEdit(ctr);
-    _currentTimeLineEdit->setReadOnly(true);
-    _currentTimeLineEdit->setText("0");
-    _currentTimeLineEdit->setAlignment(Qt::AlignRight);
-    _layoutPlaybackControls(ctr);
+    setCentralWidget(_glWidget);
     
     /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
@@ -102,15 +79,15 @@ MainWindow::MainWindow(GLWidget *glWidget,
     _rewindAction = new QAction("Rewind", this);
     _pauseAction = new QAction("Pause", this);
     
-    connect(_forwardButton, SIGNAL(clicked(bool)),
+    connect(_playbackWidget, SIGNAL(signalForward()),
             _forwardAction, SLOT(trigger()));
-    connect(_backButton, SIGNAL(clicked(bool)),
+    connect(_playbackWidget, SIGNAL(signalBack()),
             _backAction, SLOT(trigger()));
-    connect(_pauseButton, SIGNAL(clicked(bool)),
+    connect(_playbackWidget, SIGNAL(signalPause()),
             _pauseAction, SLOT(trigger()));
-    connect(_rewindButton, SIGNAL(clicked(bool)),
+    connect(_playbackWidget, SIGNAL(signalRewind()),
             _rewindAction, SLOT(trigger()));
-    connect(_playSpeedCombo, SIGNAL(activated(const QString&)),
+    connect(_playbackWidget, SIGNAL(signalPlaybackRateChanged(const QString&)),
             this, SLOT(slotPlaybackRateChanged(const QString&)));
     
     connect(_forwardAction, SIGNAL(triggered()),
@@ -122,7 +99,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     connect(_rewindAction, SIGNAL(triggered()),
             _glWidget, SLOT(slotRewind()));
     
-    connect(_slider, SIGNAL(valueChanged(int)),
+    connect(_playbackWidget, SIGNAL(signalTimeSliderChanged(int)),
             SLOT(onTimeSliderDrag(int)));
     
     connect(_glWidget, SIGNAL(signalTimeChanged(double)),
@@ -150,6 +127,7 @@ MainWindow::MainWindow(GLWidget *glWidget,
     
     slotTimeChanged(0);
     _layerListWidget->show();
+    _playbackWidget->show();
     
     _loadBaseMap();
 }
@@ -157,21 +135,6 @@ MainWindow::MainWindow(GLWidget *glWidget,
 MainWindow::~MainWindow()
 {
     // empty
-}
-
-void
-MainWindow::_layoutPlaybackControls(QWidget *ctr)
-{
-    QGridLayout *_layout = new QGridLayout(ctr);
-    _layout->addWidget(_rewindButton, 0, 0);
-    _layout->addWidget(_backButton, 0, 1);
-    _layout->addWidget(_pauseButton, 0, 2);
-    _layout->addWidget(_forwardButton, 0, 3);
-    _layout->addWidget(_playSpeedCombo, 0, 4);
-    _layout->addWidget(_slider, 1, 0, 1, 4);
-    _layout->addWidget(_currentTimeLineEdit, 1, 4);
-    for (int i=0; i < _layout->columnCount(); i++)
-        _layout->setColumnStretch(i, 1);
 }
 
 void
@@ -246,7 +209,7 @@ MainWindow::clearMap()
     _glWidget->getMap()->clearLayers();
     _layerListWidget->clear();
     _loadBaseMap();
-    _slider->setMaximum(1800); /* 30 minutes */
+    _playbackWidget->setTimeSliderMaximum(1800); /* 30 minutes */
     _glWidget->update();
 }
 
@@ -363,11 +326,7 @@ MainWindow::slotPlaybackRateChanged(const QString &newRate)
 void
 MainWindow::slotTimeChanged(double mapSeconds)
 {
-    QString time = Util::secondsToString(mapSeconds);
-    _currentTimeLineEdit->setText(time);
-    _slider->blockSignals(true);
-    _slider->setSliderPosition(int(mapSeconds));
-    _slider->blockSignals(false);
+    _playbackWidget->setTime(mapSeconds);
 }
 
 void
@@ -380,7 +339,8 @@ void
 MainWindow::slotLayerAdded(LayerId)
 {
     int dur = _glWidget->getMap()->getDuration();
-    _slider->setMaximum(dur);
+    if (dur > 0)
+        _playbackWidget->setTimeSliderMaximum(dur);
 }
 
 void
@@ -407,7 +367,7 @@ MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
 void
 MainWindow::slotShowPlaybackWidget()
 {
-    _showWidget(this);
+    _showWidget(_playbackWidget);
 }
 
 void
@@ -433,6 +393,7 @@ MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
         added.append(thisLayer->id());
         _glWidget->getMap()->addLayer(thisLayer);
         _layerListWidget->addLayer(thisLayer);
+        qApp->processEvents();
     }
 }
 

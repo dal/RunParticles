@@ -5,8 +5,6 @@
 #include <QAction>
 #include <QLineEdit>
 #include <QMenuBar>
-#include <QPushButton>
-#include <QComboBox>
 #include <QShortcut>
 #include <QSlider>
 #include <QNetworkAccessManager>
@@ -15,6 +13,7 @@
 #include "GLWidget.h"
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
+#include "PlaybackWidget.h"
 #include "TrackFileReader.h"
 
 class MainWindow : public QMainWindow
@@ -85,11 +84,8 @@ protected:
     
     QMenuBar *_menuBar;
     GLWidget *_glWidget;
+    PlaybackWidget *_playbackWidget;
     LayerListWidget *_layerListWidget;
-    QPushButton *_rewindButton, *_forwardButton, *_pauseButton, *_backButton;
-    QSlider *_slider;
-    QLineEdit *_currentTimeLineEdit;
-    QComboBox *_playSpeedCombo;
     QAction *_newMapAction, *_openMapFileAction, *_saveMapFileAction,
             *_saveAsMapFileAction, *_addLayerAction, *_forwardAction,
             *_backAction, *_rewindAction, *_pauseAction,

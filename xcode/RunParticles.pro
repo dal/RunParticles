@@ -115,6 +115,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/OsmLayer.h \
           ../src/OsmTileSource.h \
           ../src/PathUtil.h \
+          ../src/PlaybackWidget.h \
           ../src/Projection.h \
           ../src/Singleton.h \
           ../src/TcxHandler.h \
@@ -248,6 +249,7 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/OsmLayer.cpp \
           ../src/OsmTileSource.cpp \
           ../src/PathUtil.cpp \
+          ../src/PlaybackWidget.cpp \
           ../src/Projection.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \

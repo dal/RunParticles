@@ -22,6 +22,11 @@ _duration(0)
             this, &Map::_onLayerProjected);
 }
 
+Map::~Map()
+{
+    _projector->cancel();
+}
+
 void
 Map::draw(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
@@ -41,6 +46,17 @@ Map::addLayer(Layer *layer)
     LayerPtr layerPtr(layer);
     _projector->project(layerPtr);
     return true;
+}
+
+void
+Map::addLayers(QList<Layer*> layers)
+{
+    QList<LayerPtr> layerPtrs;
+    Layer *layer;
+    foreach(layer, layers) {
+        layerPtrs.append(LayerPtr(layer));
+    }
+    _projector->project(layerPtrs);
 }
 
 Layer*

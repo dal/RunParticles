@@ -13,7 +13,8 @@
 MapProjectorWorker::MapProjectorWorker(const Projection *projection,
                                        QObject *parent)
     : QThread(parent),
-    _projection(projection)
+    _projection(projection),
+    _cancelRequested(false)
 {
 }
     
@@ -24,7 +25,7 @@ MapProjectorWorker::~MapProjectorWorker()
 void
 MapProjectorWorker::run()
 {
-    while (true) {
+    while (!_cancelRequested) {
         LayerPtr thisLayer;
         _inMutex.lock();
         if (!_input.isEmpty()) {
@@ -44,7 +45,25 @@ MapProjectorWorker::run()
 void
 MapProjectorWorker::project(LayerPtr layer)
 {
+    _cancelRequested = false;
     QMutexLocker locker(&_inMutex);
     _input.append(layer);
     start();
+}
+
+void
+MapProjectorWorker::project(QList<LayerPtr> layers)
+{
+    _cancelRequested = false;
+    QMutexLocker locker(&_inMutex);
+    _input << layers;
+    start();
+}
+
+void
+MapProjectorWorker::cancel()
+{
+    _cancelRequested = true;
+    wait();
+    _input.clear();
 }

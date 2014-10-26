@@ -33,6 +33,12 @@ public:
     
     void project(LayerPtr layer);
     
+    void project(QList<LayerPtr> layers);
+    
+public slots:
+    
+    void cancel();
+    
 signals:
     void signalReady(LayerPtr);
     
@@ -42,6 +48,8 @@ protected:
     QList<LayerPtr>_input;
     
     const Projection* _projection;
+    
+    bool _cancelRequested;
     
 };
 

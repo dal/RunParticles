@@ -35,9 +35,13 @@ class Map : public QObject
 public:
     Map(QObject *parent=0);
     
+    virtual ~Map();
+    
     void draw(const ViewCtx&, const TimeCtx&);
     
     bool addLayer(Layer*);
+    
+    void addLayers(QList<Layer*>);
     
     int getDuration() const { return _duration; }
     

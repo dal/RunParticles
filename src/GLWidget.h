@@ -137,7 +137,7 @@ protected:
     
     CameraOrtho _viewCamera;
     
-    QPoint _lastDownPos;
+    QPoint _lastMovePos, _lastDownPos;
     
     MapView _mapView;
     

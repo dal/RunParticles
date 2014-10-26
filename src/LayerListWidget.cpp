@@ -118,8 +118,11 @@ LayerListWidget::slotSetSelectedLayers(QList<LayerId> layerIds)
     for (int i = 0; i < root->childCount(); i++) {
         QTreeWidgetItem *item = root->child(i);
         LayerId thisLayerId = item->data(ColumnName, LayerIdRole).toUInt();
-        if (layerIds.contains(thisLayerId))
-            setCurrentItem(item);
+        if (layerIds.contains(thisLayerId)) {
+            item->setSelected(true);
+            if (layerIds.length() == 1)
+                setCurrentItem(item);
+        }
     }
 }
 

@@ -9,12 +9,17 @@
 
 #include "Map.h"
 
+#include "MapProjectorWorker.h"
+
 Map::Map(QObject *parent)
 : QObject(parent),
 _projection(Projection()),
 _duration(0)
 {
-    
+    qRegisterMetaType<LayerPtr>("LayerPtr");
+    _projector = new MapProjectorWorker(&_projection, this);
+    connect(_projector, &MapProjectorWorker::signalReady,
+            this, &Map::_onLayerProjected);
 }
 
 void
@@ -34,16 +39,16 @@ bool
 Map::addLayer(Layer *layer)
 {
     LayerPtr layerPtr(layer);
-    _layers.push_back(layerPtr);
-    _layerMap.insert(std::pair<LayerId, LayerPtr>(layer->id(), layerPtr));
-    // give the layer an opportunity to reproject
-    layer->project(_projection);
-    PassMap layerPasses = layer->passes();
-    _passes.insert(layerPasses.begin(), layerPasses.end());
-    _duration = (layer->duration() > _duration) ? layer->duration() : _duration;
-    connect(layer, SIGNAL(layerUpdated()), SIGNAL(layerUpdated()));
-    emit(signalLayerAdded(layer->id()));
+    _projector->project(layerPtr);
     return true;
+}
+
+Layer*
+Map::getLayer(const LayerId id)
+{
+    if (_layerMap.find(id) != _layerMap.end())
+        return _layerMap[id].get();
+    return NULL;
 }
 
 LayerPtrList
@@ -87,3 +92,15 @@ Map::onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const
     return found;
 }
 
+void
+Map::_onLayerProjected(LayerPtr layerPtr)
+{
+    _layers.push_back(layerPtr);
+    std::pair<LayerId, LayerPtr> mypair(layerPtr->id(), layerPtr);
+    _layerMap.insert(mypair);
+    PassMap layerPasses = layerPtr->passes();
+    _passes.insert(layerPasses.begin(), layerPasses.end());
+    _duration = (layerPtr->duration() > _duration) ? layerPtr->duration() : _duration;
+    connect(layerPtr.get(), SIGNAL(layerUpdated()), SIGNAL(layerUpdated()));
+    emit(signalLayerAdded(layerPtr->id()));
+}

@@ -434,8 +434,6 @@ MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
         _glWidget->getMap()->addLayer(thisLayer);
         _layerListWidget->addLayer(thisLayer);
     }
-    /* frame up the last added layer */
-    slotFrameLayers(added.mid(added.count()-1, -1));
 }
 
 void

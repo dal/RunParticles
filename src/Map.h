@@ -11,8 +11,6 @@
 #define MAP_H
 
 #include <QObject>
-#include <QThread>
-#include <QMutex>
 
 #include "Layer.h"
 #include "Projection.h"
@@ -24,40 +22,11 @@
 
 #define SELECTION_TOLERANCE_PIXELS 16.
 
-typedef std::shared_ptr<Layer> LayerPtr;
-
 typedef std::vector<LayerPtr> LayerPtrList;
 
 typedef std::map<LayerId, LayerPtr> LayerMap;
 
-class Map;
-
-class MapProjectorWorker : public QThread
-{
-    Q_OBJECT
-    
-public:
-    MapProjectorWorker(Map *parent=NULL);
-    
-    virtual ~MapProjectorWorker() { };
-    
-    void run();
-    
-    void project(LayerPtr);
-    
-signals:
-    void signalReady(LayerPtr);
-    
-    void signalError(LayerId, const QString&);
-    
-protected:
-    QMutex _inMutex;
-    
-    QList<LayerPtr> _input;
-    
-    Map *_map;
-    
-};
+class MapProjectorWorker;
 
 class Map : public QObject
 {
@@ -72,7 +41,7 @@ public:
     
     int getDuration() const { return _duration; }
     
-    Layer* getLayer(const LayerId id) { return _layerMap[id].get(); }
+    Layer* getLayer(const LayerId id);
     
     const Projection getProjection() const { return _projection; }
     
@@ -83,6 +52,10 @@ public:
 public slots:
     
     bool onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const;
+    
+protected slots:
+    
+    void _onLayerProjected(LayerPtr layer);
     
 signals:
     
@@ -99,6 +72,8 @@ private:
     unsigned int _duration;
     
     PassMap _passes;
+    
+    MapProjectorWorker* _projector;
     
 signals:
     

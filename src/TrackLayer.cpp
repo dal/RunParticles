@@ -122,17 +122,10 @@ TrackLayer::project(const Projection &projection)
     _particleRadius *= projection.getScaleMultiplier();
     _mediumLodRes *= projection.getScaleMultiplier();
     _loLodRes *= projection.getScaleMultiplier();
-    
-    qDebug("med: %f, lo: %f", _mediumLodRes, _loLodRes);
-    qDebug("hi: %d points", _path_hi.count());
-    
     // Make the medium res path
     _path_med = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
-    qDebug("med: %d points", _path_med.count());
-    
     // Make the low res path
     _path_lo = PathUtil::DouglasPeucker(_path_med, _loLodRes);
-    qDebug("lo: %d points", _path_lo.count());
 }
 
 void

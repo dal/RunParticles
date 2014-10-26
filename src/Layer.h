@@ -25,6 +25,12 @@ class TimeCtx;
 
 typedef unsigned int LayerId;
 
+class Layer;
+
+typedef std::shared_ptr<Layer> LayerPtr;
+
+Q_DECLARE_METATYPE(LayerPtr);
+
 class Layer : public QObject
 {
     

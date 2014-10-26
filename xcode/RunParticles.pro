@@ -110,6 +110,7 @@ HEADERS = ../src/BoundingBox.h \
           ../src/Map.h \
           ../src/MapFileHandler.h \
           ../src/MapFileIO.h \
+          ../src/MapProjectorWorker.h \
           ../src/MapView.h \
           ../src/OsmLayer.h \
           ../src/OsmTileSource.h \
@@ -242,6 +243,7 @@ SOURCES = ../src/BoundingBox.cpp \
           ../src/Map.cpp \
           ../src/MapFileHandler.cpp \
           ../src/MapFileIO.cpp \
+          ../src/MapProjectorWorker.cpp \
           ../src/MapView.cpp \
           ../src/OsmLayer.cpp \
           ../src/OsmTileSource.cpp \

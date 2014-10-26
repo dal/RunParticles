@@ -21,26 +21,26 @@ TrackFileReaderWorker::TrackFileReaderWorker(TrackFileReader *parent) :
     
 void
 TrackFileReaderWorker::run() {
-        while (true) {
-            WorkPair work;
-            _inMutex.lock();
-            if (!_input.isEmpty()) {
-                work = _input.first();
-                _input.pop_front();
-            } else {
-                _inMutex.unlock();
-                break;
-            }
+    while (true) {
+        WorkPair work;
+        _inMutex.lock();
+        if (!_input.isEmpty()) {
+            work = _input.first();
+            _input.pop_front();
+        } else {
             _inMutex.unlock();
-            std::string whyNot;
-            if (!_reader->read(work.first, work.second, &whyNot)) {
-                QString error = QString::fromStdString(whyNot);
-                emit signalError(work.first, error);
-            } else {
-                emit signalReady(work.first, work.second);
-            }
+            break;
         }
-    };
+        _inMutex.unlock();
+        std::string whyNot;
+        if (!_reader->read(work.first, work.second, &whyNot)) {
+            QString error = QString::fromStdString(whyNot);
+            emit signalError(work.first, error);
+        } else {
+            emit signalReady(work.first, work.second);
+        }
+    }
+};
     
 void
 TrackFileReaderWorker::read(const QString &path, QList<Track*> *tracks) {

@@ -11,6 +11,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkDiskCache>
 
+#include "AboutDialog.h"
 #include "GLWidget.h"
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
@@ -62,6 +63,8 @@ public slots:
     
     void slotLayerVisibilityChanged(LayerId layerId, bool visible);
     
+    void slotShowAboutDialog();
+    
     void slotShowPlaybackWidget();
     
     void slotShowLayerListWidget();
@@ -91,7 +94,8 @@ protected:
     QAction *_newMapAction, *_openMapFileAction, *_saveMapFileAction,
             *_saveAsMapFileAction, *_addLayerAction, *_forwardAction,
             *_backAction, *_rewindAction, *_pauseAction,
-            *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction;
+            *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction,
+            *_showAboutDialogAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;
@@ -102,6 +106,7 @@ protected:
     QString _lastLayerPathAdded;
     QList<LayerId> _layersToFrame;
     int _numPendingLayers;
+    AboutDialog *_aboutDialog;
 };
 
 #endif

@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file alias="appIcon128">../assets/RunParticles.iconset/icon_128x128.png</file>
+</qresource>
+</RCC>

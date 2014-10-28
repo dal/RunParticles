@@ -21,7 +21,8 @@ MainWindow::MainWindow(QWidget * parent,
     _playbackWidget(new PlaybackWidget()),
     _layerListWidget(new LayerListWidget()),
     _trackFileReader(new TrackFileReader(this)),
-    _numPendingLayers(0)
+    _numPendingLayers(0),
+    _aboutDialog(new AboutDialog(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -79,6 +80,7 @@ MainWindow::MainWindow(QWidget * parent,
             SLOT(slotShowLayerListWidget()));
     connect(_mapWindowAction, SIGNAL(triggered()), SLOT(slotShowMapWindow()));
     
+    /* Playback controls */
     _forwardAction = new QAction("Play", this);
     _backAction = new QAction("Reverse", this);
     _rewindAction = new QAction("Rewind", this);
@@ -113,6 +115,14 @@ MainWindow::MainWindow(QWidget * parent,
             this, SLOT(slotLayerAdded(LayerId)));
     connect(_glWidget, SIGNAL(signalLayersSelected(QList<LayerId>)),
             _layerListWidget, SLOT(slotSetSelectedLayers(QList<LayerId>)));
+    
+    /* About menu */
+    _showAboutDialogAction = new QAction("About RunParticles", this);
+    _showAboutDialogAction->setMenuRole(QAction::AboutRole);
+    connect(_showAboutDialogAction, &QAction::triggered,
+            this, &MainWindow::slotShowAboutDialog);
+    QMenu *aboutMenu = _menuBar->addMenu("About . . .");
+    aboutMenu->addAction(_showAboutDialogAction);
     
     // Application keyboard shortcuts
     _setupShortcuts();
@@ -392,6 +402,12 @@ MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
     if (layer)
         layer->setVisible(visible);
     _glWidget->update();
+}
+
+void
+MainWindow::slotShowAboutDialog()
+{
+    _aboutDialog->show();
 }
 
 void

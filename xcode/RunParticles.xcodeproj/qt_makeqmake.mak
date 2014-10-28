@@ -126,6 +126,7 @@ RunParticles.xcodeproj/project.pbxproj: RunParticles.pro /usr/local/Qt-5.3.1/mks
 		/usr/local/Qt-5.3.1/mkspecs/features/yacc.prf \
 		/usr/local/Qt-5.3.1/mkspecs/features/lex.prf \
 		RunParticles.pro \
+		../resources/resources.qrc \
 		/usr/local/Qt-5.3.1/lib/QtOpenGL.framework/QtOpenGL.prl \
 		/usr/local/Qt-5.3.1/lib/QtWidgets.framework/QtWidgets.prl \
 		/usr/local/Qt-5.3.1/lib/QtGui.framework/QtGui.prl \
@@ -250,6 +251,7 @@ RunParticles.xcodeproj/project.pbxproj: RunParticles.pro /usr/local/Qt-5.3.1/mks
 /usr/local/Qt-5.3.1/mkspecs/features/yacc.prf:
 /usr/local/Qt-5.3.1/mkspecs/features/lex.prf:
 RunParticles.pro:
+../resources/resources.qrc:
 /usr/local/Qt-5.3.1/lib/QtOpenGL.framework/QtOpenGL.prl:
 /usr/local/Qt-5.3.1/lib/QtWidgets.framework/QtWidgets.prl:
 /usr/local/Qt-5.3.1/lib/QtGui.framework/QtGui.prl:

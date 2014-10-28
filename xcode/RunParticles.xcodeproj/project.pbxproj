@@ -15,6 +15,21 @@
 			shellPath = "/bin/sh";
 			shellScript = "make -C /Users/dal/Documents/cinder/RunParticles/xcode -f RunParticles.xcodeproj/qt_makeqmake.mak";
 		};
+		FA9326520095A9E4DBABD9EC = {
+			isa = PBXFileReference;
+			path = "../src/AboutDialog.cpp";
+			name = "AboutDialog.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		A23C7037EC0D6DE434714916 = {
+			fileRef = "FA9326520095A9E4DBABD9EC";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		29072F3FEF13327AFC28B543 = {
 			isa = PBXFileReference;
 			path = "../src/BoundingBox.cpp";
@@ -180,6 +195,21 @@
 					);
 			};
 		};
+		8871592D3751B133392E3F23 = {
+			isa = PBXFileReference;
+			path = "../src/MapProjectorWorker.cpp";
+			name = "MapProjectorWorker.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		208117D1799FAFCD7FD01AB9 = {
+			fileRef = "8871592D3751B133392E3F23";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		A026C5F8789BBA62A2B797F8 = {
 			isa = PBXFileReference;
 			path = "../src/MapView.cpp";
@@ -234,6 +264,21 @@
 		};
 		2AF31692F751FDCC40B44963 = {
 			fileRef = "BFFA062A44C74F9B7D1E2C3A";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		4F747A841D90BE41B5437A5F = {
+			isa = PBXFileReference;
+			path = "../src/PlaybackWidget.cpp";
+			name = "PlaybackWidget.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		69BBFF235298D794712B4834 = {
+			fileRef = "4F747A841D90BE41B5437A5F";
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -590,6 +635,34 @@
 			path = "RunParticles.icns";
 			sourceTree = "<absolute>";
 		};
+		B6332CE6B3399115AD5D7562 = {
+			isa = PBXFileReference;
+			path = "qrc_resources.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		CDEE11F2F6164D3D47FF69C9 = {
+			fileRef = "B6332CE6B3399115AD5D7562";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
+		509C3A85F5479951F08BCEF7 = {
+			isa = PBXFileReference;
+			path = "moc_AboutDialog.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		774F70CD825DEFB256C06F62 = {
+			fileRef = "509C3A85F5479951F08BCEF7";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		728734BB4FDF06F5EB24A8BC = {
 			isa = PBXFileReference;
 			path = "moc_GLWidget.cpp";
@@ -674,6 +747,20 @@
 					);
 			};
 		};
+		5A6CED3A52D173986625C53C = {
+			isa = PBXFileReference;
+			path = "moc_MapProjectorWorker.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		7F1D21DFA0DA178974FCCBFF = {
+			fileRef = "5A6CED3A52D173986625C53C";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		F2F1FB00C901BF2BE7ED1223 = {
 			isa = PBXFileReference;
 			path = "moc_OsmLayer.cpp";
@@ -702,6 +789,20 @@
 					);
 			};
 		};
+		1627BC7B72F9DF22C924837D = {
+			isa = PBXFileReference;
+			path = "moc_PlaybackWidget.cpp";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.cpp.cpp";
+		};
+		D856D590178766F3B2B1F921 = {
+			fileRef = "1627BC7B72F9DF22C924837D";
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					);
+			};
+		};
 		52F4B3BCD60E59740C24DAEE = {
 			isa = PBXFileReference;
 			path = "moc_TrackFileReader.cpp";
@@ -715,6 +816,13 @@
 				ATTRIBUTES = (
 					);
 			};
+		};
+		44F4CD9AA379916F49F942A2 = {
+			isa = PBXFileReference;
+			path = "../src/AboutDialog.h";
+			name = "AboutDialog.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
 		};
 		D90C4EF3101EDFB1AA31B07E = {
 			isa = PBXFileReference;
@@ -786,6 +894,13 @@
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
+		093DF04CE9F10E1D2D26111F = {
+			isa = PBXFileReference;
+			path = "../src/MapProjectorWorker.h";
+			name = "MapProjectorWorker.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
 		284403AA1E041E53A0CE86A8 = {
 			isa = PBXFileReference;
 			path = "../src/MapView.h";
@@ -811,6 +926,13 @@
 			isa = PBXFileReference;
 			path = "../src/PathUtil.h";
 			name = "PathUtil.h";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "sourcecode.c.h";
+		};
+		B24B21373544F04D4F0094DF = {
+			isa = PBXFileReference;
+			path = "../src/PlaybackWidget.h";
+			name = "PlaybackWidget.h";
 			sourceTree = "<absolute>";
 			lastKnownFileType = "sourcecode.c.h";
 		};
@@ -2082,19 +2204,51 @@
 			path = ".qmake.stash";
 			sourceTree = "<absolute>";
 		};
+		E562089B6BDEF8C422635B4E = {
+			isa = PBXFileReference;
+			path = "../resources/resources.qrc";
+			name = "resources.qrc";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "text";
+		};
+		E562089B6BDEF8C422635B4E = {
+			isa = PBXFileReference;
+			path = "../resources/resources.qrc";
+			name = "resources.qrc";
+			sourceTree = "<absolute>";
+			lastKnownFileType = "text";
+		};
 		25B08E2869634E9BCBA333A2 = {
 			isa = PBXGroup;
 			children = (
+				"B6332CE6B3399115AD5D7562",
+				"509C3A85F5479951F08BCEF7",
 				"728734BB4FDF06F5EB24A8BC",
 				"74E13A7671F16777899854ED",
 				"7869A011A5328AED84BC88A3",
 				"5A094B6E03696B8AC04E705B",
 				"47FFAD3FF3BD5B6415E28B3B",
 				"013B133ED758257DFC0CFC53",
+				"5A6CED3A52D173986625C53C",
 				"F2F1FB00C901BF2BE7ED1223",
 				"488EFBEF1EE8C560ADF03F36",
+				"1627BC7B72F9DF22C924837D",
 				"52F4B3BCD60E59740C24DAEE");
 			name = "Generated Sources";
+			sourceTree = "<Group>";
+		};
+		8DFAB9C8B16410B121704055 = {
+			isa = PBXGroup;
+			children = (
+				"14AD0E04B9F3B4A76724C138");
+			name = "..";
+			sourceTree = "<Group>";
+		};
+		14AD0E04B9F3B4A76724C138 = {
+			isa = PBXGroup;
+			children = (
+				"E562089B6BDEF8C422635B4E");
+			name = "resources";
 			sourceTree = "<Group>";
 		};
 		5ADDF1BA7F6260E6AA5739ED = {
@@ -2107,6 +2261,7 @@
 		328C86AACB3AF87F1CDE3355 = {
 			isa = PBXGroup;
 			children = (
+				"FA9326520095A9E4DBABD9EC",
 				"29072F3FEF13327AFC28B543",
 				"58B7D9C526E6EF45DC28578D",
 				"EB45FA7039E876081F0B08DB",
@@ -2118,10 +2273,12 @@
 				"D271C1F4730699B3DD9D5FEB",
 				"C55E568106AC78062240BC3F",
 				"AC92AA732CD4EA20A22225CB",
+				"8871592D3751B133392E3F23",
 				"A026C5F8789BBA62A2B797F8",
 				"AE13F9FDBA20B8D5EF69FEB7",
 				"0D510F94E47B9D7D529308EF",
 				"BFFA062A44C74F9B7D1E2C3A",
+				"4F747A841D90BE41B5437A5F",
 				"2F930CB1817BE53AFAC88039",
 				"4C00131F32F4494B7612A0E2",
 				"2673EE3F7F4F2D279F1E1B66",
@@ -2131,6 +2288,7 @@
 				"0DC79AFB554894D76325313B",
 				"18D173CC430833F7998F0527",
 				"6288DBAB301D36E70BCE2D51",
+				"44F4CD9AA379916F49F942A2",
 				"D90C4EF3101EDFB1AA31B07E",
 				"B702B99370D1E8B7507E1FD6",
 				"143A93E78B3B20A501AD1EB9",
@@ -2141,10 +2299,12 @@
 				"DB48620C2776DE5ACD5B6810",
 				"1DF1F0334BE4102D1F17ACF9",
 				"E8076FE0FEAA0ADC2FDF3B70",
+				"093DF04CE9F10E1D2D26111F",
 				"284403AA1E041E53A0CE86A8",
 				"36ED96CFBFC350FC249FDC8C",
 				"39DBAECD4469C22BDEFC836D",
 				"8F36D14D375D628DE557FCFE",
+				"B24B21373544F04D4F0094DF",
 				"845697297EC169FBCDD0EC0B",
 				"150406079F9C102F6E19568B",
 				"724C6D4F899DC1E9AD1D98D0",
@@ -2285,6 +2445,27 @@
 			name = "fitsdk";
 			sourceTree = "<Group>";
 		};
+		A3E1AA9917EC82D3446C262A = {
+			isa = PBXGroup;
+			children = (
+				"5D0E032054E018CC1FBC5319");
+			name = "..";
+			sourceTree = "<Group>";
+		};
+		5D0E032054E018CC1FBC5319 = {
+			isa = PBXGroup;
+			children = (
+				"E562089B6BDEF8C422635B4E");
+			name = "resources";
+			sourceTree = "<Group>";
+		};
+		87DF60DE337FB58864343E39 = {
+			isa = PBXGroup;
+			children = (
+				"8DFAB9C8B16410B121704055");
+			name = "Resources";
+			sourceTree = "<Group>";
+		};
 		2EB56BE3C2D93CDAB0C52E67 = {
 			isa = PBXGroup;
 			children = (
@@ -2386,7 +2567,8 @@
 				"C933C2F8B41CBD4E4E39F30C",
 				"81724E7EF22F4E7E348F05E3",
 				"FC8B1819634F1A0306D1F056",
-				"AB745978DF0F41D1801ABDA6");
+				"AB745978DF0F41D1801ABDA6",
+				"A3E1AA9917EC82D3446C262A");
 			name = "Supporting Files";
 			sourceTree = "<Group>";
 		};
@@ -2403,6 +2585,7 @@
 		F7E50F631C51CD5B5DC0BC43 = {
 			buildActionMask = 2147483647;
 			files = (
+				"A23C7037EC0D6DE434714916",
 				"DBEE92E3CB64A5C0F62AC60B",
 				"CD6D89FE53345F50C5E06134",
 				"A0C87B5105D2FEA9C5E389DC",
@@ -2414,10 +2597,12 @@
 				"6673093D0173CC97E26C9EA4",
 				"9CE1344A9E295E1129D29BF2",
 				"63B8D00D1AB294B60D36B165",
+				"208117D1799FAFCD7FD01AB9",
 				"2F21EA044BE4362646487450",
 				"636A0D8F97BF0F1A5388C6E5",
 				"10A8F668DF810E1D1EFD4CFD",
 				"2AF31692F751FDCC40B44963",
+				"69BBFF235298D794712B4834",
 				"DE671116C76ADF99753FC5D9",
 				"9D996F5B6A5754FD38B51743",
 				"ACEB944DF445E8FFD5248DBD",
@@ -2441,14 +2626,18 @@
 				"D37F0180244B59BC5508A189",
 				"F4861EA61FB5213FE2333A47",
 				"0DBD53C95648964A5F4BD8FD",
+				"CDEE11F2F6164D3D47FF69C9",
+				"774F70CD825DEFB256C06F62",
 				"4FB1C9C214450AFA20E4F137",
 				"CD697CDC605931FD2D2A9573",
 				"07DDFCCE39681C458D59536F",
 				"113C905D374AA630EF48360D",
 				"2DEA6EF101F05F1898C69D46",
 				"AA8C4C856160FD224CB57A4C",
+				"7F1D21DFA0DA178974FCCBFF",
 				"CB3117BC7DAFA6785082E3EC",
 				"045E7FED3E354C82E8351D3D",
+				"D856D590178766F3B2B1F921",
 				"E094ABD96B9687FBA062285A");
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2895,6 +3084,7 @@
 				"2EB56BE3C2D93CDAB0C52E67",
 				"25B08E2869634E9BCBA333A2",
 				"74B182DB50CB5611B5C1C297",
+				"87DF60DE337FB58864343E39",
 				"AF39DD055C3EF8226FBE929D",
 				"FE0A091FDBFB3E9C31B7A1BD");
 			isa = PBXGroup;
@@ -2992,6 +3182,7 @@
 					"-Wall",
 					"-W",
 					"-fPIE",
+					"-DRUNPARTICLES_APP_VERSION=\\\"1.0\\\"",
 					"-DQT_OPENGL_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
@@ -3008,6 +3199,7 @@
 					"-Wall",
 					"-W",
 					"-fPIE",
+					"-DRUNPARTICLES_APP_VERSION=\\\"1.0\\\"",
 					"-DQT_OPENGL_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
@@ -3106,6 +3298,7 @@
 					"-Wall",
 					"-W",
 					"-fPIE",
+					"-DRUNPARTICLES_APP_VERSION=\\\"1.0\\\"",
 					"-DQT_OPENGL_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",
@@ -3122,6 +3315,7 @@
 					"-Wall",
 					"-W",
 					"-fPIE",
+					"-DRUNPARTICLES_APP_VERSION=\\\"1.0\\\"",
 					"-DQT_OPENGL_LIB",
 					"-DQT_WIDGETS_LIB",
 					"-DQT_XML_LIB",

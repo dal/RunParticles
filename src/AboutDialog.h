@@ -25,6 +25,7 @@ protected:
     QPushButton *_closeButton;
     QLabel *_icon;
     QTextBrowser *_textEdit;
+    QLabel *_version;
 };
 
 #endif /* defined(__RunParticles__AboutDialog__) */

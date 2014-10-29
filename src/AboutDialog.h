@@ -12,7 +12,7 @@
 #include <QDialog>
 #include <QLabel>
 #include <QPushButton>
-#include <QTextEdit>
+#include <QTextBrowser>
 
 class AboutDialog : public QDialog
 {
@@ -24,7 +24,7 @@ public:
 protected:
     QPushButton *_closeButton;
     QLabel *_icon;
-    QTextEdit *_textEdit;
+    QTextBrowser *_textEdit;
 };
 
 #endif /* defined(__RunParticles__AboutDialog__) */

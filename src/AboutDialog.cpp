@@ -19,22 +19,27 @@ AboutDialog::AboutDialog(QWidget *parent) :
     _icon = new QLabel(this);
     _icon->setPixmap(QPixmap(":/appIcon128"));
     
-    _textEdit = new QTextEdit(QString("<h2>RunParticles v%0</h2>"
-                                      "<p>&copy;2014 by Doug Letterman<br />"
-                                      "<a href=\"http://www.renderfast.com/\">"
-                                      "renderfast.com</a></p>"
-                                      "<p>Oakland, California, USA</p>"
-                                      "<p><em>RunParticles is free software "
-                                      "distributed under the terms of the "
-                                      "MIT&nbsp;License</em></p>")
-                                      .arg(qApp->applicationVersion()),
-                              this);
+    _textEdit = new QTextBrowser(this);
+    _textEdit->setHtml(QString("<h2>RunParticles v%0</h2>"
+                               "<p>&copy; 2014 by Doug Letterman<br />"
+                               "<a href=\"http://www.renderfast.com/\">"
+                               "renderfast.com</a></p>"
+                               "<p>Oakland, California, USA</p>"
+                               "<p>RunParticles is free software "
+                               "distributed under the terms of the "
+                               "<a href=\"http://opensource.org/licenses/MIT\">"
+                               "MIT License</a></p>"
+                               "<p>Basemap &copy; "
+                               "<a href=\"http://openstreetmap.org\">"
+                               "OpenStreetMap</a> contributors</p>")
+                       .arg(qApp->applicationVersion()));
     _textEdit->setFrameStyle(QFrame::NoFrame);
     _textEdit->setReadOnly(true);
     _textEdit->setAlignment(Qt::AlignCenter);
     _textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     _textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     _textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    _textEdit->setOpenExternalLinks(true);
     QPalette p;
     p.setColor(QPalette::Base, p.color(QPalette::Background));
     _textEdit->setPalette(p);

@@ -14,6 +14,9 @@
 #include "cinder/CinderResources.h"
 #include "cinder/gl/Texture.h"
 
+#include "cinder/gl/TextureFont.h"
+#include "cinder/Text.h"
+
 #include <unordered_map>
 
 #include <QObject>
@@ -90,7 +93,7 @@ protected:
     
     TileMap _tiles;
     
-    gl::DisplayList _quad;
+    gl::DisplayList _quad, _label;
     
     uint _getZoomLevel(double resolution) const;
     
@@ -113,6 +116,12 @@ protected:
     QGLShaderProgram *_shader;
     
     bool _isSetup;
+    
+    gl::TextureFontRef _tFont;
+    
+    Font _font;
+    
+    Vec2f _labelWidth;
     
 };
 

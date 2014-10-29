@@ -47,6 +47,17 @@ OsmLayer::OsmLayer() : Layer(),
     gl::drawSolidRect(Rectf(0., 10.0,
                             10.0, 0.0));
     _quad.endList();
+    
+    // Initialize the copyright label displayList
+    _font = Font("Monaco", 80);
+    _tFont = gl::TextureFont::create( _font );
+    std::string copyright("Copyright OpenStreetMap contributors");
+    _labelWidth = _tFont->measureString(copyright);
+    _label = gl::DisplayList(GL_COMPILE);
+    _label.newList();
+    gl::color(ColorA( 0.8f, 0.8f, 0.8f, 1.0f ));
+    _tFont->drawString(copyright, Vec2f(0., 0.));
+    _label.endList();
 }
 
 OsmLayer::~OsmLayer()
@@ -100,6 +111,8 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     if (pass != Pass_BaseMap)
         return;
     
+    gl::enableAlphaBlending();
+    
     if (_lastResolution != viewCtx.getResolution()) {
         _lastResolution = viewCtx.getResolution();
         _currentZoom = _getZoomLevel(viewCtx.getResolution()
@@ -141,6 +154,17 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
             }
         }
     }
+    
+    // draw the credit label at the lower left
+    glPushMatrix();
+    float res = viewCtx.getResolution();
+    glTranslated(res*10.0, res*8., 1.0);
+    float textScale = _labelWidth.x / 10000. * res;
+    glScalef(textScale, -textScale, 1.0);
+    _label.draw();
+    glPopMatrix();
+    
+    gl::disableAlphaBlending();
     
     // clean up tiles we no longer display
     for (TileMap::iterator i=_tiles.begin(); i != _tiles.end();) {
@@ -202,8 +226,8 @@ OsmLayer::Tile::draw(const ViewCtx &viewCtx)
 void
 OsmLayer::Tile::_drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight)
 {
-    gl::drawSolidRect(Rectf(upperLeft.x, upperLeft.y,
-                            lowerRight.x, lowerRight.y));
+    //gl::drawSolidRect(Rectf(upperLeft.x, upperLeft.y,
+    //                        lowerRight.x, lowerRight.y));
     glPushMatrix();
     glTranslated(upperLeft.x, lowerRight.y, 0.0);
     float width = lowerRight.x - upperLeft.x;

@@ -75,6 +75,10 @@ public slots:
     
     void slotTrackFileLoadError(const QString &path, const QString &what);
     
+    void slotLockViewToSelectedLayer();
+    
+    void slotFrameSelectedLayers();
+    
 protected:
     
     void _layoutPlaybackControls(QWidget*);
@@ -95,7 +99,8 @@ protected:
             *_saveAsMapFileAction, *_addLayerAction, *_forwardAction,
             *_backAction, *_rewindAction, *_pauseAction,
             *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction,
-            *_showAboutDialogAction;
+            *_showAboutDialogAction, *_frameSelectedLayersAction,
+            *_lockViewToLayerAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;

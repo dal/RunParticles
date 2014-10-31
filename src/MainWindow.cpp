@@ -66,6 +66,17 @@ MainWindow::MainWindow(QWidget * parent,
     connect(_addLayerAction, SIGNAL(triggered(bool)),
             this, SLOT(slotAddLayer()));
     
+    /* View menu */
+    QMenu *_viewMenu = _menuBar->addMenu("View");
+    _frameSelectedLayersAction = new QAction("Frame selected layers", this);
+    _lockViewToLayerAction = new QAction("Lock view to selected layer", this);
+    _viewMenu->addAction(_frameSelectedLayersAction);
+    _viewMenu->addAction(_lockViewToLayerAction);
+    connect(_lockViewToLayerAction, &QAction::triggered,
+            this, &MainWindow::slotLockViewToSelectedLayer);
+    connect(_frameSelectedLayersAction, &QAction::triggered,
+            this, &MainWindow::slotFrameSelectedLayers);
+    
     /* Window menu */
     QMenu *_windowMenu = _menuBar->addMenu("Window");
     _playCtrlWindowAction = new QAction("Playback controls", this);
@@ -451,6 +462,28 @@ MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 {
     QString err = QString("Error loading file '%0': %1").arg(path).arg(what);
     QMessageBox::critical(this, "Could not load file", err);
+}
+
+void
+MainWindow::slotLockViewToSelectedLayer()
+{
+    QList<LayerId> layers = _layerListWidget->selectedLayerIds();
+    if (layers.empty())
+        QMessageBox::critical(this, "No layers selected",
+                              "No layers selected to follow");
+    else
+        _glWidget->slotLockViewToLayer(layers.last());
+}
+
+void
+MainWindow::slotFrameSelectedLayers()
+{
+    QList<LayerId> layers = _layerListWidget->selectedLayerIds();
+    if (layers.empty())
+        QMessageBox::critical(this, "No layers selected",
+                              "No layers selected to frame");
+    else
+        slotFrameLayers(layers);
 }
 
 void

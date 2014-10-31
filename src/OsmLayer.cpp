@@ -51,7 +51,7 @@ OsmLayer::OsmLayer() : Layer(),
     // Initialize the copyright label displayList
     _font = Font("Monaco", 80);
     _tFont = gl::TextureFont::create( _font );
-    std::string copyright("Copyright OpenStreetMap contributors");
+    std::string copyright("(c) OpenStreetMap contributors");
     _labelWidth = _tFont->measureString(copyright);
     _label = gl::DisplayList(GL_COMPILE);
     _label.newList();
@@ -111,8 +111,6 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     if (pass != Pass_BaseMap)
         return;
     
-    gl::enableAlphaBlending();
-    
     if (_lastResolution != viewCtx.getResolution()) {
         _lastResolution = viewCtx.getResolution();
         _currentZoom = _getZoomLevel(viewCtx.getResolution()
@@ -157,14 +155,14 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
     
     // draw the credit label at the lower left
     glPushMatrix();
+    gl::enableAlphaBlending();
     float res = viewCtx.getResolution();
     glTranslated(res*10.0, res*8., 1.0);
     float textScale = _labelWidth.x / 10000. * res;
     glScalef(textScale, -textScale, 1.0);
     _label.draw();
-    glPopMatrix();
-    
     gl::disableAlphaBlending();
+    glPopMatrix();
     
     // clean up tiles we no longer display
     for (TileMap::iterator i=_tiles.begin(); i != _tiles.end();) {

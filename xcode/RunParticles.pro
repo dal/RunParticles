@@ -118,6 +118,7 @@ HEADERS = ../src/AboutDialog.h \
           ../src/PathUtil.h \
           ../src/PlaybackWidget.h \
           ../src/Projection.h \
+          ../src/Settings.h \
           ../src/Singleton.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
@@ -253,6 +254,7 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/PathUtil.cpp \
           ../src/PlaybackWidget.cpp \
           ../src/Projection.cpp \
+          ../src/Settings.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
           ../src/TrackFileReader.cpp \

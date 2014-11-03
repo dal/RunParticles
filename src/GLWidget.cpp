@@ -24,6 +24,7 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _fullScreen(false),
     _lockToLayer(false)
 {
+    setObjectName("GLWidget");
     if (_map == NULL)
         _map = new Map();
     elapsedTimer.start();

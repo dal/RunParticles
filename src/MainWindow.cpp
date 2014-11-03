@@ -22,7 +22,8 @@ MainWindow::MainWindow(QWidget * parent,
     _layerListWidget(new LayerListWidget()),
     _trackFileReader(new TrackFileReader(this)),
     _numPendingLayers(0),
-    _aboutDialog(new AboutDialog(this))
+    _aboutDialog(new AboutDialog(this)),
+    _settings(new Settings(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -152,6 +153,7 @@ MainWindow::MainWindow(QWidget * parent,
             _glWidget, SLOT(slotLockViewToLayer(LayerId)));
     
     slotTimeChanged(0);
+    restoreSettings();
     _layerListWidget->show();
     _playbackWidget->show();
     _glWidget->show();
@@ -273,6 +275,29 @@ MainWindow::getNetworkCacheDir() const
         cacheLoc = QDir::homePath()+"/."+QCoreApplication::applicationName();
     }
     return cacheLoc;
+}
+
+void
+MainWindow::closeEvent(QCloseEvent *event)
+{
+    saveSettings();
+    event->accept();
+}
+
+void
+MainWindow::saveSettings()
+{
+    _settings->saveWidgetState(_glWidget);
+    _settings->saveWidgetState(_playbackWidget);
+    _settings->saveWidgetState(_layerListWidget);
+}
+
+void
+MainWindow::restoreSettings()
+{
+    _settings->restoreWidgetState(_glWidget);
+    _settings->restoreWidgetState(_playbackWidget);
+    _settings->restoreWidgetState(_layerListWidget);
 }
 
 bool

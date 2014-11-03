@@ -45,6 +45,7 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     _frameLayerAction(new QAction("Frame selected layers", this)),
     _lockViewAction(new QAction("Lock View to layer", this))
 {
+    setObjectName("LayerListWidget");
     setWindowTitle("Layer list");
     setColumnCount(ColumnCount);
     QStringList columns = QStringList() << "Visible" << "Name"

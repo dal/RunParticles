@@ -16,6 +16,7 @@
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
 #include "PlaybackWidget.h"
+#include "Settings.h"
 #include "TrackFileReader.h"
 
 class MainWindow : public QMainWindow
@@ -37,6 +38,12 @@ public:
     bool confirmAbandonMap();
     
     QString getNetworkCacheDir() const;
+    
+    void closeEvent(QCloseEvent *event);
+    
+    void saveSettings();
+    
+    void restoreSettings();
     
 public slots:
     bool slotSaveMapFile();
@@ -112,6 +119,7 @@ protected:
     QList<LayerId> _layersToFrame;
     int _numPendingLayers;
     AboutDialog *_aboutDialog;
+    Settings *_settings;
 };
 
 #endif

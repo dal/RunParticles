@@ -16,6 +16,7 @@
 PlaybackWidget::PlaybackWidget(QWidget *parent) :
     QWidget(parent)
 {
+    setObjectName("PlaybackWidget");
     setWindowTitle("Playback controls");
     _rewindButton = new QPushButton(QString::fromUtf8("\u25C0\u25C0"), this);//<<
     _backButton = new QPushButton(QString::fromUtf8("\u25C0"), this); // <

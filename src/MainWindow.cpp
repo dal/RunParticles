@@ -42,7 +42,10 @@ MainWindow::MainWindow(QWidget * parent,
     connect(_trackFileReader, &TrackFileReader::signalDone,
             _playbackWidget, &PlaybackWidget::hideProgress);
     
-    setCentralWidget(_playbackWidget);
+    // Placeholder hidden centralWidget to keep Qt happy
+    QWidget *myCentralWidget = new QWidget();
+    setCentralWidget(myCentralWidget);
+    centralWidget()->hide();
     
     /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
@@ -486,7 +489,7 @@ void
 MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
 {
     QString err = QString("Error loading file '%0': %1").arg(path).arg(what);
-    QMessageBox::critical(this, "Could not load file", err);
+    QMessageBox::critical(_glWidget, "Could not load file", err);
 }
 
 void
@@ -494,7 +497,7 @@ MainWindow::slotLockViewToSelectedLayer()
 {
     QList<LayerId> layers = _layerListWidget->selectedLayerIds();
     if (layers.empty())
-        QMessageBox::critical(this, "No layers selected",
+        QMessageBox::critical(_glWidget, "No layers selected",
                               "No layers selected to follow");
     else
         _glWidget->slotLockViewToLayer(layers.last());
@@ -505,7 +508,7 @@ MainWindow::slotFrameSelectedLayers()
 {
     QList<LayerId> layers = _layerListWidget->selectedLayerIds();
     if (layers.empty())
-        QMessageBox::critical(this, "No layers selected",
+        QMessageBox::critical(_glWidget, "No layers selected",
                               "No layers selected to frame");
     else
         slotFrameLayers(layers);

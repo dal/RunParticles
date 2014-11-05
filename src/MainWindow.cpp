@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QEventLoop>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QMenu>
 #include <QMessageBox>
 
@@ -45,20 +46,30 @@ MainWindow::MainWindow(QWidget * parent,
     // Placeholder hidden centralWidget to keep Qt happy
     QWidget *myCentralWidget = new QWidget();
     setCentralWidget(myCentralWidget);
-    centralWidget()->hide();
     
     /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
     _newMapAction = new QAction("&New Map", this);
-    _openMapFileAction = new QAction("&Open Map. . .", this);
-    _saveAsMapFileAction = new QAction("Save Map As. . .", this);
+    _addLayerAction = new QAction("&Add Track File...", this);
+    _openMapFileAction = new QAction("&Open Map...", this);
+    _saveAsMapFileAction = new QAction("Save Map As...", this);
     _saveMapFileAction = new QAction("&Save Map", this);
-    _addLayerAction = new QAction("&Add Track File. . .", this);
     _fileMenu->addAction(_newMapAction);
+    _fileMenu->addSeparator();
+    _fileMenu->addAction(_addLayerAction);
+    _recentLayersMenu = new QMenu("Add recent layer");
+    _fileMenu->addMenu(_recentLayersMenu);
+    connect(_recentLayersMenu, &QMenu::triggered,
+            this, &MainWindow::slotAddRecentLayer);
+    _fileMenu->addSeparator();
     _fileMenu->addAction(_openMapFileAction);
+    _recentMapsMenu = new QMenu("Open recent map");
+    _fileMenu->addMenu(_recentMapsMenu);
+    connect(_recentMapsMenu, &QMenu::triggered,
+            this, &MainWindow::slotOpenRecentMapFile);
+    _fileMenu->addSeparator();
     _fileMenu->addAction(_saveMapFileAction);
     _fileMenu->addAction(_saveAsMapFileAction);
-    _fileMenu->addAction(_addLayerAction);
     connect(_newMapAction, SIGNAL(triggered(bool)),
             this, SLOT(slotNewMap()));
     connect(_openMapFileAction, SIGNAL(triggered(bool)),
@@ -154,6 +165,9 @@ MainWindow::MainWindow(QWidget * parent,
     connect(_layerListWidget,
             SIGNAL(signalLockViewToLayer(LayerId)),
             _glWidget, SLOT(slotLockViewToLayer(LayerId)));
+    
+    connect(qApp, &QCoreApplication::aboutToQuit,
+            this, &MainWindow::slotAboutToQuit);
     
     slotTimeChanged(0);
     restoreSettings();
@@ -281,18 +295,22 @@ MainWindow::getNetworkCacheDir() const
 }
 
 void
-MainWindow::closeEvent(QCloseEvent *event)
-{
-    saveSettings();
-    event->accept();
-}
-
-void
 MainWindow::saveSettings()
 {
     _settings->saveWidgetState(_glWidget);
     _settings->saveWidgetState(_playbackWidget);
     _settings->saveWidgetState(_layerListWidget);
+    QAction *recentAction;
+    QList<QString> recents;
+    foreach(recentAction, _recentLayersMenu->actions()) {
+        recents.append(recentAction->data().toString());
+    }
+    _settings->setRecentLayerFiles(recents);
+    recents.clear();
+    foreach(recentAction, _recentMapsMenu->actions()) {
+        recents.append(recentAction->data().toString());
+    }
+    _settings->setRecentMapFiles(recents);
 }
 
 void
@@ -301,6 +319,13 @@ MainWindow::restoreSettings()
     _settings->restoreWidgetState(_glWidget);
     _settings->restoreWidgetState(_playbackWidget);
     _settings->restoreWidgetState(_layerListWidget);
+    QString path;
+    foreach(path, _settings->getRecentMapFiles()) {
+        _addPathToRecentMenu(_recentMapsMenu, path);
+    }
+    foreach(path, _settings->getRecentLayerFiles()) {
+        _addPathToRecentMenu(_recentLayersMenu, path);
+    }
 }
 
 bool
@@ -329,9 +354,16 @@ MainWindow::slotOpenMapFile()
     QString path = QFileDialog::getOpenFileName(this, "Select map file");
     /* pump the event loop once to let the dialog disappear */
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    return slotOpenMapFile(path);
+}
+
+bool
+MainWindow::slotOpenMapFile(const QString &path)
+{
     if (path.isEmpty())
         return false;
     clearMap();
+    _addPathToRecentMenu(_recentMapsMenu, path);
     return loadMapFile(path);
 }
 
@@ -350,6 +382,27 @@ MainWindow::_loadBaseMap()
 }
 
 void
+MainWindow::_addPathToRecentMenu(QMenu *theMenu, const QString &path)
+{
+    QFileInfo thisFile(path);
+    QList<QAction*> recents = theMenu->actions();
+    QAction *action;
+    foreach(action, recents) {
+        if (action->data().toString() == path) {
+            return;
+        }
+    }
+    
+    if (recents.length() > _numRecentFiles) {
+        theMenu->removeAction(recents.first());
+    }
+    
+    QAction *thisAction = new QAction(thisFile.fileName(), this);
+    thisAction->setData(QVariant(path));
+    theMenu->addAction(thisAction);
+}
+
+void
 MainWindow::slotAddLayer()
 {
     QStringList paths = QFileDialog::getOpenFileNames(this,
@@ -359,13 +412,20 @@ MainWindow::slotAddLayer()
     if (!paths.isEmpty()) {
         QString path;
         foreach(path, paths) {
-            loadTrackFile(path);
-            _fileIO->addTrackFile(path);
-            /* remember the last layer path explicitly added because we'll 
-               frame up all tracks in it when the map is ready */
-            _lastLayerPathAdded = path;
+            slotAddLayer(path);
+            _addPathToRecentMenu(_recentLayersMenu, path);
         }
     }
+}
+
+void
+MainWindow::slotAddLayer(const QString &path)
+{
+    loadTrackFile(path);
+    _fileIO->addTrackFile(path);
+    /* remember the last layer path explicitly added because we'll
+     frame up all tracks in it when the map is ready */
+    _lastLayerPathAdded = path;
 }
 
 void
@@ -512,6 +572,28 @@ MainWindow::slotFrameSelectedLayers()
                               "No layers selected to frame");
     else
         slotFrameLayers(layers);
+}
+
+void
+MainWindow::slotOpenRecentMapFile(QAction *mapAction)
+{
+    if (!confirmAbandonMap())
+        return;
+    QString path = mapAction->data().toString();
+    slotOpenMapFile(path);
+}
+
+void
+MainWindow::slotAddRecentLayer(QAction *layerAction)
+{
+    QString path = layerAction->data().toString();
+    slotAddLayer(path);
+}
+
+void
+MainWindow::slotAboutToQuit()
+{
+    saveSettings();
 }
 
 void

@@ -24,7 +24,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
+    
     MainWindow(QWidget * parent = 0, Qt::WindowFlags flags = 0);
+    
     virtual ~MainWindow();
     
     void loadTrackFile(const QString &trackFilePath);
@@ -39,8 +41,6 @@ public:
     
     QString getNetworkCacheDir() const;
     
-    void closeEvent(QCloseEvent *event);
-    
     void saveSettings();
     
     void restoreSettings();
@@ -52,9 +52,13 @@ public slots:
     
     bool slotOpenMapFile();
     
+    bool slotOpenMapFile(const QString &path);
+    
     void slotNewMap();
     
     void slotAddLayer();
+    
+    void slotAddLayer(const QString &path);
     
     void slotPlaybackRateChanged(const QString &newRate);
     
@@ -86,13 +90,25 @@ public slots:
     
     void slotFrameSelectedLayers();
     
+    void slotOpenRecentMapFile(QAction *mapAction);
+    
+    void slotAddRecentLayer(QAction *layerAction);
+    
+    void slotAboutToQuit();
+    
 protected:
+    
+    enum {
+        _numRecentFiles = 5
+    };
     
     void _layoutPlaybackControls(QWidget*);
     
     void _setupShortcuts();
     
     void _loadBaseMap();
+    
+    void _addPathToRecentMenu(QMenu *theMenu, const QString &path);
     
     void _showWidget(QWidget *widget);
     
@@ -111,6 +127,7 @@ protected:
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;
+    QMenu *_recentMapsMenu, *_recentLayersMenu;
     QNetworkAccessManager *_networkAccessManager;
     QNetworkDiskCache *_diskCache;
     QStringList _trackFiles;

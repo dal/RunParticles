@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget * parent,
     _trackFileReader(new TrackFileReader(this)),
     _numPendingLayers(0),
     _aboutDialog(new AboutDialog(this)),
-    _settings(new Settings(this))
+    _settings(new Settings(this)),
+    _preferencesDialog(new PreferencesDialog(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -147,8 +148,16 @@ MainWindow::MainWindow(QWidget * parent,
     _showAboutDialogAction->setMenuRole(QAction::AboutRole);
     connect(_showAboutDialogAction, &QAction::triggered,
             this, &MainWindow::slotShowAboutDialog);
-    QMenu *aboutMenu = _menuBar->addMenu("About . . .");
+    QMenu *aboutMenu = _menuBar->addMenu("About...");
     aboutMenu->addAction(_showAboutDialogAction);
+    
+    /* Preferences menu item */
+    _showPreferencesDialogAction = new QAction("Preferences...", this);
+    _showPreferencesDialogAction->setMenuRole(QAction::PreferencesRole);
+    connect(_showPreferencesDialogAction, &QAction::triggered,
+            this, &MainWindow::slotShowPreferencesDialog);
+    QMenu *prefsMenu = _menuBar->addMenu("Preferences...");
+    prefsMenu->addAction(_showPreferencesDialogAction);
     
     // Application keyboard shortcuts
     _setupShortcuts();
@@ -514,6 +523,12 @@ void
 MainWindow::slotShowAboutDialog()
 {
     _aboutDialog->show();
+}
+
+void
+MainWindow::slotShowPreferencesDialog()
+{
+    _preferencesDialog->exec();
 }
 
 void

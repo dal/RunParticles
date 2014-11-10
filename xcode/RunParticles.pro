@@ -117,6 +117,7 @@ HEADERS = ../src/AboutDialog.h \
           ../src/OsmTileSource.h \
           ../src/PathUtil.h \
           ../src/PlaybackWidget.h \
+          ../src/PreferencesDialog.h \
           ../src/Projection.h \
           ../src/Settings.h \
           ../src/Singleton.h \
@@ -253,6 +254,7 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/OsmTileSource.cpp \
           ../src/PathUtil.cpp \
           ../src/PlaybackWidget.cpp \
+          ../src/PreferencesDialog.cpp \
           ../src/Projection.cpp \
           ../src/Settings.cpp \
           ../src/TcxHandler.cpp \

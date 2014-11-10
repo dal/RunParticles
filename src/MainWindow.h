@@ -16,6 +16,7 @@
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
 #include "PlaybackWidget.h"
+#include "PreferencesDialog.h"
 #include "Settings.h"
 #include "TrackFileReader.h"
 
@@ -76,6 +77,8 @@ public slots:
     
     void slotShowAboutDialog();
     
+    void slotShowPreferencesDialog();
+    
     void slotShowPlaybackWidget();
     
     void slotShowLayerListWidget();
@@ -123,7 +126,7 @@ protected:
             *_backAction, *_rewindAction, *_pauseAction,
             *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction,
             *_showAboutDialogAction, *_frameSelectedLayersAction,
-            *_lockViewToLayerAction;
+            *_lockViewToLayerAction, *_showPreferencesDialogAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;
@@ -137,6 +140,7 @@ protected:
     int _numPendingLayers;
     AboutDialog *_aboutDialog;
     Settings *_settings;
+    PreferencesDialog *_preferencesDialog;
 };
 
 #endif

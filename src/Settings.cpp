@@ -8,6 +8,49 @@
 
 #include "Settings.h"
 
+QVariant
+TrackColorPref::toVariant() const
+{
+    QList<QVariant> var;
+    var.append(QVariant(pattern));
+    var.append(QVariant(color.rgba()));
+    return var;
+}
+
+TrackColorPref
+TrackColorPref::fromVariant(const QVariant &var)
+{
+    TrackColorPref pref;
+    QList<QVariant> parts = var.toList();
+    pref.pattern = parts[0].toString();
+    pref.color = QColor::fromRgba(parts[1].toUInt());
+    return pref;
+}
+
+QVariant
+TrackColorPrefs::toVariant() const
+{
+    QList<QVariant> vars;
+    TrackColorPref myPref;
+    foreach(myPref, prefs) {
+        vars.append(myPref.toVariant());
+    }
+    return QVariant(vars);
+}
+
+TrackColorPrefs
+TrackColorPrefs::fromVariant(const QVariant &var)
+{
+    TrackColorPrefs myPrefs;
+    QList<QVariant> vars = var.toList();
+    QVariant myVar;
+    foreach(myVar, vars)
+    {
+        myPrefs.prefs.append(TrackColorPref::fromVariant(myVar));
+    }
+    return myPrefs;
+}
+
 Settings::Settings(QObject *parent) :
     QObject(parent),
     _settings(new QSettings(this))

@@ -11,9 +11,27 @@
 
 #include <QObject>
 
+#include <QList>
 #include <QSettings>
 #include <QString>
 #include <QWidget>
+
+struct TrackColorPref
+{
+    QString pattern;
+    QColor color;
+    
+    QVariant toVariant() const;
+    static TrackColorPref fromVariant(const QVariant &var);
+};
+
+struct TrackColorPrefs
+{
+    QList<TrackColorPref> prefs;
+    
+    QVariant toVariant() const;
+    static TrackColorPrefs fromVariant(const QVariant &var);
+};
 
 class Settings : public QObject
 {
@@ -36,6 +54,10 @@ public:
     QStringList getRecentLayerFiles();
     
     void setRecentLayerFiles(const QList<QString> &files);
+    
+    TrackColorPrefs getTrackColorPrefs();
+    
+    void setTrackColorPrefs(const TrackColorPrefs &prefs);
     
 protected:
     

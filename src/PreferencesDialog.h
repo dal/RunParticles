@@ -13,6 +13,8 @@
 #include <QPushButton>
 #include <QTableWidget>
 
+#include "Settings.h"
+
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
@@ -22,7 +24,15 @@ public:
     
     virtual ~PreferencesDialog() { };
     
+    void loadSettings(Settings *settings);
+    
 protected:
+    enum {
+        TrackColorTable_Pattern_Col,
+        TrackColorTable_Color_Col,
+        TrackColorTable_Num_Cols
+    };
+    
     QTableWidget *_tableWidget;
     QPushButton *_saveButton, *_cancelButton;
 

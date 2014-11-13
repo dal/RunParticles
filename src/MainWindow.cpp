@@ -528,6 +528,7 @@ MainWindow::slotShowAboutDialog()
 void
 MainWindow::slotShowPreferencesDialog()
 {
+    _preferencesDialog->loadSettings(_settings);
     _preferencesDialog->exec();
 }
 

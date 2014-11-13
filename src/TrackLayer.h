@@ -54,6 +54,10 @@ public:
     
     bool ephemeral() const;
     
+    ColorA getTrackColor() const;
+    
+    void setTrackColor(const ColorA &color);
+    
 protected:
     
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
@@ -79,6 +83,8 @@ protected:
     MapPoint _particlePos;
     
     QDateTime _startTime;
+    
+    ColorA _trackColor;
     
     float *_pathBuffer;
     

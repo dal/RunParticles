@@ -30,7 +30,12 @@ struct TrackColorPrefs
     QList<TrackColorPref> prefs;
     
     QVariant toVariant() const;
+    
+    QColor getColorForTrackType(const QString &type);
+    
     static TrackColorPrefs fromVariant(const QVariant &var);
+    
+    static TrackColorPrefs getDefaultPrefs();
 };
 
 class Settings : public QObject

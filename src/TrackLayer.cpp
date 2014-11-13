@@ -1,7 +1,5 @@
 #include "TrackLayer.h"
 
-#include <QColor>
-
 #include "PathUtil.h"
 #include "Projection.h"
 #include "Types.h"
@@ -46,7 +44,8 @@ _particleRadius(PARTICLE_RADIUS),
 _mediumLodRes(MEDIUM_LOD_RES),
 _loLodRes(LO_LOD_RES),
 _track(track),
-_duration(0)
+_duration(0),
+_trackColor(Color(1,0,0))
 {
     if (!_isSetup)
         _setup();
@@ -261,4 +260,16 @@ bool
 TrackLayer::ephemeral() const
 {
     return false;
+}
+
+ColorA
+TrackLayer::getTrackColor() const
+{
+    return _trackColor;
+}
+
+void
+TrackLayer::setTrackColor(const ColorA &color)
+{
+    _trackColor = color;
 }

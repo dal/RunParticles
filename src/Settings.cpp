@@ -8,6 +8,8 @@
 
 #include "Settings.h"
 
+#include <fnmatch.h>
+
 QVariant
 TrackColorPref::toVariant() const
 {
@@ -38,6 +40,19 @@ TrackColorPrefs::toVariant() const
     return QVariant(vars);
 }
 
+QColor
+TrackColorPrefs::getColorForTrackType(const QString &type)
+{
+    TrackColorPref myPref;
+    const char* theType = qPrintable(type);
+    foreach(myPref, prefs) {
+        const char* myPattern = qPrintable(myPref.pattern);
+        if (fnmatch(myPattern, theType, FNM_PATHNAME) == 0)
+            return myPref.color;
+    }
+    return QColor(0, 0, 0, 0);
+}
+
 TrackColorPrefs
 TrackColorPrefs::fromVariant(const QVariant &var)
 {
@@ -48,6 +63,20 @@ TrackColorPrefs::fromVariant(const QVariant &var)
     {
         myPrefs.prefs.append(TrackColorPref::fromVariant(myVar));
     }
+    return myPrefs;
+}
+
+TrackColorPrefs
+TrackColorPrefs::getDefaultPrefs()
+{
+    TrackColorPrefs myPrefs;
+    TrackColorPref runPref;
+    runPref.pattern = "run";
+    runPref.color = QColor(1, 0, 0);
+    TrackColorPref otherPrefs;
+    otherPrefs.pattern = "*";
+    otherPrefs.color = QColor(0, 0, 1);
+    myPrefs.prefs << runPref << otherPrefs;
     return myPrefs;
 }
 
@@ -102,6 +131,20 @@ void
 Settings::setRecentLayerFiles(const QList<QString> &files)
 {
     _setList("recentLayerFiles", files);
+}
+
+TrackColorPrefs
+Settings::getTrackColorPrefs()
+{
+    if (_settings->contains("trackColors"))
+        return TrackColorPrefs::fromVariant(_settings->value("trackColors"));
+    return TrackColorPrefs::getDefaultPrefs();
+}
+
+void
+Settings::setTrackColorPrefs(const TrackColorPrefs &prefs)
+{
+    _settings->setValue("trackColors", prefs.toVariant());
 }
 
 QStringList

@@ -16,12 +16,14 @@
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent)
 {
+    setWindowTitle("Preferences");
+    _colorDialog = new QColorDialog(this);
     _tableWidget = new QTableWidget(this);
     _tableWidget->setColumnCount(TrackColorTable_Num_Cols);
     QStringList headerLabels;
     headerLabels << "Pattern" << "Color";
     _tableWidget->setHorizontalHeaderLabels(headerLabels);
-    QGroupBox *tableBox = new QGroupBox("Track colors", this);
+    QGroupBox *tableBox = new QGroupBox("Track color rules", this);
     QVBoxLayout *tableBoxLayout = new QVBoxLayout();
     tableBoxLayout->addWidget(_tableWidget);
     tableBox->setLayout(tableBoxLayout);
@@ -34,6 +36,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     bottomRow->addWidget(_cancelButton);
     bottomRow->addWidget(_saveButton);
     layout->addLayout(bottomRow);
+    
+    connect(_tableWidget, &QTableWidget::cellDoubleClicked,
+            this, &PreferencesDialog::slotCellDoubleClicked);
+    connect(_saveButton, &QPushButton::clicked, this, &QDialog::accept);
+    connect(_cancelButton, &QPushButton::clicked, this, &QDialog::reject);
 }
 
 void
@@ -45,11 +52,26 @@ PreferencesDialog::loadSettings(Settings *settings)
     for (int row=0; row < trackColors.prefs.length(); row++) {
         TrackColorPref myPref = trackColors.prefs[row];
         QTableWidgetItem *pItem = new QTableWidgetItem(myPref.pattern);
-        qDebug() << myPref.pattern;
         _tableWidget->setItem(row, TrackColorTable_Pattern_Col, pItem);
         QTableWidgetItem *cItem = new QTableWidgetItem();
         cItem->setBackground(QBrush(myPref.color));
+        cItem->setFlags(Qt::ItemIsEnabled);
         _tableWidget->setItem(row, TrackColorTable_Color_Col, cItem);
+    }
+}
+
+void
+PreferencesDialog::slotCellDoubleClicked(int row, int col)
+{
+    if (col != TrackColorTable_Color_Col)
+        return;
+    QTableWidgetItem *item = _tableWidget->item(row, col);
+    QBrush bgBrush = item->background();
+    QColor color = bgBrush.color();
+    _colorDialog->setCurrentColor(color);
+    if (_colorDialog->exec() == QDialog::Accepted) {
+        bgBrush.setColor(_colorDialog->currentColor());
+        item->setBackground(bgBrush);
     }
 }
 

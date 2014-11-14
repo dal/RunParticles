@@ -9,6 +9,7 @@
 #ifndef __RunParticles__PreferencesDialog__
 #define __RunParticles__PreferencesDialog__
 
+#include <QColorDialog>
 #include <QDialog>
 #include <QPushButton>
 #include <QTableWidget>
@@ -26,6 +27,10 @@ public:
     
     void loadSettings(Settings *settings);
     
+public slots:
+    
+    void slotCellDoubleClicked(int row, int col);
+    
 protected:
     enum {
         TrackColorTable_Pattern_Col,
@@ -35,6 +40,7 @@ protected:
     
     QTableWidget *_tableWidget;
     QPushButton *_saveButton, *_cancelButton;
+    QColorDialog *_colorDialog;
 
 };
 

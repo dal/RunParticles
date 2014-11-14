@@ -72,10 +72,10 @@ TrackColorPrefs::getDefaultPrefs()
     TrackColorPrefs myPrefs;
     TrackColorPref runPref;
     runPref.pattern = QString("run");
-    runPref.color = QColor(1, 0, 0);
+    runPref.color = QColor(255, 0, 0);
     TrackColorPref otherPrefs;
     otherPrefs.pattern = QString("*");
-    otherPrefs.color = QColor(0, 0, 1);
+    otherPrefs.color = QColor(0, 0, 255);
     myPrefs.prefs << runPref << otherPrefs;
     return myPrefs;
 }

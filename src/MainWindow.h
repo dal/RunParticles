@@ -19,6 +19,7 @@
 #include "PreferencesDialog.h"
 #include "Settings.h"
 #include "TrackFileReader.h"
+#include "TrackLayer.h"
 
 class MainWindow : public QMainWindow
 {
@@ -45,6 +46,10 @@ public:
     void saveSettings();
     
     void restoreSettings();
+    
+    void applyTrackStyleRule(const TrackStyleRules &rules, TrackLayer *layer);
+    
+    void applyTrackStyleRules(const TrackStyleRules &rules);
     
 public slots:
     bool slotSaveMapFile();

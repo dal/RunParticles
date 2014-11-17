@@ -16,26 +16,28 @@
 #include <QString>
 #include <QWidget>
 
-struct TrackColorPref
+struct TrackStyleRule
 {
+    TrackStyleRule();
     QString pattern;
     QColor color;
+    unsigned int width;
     
     QVariant toVariant() const;
-    static TrackColorPref fromVariant(const QVariant &var);
+    static TrackStyleRule fromVariant(const QVariant &var);
 };
 
-struct TrackColorPrefs
+struct TrackStyleRules
 {
-    QList<TrackColorPref> prefs;
+    QList<TrackStyleRule> prefs;
     
     QVariant toVariant() const;
     
-    QColor getColorForTrackType(const QString &type);
+    TrackStyleRule getStyleForTrackType(const QString &type) const;
     
-    static TrackColorPrefs fromVariant(const QVariant &var);
+    static TrackStyleRules fromVariant(const QVariant &var);
     
-    static TrackColorPrefs getDefaultPrefs();
+    static TrackStyleRules getDefaultPrefs();
 };
 
 class Settings : public QObject
@@ -60,9 +62,9 @@ public:
     
     void setRecentLayerFiles(const QList<QString> &files);
     
-    TrackColorPrefs getTrackColorPrefs();
+    TrackStyleRules getTrackStyleRules();
     
-    void setTrackColorPrefs(const TrackColorPrefs &prefs);
+    void setTrackStyleRules(const TrackStyleRules &rules);
     
 protected:
     

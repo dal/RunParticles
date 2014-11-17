@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QLineEdit>
 #include <QVBoxLayout>
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
@@ -19,11 +20,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     setWindowTitle("Preferences");
     _colorDialog = new QColorDialog(this);
     _tableWidget = new QTableWidget(this);
-    _tableWidget->setColumnCount(TrackColorTable_Num_Cols);
+    _tableWidget->setColumnCount(TrackStyleTable_Num_Cols);
     QStringList headerLabels;
-    headerLabels << "Pattern" << "Color";
+    headerLabels << "Pattern" << "Color" << "Width";
     _tableWidget->setHorizontalHeaderLabels(headerLabels);
-    QGroupBox *tableBox = new QGroupBox("Track color rules", this);
+    QGroupBox *tableBox = new QGroupBox("Track style rules", this);
     QVBoxLayout *tableBoxLayout = new QVBoxLayout();
     tableBoxLayout->addWidget(_tableWidget);
     tableBox->setLayout(tableBoxLayout);
@@ -46,24 +47,52 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 void
 PreferencesDialog::loadSettings(Settings *settings)
 {
-    TrackColorPrefs trackColors = settings->getTrackColorPrefs();
+    TrackStyleRules trackRules = settings->getTrackStyleRules();
     _tableWidget->clearContents();
-    _tableWidget->setRowCount(trackColors.prefs.count());
-    for (int row=0; row < trackColors.prefs.length(); row++) {
-        TrackColorPref myPref = trackColors.prefs[row];
+    _tableWidget->setRowCount(trackRules.prefs.count());
+    for (int row=0; row < trackRules.prefs.length(); row++) {
+        TrackStyleRule myPref = trackRules.prefs[row];
         QTableWidgetItem *pItem = new QTableWidgetItem(myPref.pattern);
-        _tableWidget->setItem(row, TrackColorTable_Pattern_Col, pItem);
+        _tableWidget->setItem(row, TrackStyleTable_Pattern_Col, pItem);
         QTableWidgetItem *cItem = new QTableWidgetItem();
         cItem->setBackground(QBrush(myPref.color));
         cItem->setFlags(Qt::ItemIsEnabled);
-        _tableWidget->setItem(row, TrackColorTable_Color_Col, cItem);
+        _tableWidget->setItem(row, TrackStyleTable_Color_Col, cItem);
+        QLineEdit *widthLineEdit = new QLineEdit(_tableWidget);
+        widthLineEdit->setFrame(false);
+        widthLineEdit->setValidator(new QIntValidator(widthLineEdit));
+        widthLineEdit->setText(QString("%0").arg(myPref.width));
+        _tableWidget->setCellWidget(row, TrackStyleTable_Width_Col,
+                                    widthLineEdit);
     }
+}
+
+TrackStyleRules
+PreferencesDialog::getTrackStyleRules() const
+{
+    TrackStyleRules rules;
+    for (int row=0; row < _tableWidget->rowCount(); row++) {
+        TrackStyleRule myRule;
+        QTableWidgetItem *rItem = _tableWidget->item(row,
+                                                   TrackStyleTable_Pattern_Col);
+        myRule.pattern = rItem->text();
+        QTableWidgetItem *cItem = _tableWidget->item(row,
+                                                     TrackStyleTable_Color_Col);
+        myRule.color = cItem->backgroundColor();
+        QLineEdit *widthLineEdit =
+            dynamic_cast<QLineEdit*>(_tableWidget->cellWidget(row,
+                                                     TrackStyleTable_Width_Col));
+        if (widthLineEdit)
+            myRule.width = widthLineEdit->text().toUInt();
+        rules.prefs.append(myRule);
+    }
+    return rules;
 }
 
 void
 PreferencesDialog::slotCellDoubleClicked(int row, int col)
 {
-    if (col != TrackColorTable_Color_Col)
+    if (col != TrackStyleTable_Color_Col)
         return;
     QTableWidgetItem *item = _tableWidget->item(row, col);
     QBrush bgBrush = item->background();

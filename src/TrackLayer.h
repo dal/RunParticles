@@ -9,6 +9,10 @@
 #include "cinder/gl/DisplayList.h"
 #include <QString>
 
+class TrackLayer;
+
+typedef std::shared_ptr<TrackLayer> TrackLayerPtr;
+
 class TrackLayer : public Layer
 {
 public:
@@ -20,7 +24,7 @@ public:
         Pass_Count
     };
     
-    static const Color RunColor, OtherColor, SelectedColor;
+    static const Color SelectedColor;
     
     TrackLayer(const Track *track);
     
@@ -58,6 +62,10 @@ public:
     
     void setTrackColor(const ColorA &color);
     
+    unsigned int getTrackWidth() const;
+    
+    void setTrackWidth(unsigned int width);
+    
 protected:
     
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
@@ -85,6 +93,8 @@ protected:
     QDateTime _startTime;
     
     ColorA _trackColor;
+    
+    unsigned int _trackWidth;
     
     float *_pathBuffer;
     

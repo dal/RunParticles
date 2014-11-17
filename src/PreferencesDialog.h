@@ -27,15 +27,18 @@ public:
     
     void loadSettings(Settings *settings);
     
+    TrackStyleRules getTrackStyleRules() const;
+    
 public slots:
     
     void slotCellDoubleClicked(int row, int col);
     
 protected:
     enum {
-        TrackColorTable_Pattern_Col,
-        TrackColorTable_Color_Col,
-        TrackColorTable_Num_Cols
+        TrackStyleTable_Pattern_Col,
+        TrackStyleTable_Color_Col,
+        TrackStyleTable_Width_Col,
+        TrackStyleTable_Num_Cols
     };
     
     QTableWidget *_tableWidget;

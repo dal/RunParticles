@@ -11,8 +11,6 @@
 
 using namespace cinder;
 
-const Color TrackLayer::RunColor = Color( 1, 0, 0 );
-const Color TrackLayer::OtherColor = Color( 0.3, 0.3, 1 );
 const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
 bool TrackLayer::_isSetup = false;
@@ -45,7 +43,8 @@ _mediumLodRes(MEDIUM_LOD_RES),
 _loLodRes(LO_LOD_RES),
 _track(track),
 _duration(0),
-_trackColor(Color(1,0,0))
+_trackColor(Color(1,0,0)),
+_trackWidth(1)
 {
     if (!_isSetup)
         _setup();
@@ -175,11 +174,9 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         currentPath = &_path_lo;
     
     if (viewCtx.isSelected(id()))
-        gl::color( SelectedColor );
-    else if (_track->sport == "Running")
-        gl::color( RunColor );
+        gl::color(SelectedColor);
     else
-        gl::color( OtherColor );
+        gl::color(_trackColor);
     
     MapPoint w2c = viewCtx.getWorldToCamera();
     PathPoint *lastPathPt;
@@ -218,10 +215,14 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         }
         lastInbounds = inbounds;
     }
+    glEnable(GL_LINE_SMOOTH);
+    glLineWidth(float(_trackWidth));
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( 2, GL_FLOAT, 0, _pathBuffer );
     glDrawArrays( GL_LINES, 0, bufferIndex/2 );
     glDisableClientState( GL_VERTEX_ARRAY );
+    glDisable(GL_LINE_SMOOTH);
+    glLineWidth(1.0f);
 }
 
 void
@@ -272,4 +273,16 @@ void
 TrackLayer::setTrackColor(const ColorA &color)
 {
     _trackColor = color;
+}
+
+unsigned int
+TrackLayer::getTrackWidth() const
+{
+    return _trackWidth;
+}
+
+void
+TrackLayer::setTrackWidth(unsigned int width)
+{
+    _trackWidth = width;
 }

@@ -11,7 +11,6 @@
 
 #include "MapFileIO.h"
 #include "OsmLayer.h"
-#include "TrackLayer.h"
 
 MainWindow::MainWindow(QWidget * parent,
                        Qt::WindowFlags flags) :
@@ -344,6 +343,28 @@ MainWindow::restoreSettings()
     }
 }
 
+void
+MainWindow::applyTrackStyleRule(const TrackStyleRules &rules,TrackLayer *layer)
+{
+    TrackStyleRule rule = rules.getStyleForTrackType(layer->sport());
+    layer->setTrackColor(Color(rule.color.redF(),
+                               rule.color.greenF(),
+                               rule.color.blueF()));
+    layer->setTrackWidth(rule.width);
+}
+
+void
+MainWindow::applyTrackStyleRules(const TrackStyleRules &rules)
+{
+    LayerPtr layer;
+    foreach(layer, _glWidget->getMap()->getLayers()) {
+        TrackLayerPtr trk = std::dynamic_pointer_cast<TrackLayer>(layer);
+        if (trk)
+            applyTrackStyleRule(rules, trk.get());
+    }
+    _glWidget->update();
+}
+
 bool
 MainWindow::slotSaveMapFile()
 {
@@ -529,7 +550,11 @@ void
 MainWindow::slotShowPreferencesDialog()
 {
     _preferencesDialog->loadSettings(_settings);
-    _preferencesDialog->exec();
+    if (_preferencesDialog->exec() == QDialog::Accepted) {
+        TrackStyleRules rules = _preferencesDialog->getTrackStyleRules();
+        _settings->setTrackStyleRules(rules);
+        applyTrackStyleRules(rules);
+    }
 }
 
 void
@@ -556,9 +581,11 @@ MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
     _trackFiles.append(path);
     Track *thisTrack;
     QList<Layer*> trackLayers;
+    TrackStyleRules rules = _settings->getTrackStyleRules();
     foreach(thisTrack, *tracks) {
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
         // See if the layer came from an explicitly-added path
+        applyTrackStyleRule(rules, thisLayer);
         if (!_lastLayerPathAdded.isEmpty() &&
             thisLayer->sourceFilePath() == _lastLayerPathAdded)
             _numPendingLayers++;

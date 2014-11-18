@@ -60,11 +60,12 @@ TrackStyleRule
 TrackStyleRules::getStyleForTrackType(const QString &type) const
 {
     TrackStyleRule myPref;
-    const char* theType = qPrintable(type);
+    const char* theType = type.toStdString().c_str();
     foreach(myPref, prefs) {
-        const char* myPattern = qPrintable(myPref.pattern);
-        if (fnmatch(myPattern, theType, FNM_PATHNAME) == 0)
+        const char* myPattern = myPref.pattern.toStdString().c_str();
+        if (fnmatch(myPattern, theType, FNM_PATHNAME) == 0) {
             return myPref;
+        }
     }
     return TrackStyleRule();
 }

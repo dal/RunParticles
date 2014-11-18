@@ -215,13 +215,11 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         }
         lastInbounds = inbounds;
     }
-    glEnable(GL_LINE_SMOOTH);
     glLineWidth(float(_trackWidth));
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer( 2, GL_FLOAT, 0, _pathBuffer );
     glDrawArrays( GL_LINES, 0, bufferIndex/2 );
     glDisableClientState( GL_VERTEX_ARRAY );
-    glDisable(GL_LINE_SMOOTH);
     glLineWidth(1.0f);
 }
 

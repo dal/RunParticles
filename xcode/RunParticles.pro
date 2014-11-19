@@ -121,6 +121,7 @@ HEADERS = ../src/AboutDialog.h \
           ../src/Projection.h \
           ../src/Settings.h \
           ../src/Singleton.h \
+          ../src/TableWidgetDragRows.h \
           ../src/TcxHandler.h \
           ../src/TimeCtx.h \
           ../src/TrackFileReader.h \
@@ -257,6 +258,7 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/PreferencesDialog.cpp \
           ../src/Projection.cpp \
           ../src/Settings.cpp \
+          ../src/TableWidgetDragRows.cpp \
           ../src/TcxHandler.cpp \
           ../src/TimeCtx.cpp \
           ../src/TrackFileReader.cpp \

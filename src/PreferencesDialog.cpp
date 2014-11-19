@@ -12,6 +12,7 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLineEdit>
+#include <QTableWidget>
 #include <QVBoxLayout>
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
@@ -19,7 +20,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
 {
     setWindowTitle("Preferences");
     _colorDialog = new QColorDialog(this);
-    _tableWidget = new QTableWidget(this);
+    _tableWidget = new TableWidgetDragRows(this);
     _tableWidget->setColumnCount(TrackStyleTable_Num_Cols);
     QStringList headerLabels;
     headerLabels << "Pattern" << "Color" << "Width";
@@ -56,7 +57,7 @@ PreferencesDialog::loadSettings(Settings *settings)
         _tableWidget->setItem(row, TrackStyleTable_Pattern_Col, pItem);
         QTableWidgetItem *cItem = new QTableWidgetItem();
         cItem->setBackground(QBrush(myPref.color));
-        cItem->setFlags(Qt::ItemIsEnabled);
+        cItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
         _tableWidget->setItem(row, TrackStyleTable_Color_Col, cItem);
         QLineEdit *widthLineEdit = new QLineEdit(_tableWidget);
         widthLineEdit->setFrame(false);

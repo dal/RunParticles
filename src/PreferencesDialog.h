@@ -12,9 +12,11 @@
 #include <QColorDialog>
 #include <QDialog>
 #include <QPushButton>
-#include <QTableWidget>
 
 #include "Settings.h"
+#include "TableWidgetDragRows.h"
+
+class TrackStyleTableWidget;
 
 class PreferencesDialog : public QDialog
 {
@@ -41,7 +43,7 @@ protected:
         TrackStyleTable_Num_Cols
     };
     
-    QTableWidget *_tableWidget;
+    TableWidgetDragRows *_tableWidget;
     QPushButton *_saveButton, *_cancelButton;
     QColorDialog *_colorDialog;
 

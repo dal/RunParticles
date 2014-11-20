@@ -9,6 +9,7 @@
 #ifndef __RunParticles__PreferencesDialog__
 #define __RunParticles__PreferencesDialog__
 
+#include <QAction>
 #include <QColorDialog>
 #include <QDialog>
 #include <QPushButton>
@@ -35,6 +36,10 @@ public slots:
     
     void slotCellDoubleClicked(int row, int col);
     
+    void slotAddRuleButtonClicked();
+    
+    void slotRemoveRule();
+    
 protected:
     enum {
         TrackStyleTable_Pattern_Col,
@@ -43,8 +48,11 @@ protected:
         TrackStyleTable_Num_Cols
     };
     
+    void _addRuleRow(const QString &pattern, const QColor &color, int width);
+    
     TableWidgetDragRows *_tableWidget;
-    QPushButton *_saveButton, *_cancelButton;
+    QAction *_removeRuleAction;
+    QPushButton *_addRuleButton, *_saveButton, *_cancelButton;
     QColorDialog *_colorDialog;
 
 };

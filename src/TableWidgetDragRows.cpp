@@ -56,8 +56,15 @@ void TableWidgetDragRows::dropEvent(QDropEvent *event)
         r = qMax(r, 0);
         for(int c = 0; c < columnCount(); ++c)
         {
-          QTableWidgetItem *source = new QTableWidgetItem(*item(*it, c));
-          setItem(r, c, source);
+            QTableWidgetItem *myItem = item(*it, c);
+            if (myItem) {
+              QTableWidgetItem *source = new QTableWidgetItem(*myItem);
+              setItem(r, c, source);
+            }
+            QWidget *myWidget = cellWidget(*it, c);
+            if (myWidget) {
+                setCellWidget(r, c, myWidget);
+            }
         }
       }
 

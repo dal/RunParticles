@@ -12,7 +12,9 @@
 #include <QString>
 #include <QStringList>
 
+#include "BoundingBox.h"
 #include "Map.h"
+#include "Types.h"
 
 class MapFileIO : public QObject
 {
@@ -35,6 +37,10 @@ public:
     
     QStringList getTrackFiles() const { return _trackFiles; };
     
+    LonLatBox getViewArea() const { return _viewArea; };
+    
+    void setViewArea(const LonLatBox &bbox);
+    
     bool isDirty() const { return _dirty; }
     
 protected:
@@ -44,6 +50,8 @@ protected:
     QStringList _trackFiles;
     
     QString _filename;
+    
+    LonLatBox _viewArea;
     
 };
 

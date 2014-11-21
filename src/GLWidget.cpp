@@ -285,6 +285,18 @@ GLWidget::moveView(const QPoint &screenDelta)
     updateGL();
 }
 
+LonLatBox
+GLWidget::getViewArea() const
+{
+    double left, top, right, bottom;
+    _mapView.getFrustum(left, top, right, bottom);
+    MapPoint ul = MapPoint(left, top);
+    MapPoint lr = MapPoint(right, bottom);
+    LonLat upperLeft = _map->getProjection().fromProjection(ul);
+    LonLat lowerRight = _map->getProjection().fromProjection(lr);
+    return LonLatBox(upperLeft, lowerRight);
+}
+
 void
 GLWidget::slotPlay()
 {

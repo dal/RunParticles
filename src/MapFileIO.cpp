@@ -17,6 +17,22 @@
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
 
+QDomElement _encodePoint(QDomDocument &doc, const QString &name,
+                         const LonLat &pt)
+{
+    QDomElement myEl = doc.createElement(name);
+    myEl.setAttribute("lat", pt.lat());
+    myEl.setAttribute("lat", pt.lon());
+    return myEl;
+};
+
+LonLat _getPoint()
+{
+    LonLat myPt;
+    
+    return myPt;
+}
+
 MapFileIO::MapFileIO(QObject *parent) :
     QObject(parent),
     _dirty(false)
@@ -38,6 +54,11 @@ MapFileIO::writeMapFile()
         trackFileElem.setAttribute("path", trackFilePath);
         trackFileList.appendChild(trackFileElem);
     }
+    QDomElement viewAreaEl = doc.createElement("viewArea");
+    viewAreaEl.appendChild(_encodePoint(doc, "upperLeft", _viewArea.upperLeft));
+    viewAreaEl.appendChild(_encodePoint(doc, "lowerRight",
+                                        _viewArea.lowerRight));
+    root.appendChild(viewAreaEl);
     QSaveFile saveFile(_filename);
     saveFile.open(QIODevice::WriteOnly);
     QTextStream ts(&saveFile);
@@ -90,5 +111,11 @@ MapFileIO::clear()
     _filename.clear();
     _trackFiles.clear();
     _dirty = false;
+}
+
+void
+MapFileIO::setViewArea(const LonLatBox &bbox)
+{
+    _viewArea = bbox;
 }
 

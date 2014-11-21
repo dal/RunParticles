@@ -87,6 +87,8 @@ public:
     
     void moveView(const QPoint &screenDelta);
     
+    LonLatBox getViewArea() const;
+    
 public slots:
     
     void update();

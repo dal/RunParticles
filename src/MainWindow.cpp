@@ -370,6 +370,7 @@ MainWindow::slotSaveMapFile()
 {
     if (_fileIO->getFilename().isEmpty())
         return slotSaveMapFileAs();
+    _fileIO->setViewArea(_glWidget->getViewArea());
     _fileIO->writeMapFile();
     return true;
 }

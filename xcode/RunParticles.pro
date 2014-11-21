@@ -102,6 +102,7 @@ ICON = RunParticles.icns
 
 HEADERS = ../src/AboutDialog.h \
           ../src/BoundingBox.h \
+          ../src/Box.h \
           ../src/FitFileReader.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \
@@ -238,7 +239,6 @@ HEADERS = ../src/AboutDialog.h \
           ../src/fitsdk/fit_pad_mesg_listener.hpp
 
 SOURCES = ../src/AboutDialog.cpp \
-          ../src/BoundingBox.cpp \
           ../src/FitFileReader.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \

@@ -250,6 +250,14 @@ GLWidget::frameBoundingBox(const BoundingBox &bbox)
     updateGL();
 }
 
+void GLWidget::frameLonLatBox(const LonLatBox &llBox)
+{
+    MapPoint ul = _map->getProjection().toProjection(llBox.upperLeft);
+    MapPoint lr = _map->getProjection().toProjection(llBox.lowerRight);
+    BoundingBox bbox(ul, lr);
+    frameBoundingBox(bbox);
+}
+
 void
 GLWidget::mouseWheelZoom(float delta)
 {

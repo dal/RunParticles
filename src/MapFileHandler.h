@@ -15,6 +15,8 @@
 #include <QXmlDefaultHandler>
 #include <QXmlAttributes>
 
+#include "BoundingBox.h"
+
 class MapFileHandler : public QXmlDefaultHandler
 {
     
@@ -27,11 +29,16 @@ public:
                       const QString&,
                       const QString&,
                       const QXmlAttributes&);
+    bool endElement(const QString&,
+                    const QString& localName,
+                    const QString&);
     QStringList getTrackFiles() const { return _trackFiles; }
+    LonLatBox getViewArea() const { return _viewArea; }
     
 protected:
-    
+    bool _inViewArea;
     QStringList _trackFiles;
+    LonLatBox _viewArea;
     
 };
 

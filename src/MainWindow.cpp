@@ -260,6 +260,10 @@ MainWindow::loadMapFile(const QString &path)
     foreach(trackFile, _fileIO->getTrackFiles()) {
         loadTrackFile(trackFile);
     }
+    LonLatBox mapViewArea = _fileIO->getViewArea();
+    if (mapViewArea.valid()) {
+        _glWidget->frameLonLatBox(mapViewArea);
+    }
     return true;
 }
 

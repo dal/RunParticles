@@ -21,8 +21,8 @@ QDomElement _encodePoint(QDomDocument &doc, const QString &name,
                          const LonLat &pt)
 {
     QDomElement myEl = doc.createElement(name);
-    myEl.setAttribute("lat", pt.lat());
-    myEl.setAttribute("lat", pt.lon());
+    myEl.setAttribute("lattitudeDegrees", pt.lat());
+    myEl.setAttribute("longitudeDegrees", pt.lon());
     return myEl;
 };
 
@@ -89,6 +89,7 @@ MapFileIO::loadMapFile(char **whyNot)
     reader.parse(&source, true /*incremental*/);
     while (reader.parseContinue()) { };
     _trackFiles = handler.getTrackFiles();
+    _viewArea = handler.getViewArea();
     return true;
 }
 

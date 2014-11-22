@@ -74,6 +74,8 @@ public:
     
     void frameBoundingBox(const BoundingBox &bbox);
     
+    void frameLonLatBox(const LonLatBox &llBox);
+    
     void mouseWheelZoom(float delta);
     
     void mouseDragZoom(const QPoint &screenDelta);

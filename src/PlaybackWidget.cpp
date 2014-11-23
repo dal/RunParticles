@@ -30,6 +30,8 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) :
     _playSpeedCombo->addItem("16x");
     _playSpeedCombo->addItem("32x");
     _playSpeedCombo->addItem("64x");
+    _playSpeedCombo->addItem("128x");
+    _playSpeedCombo->addItem("256x");
     _slider = new QSlider(Qt::Horizontal, this);
     _currentTimeLineEdit = new QLineEdit(this);
     _currentTimeLineEdit->setReadOnly(true);

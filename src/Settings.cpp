@@ -84,7 +84,7 @@ TrackStyleRules::fromVariant(const QVariant &var)
 }
 
 TrackStyleRules
-TrackStyleRules::getDefaultPrefs()
+TrackStyleRules::getDefaultRules()
 {
     TrackStyleRules myPrefs;
     TrackStyleRule runPref, bikePref, otherPrefs;
@@ -103,6 +103,12 @@ Settings::Settings(QObject *parent) :
     _settings(new QSettings(this))
 {
     
+}
+
+void
+Settings::clear()
+{
+    _settings->clear();
 }
 
 bool
@@ -156,13 +162,67 @@ Settings::getTrackStyleRules()
 {
     if (_settings->contains("trackStyleRules"))
         return TrackStyleRules::fromVariant(_settings->value("trackStyleRules"));
-    return TrackStyleRules::getDefaultPrefs();
+    return TrackStyleRules::getDefaultRules();
 }
 
 void
 Settings::setTrackStyleRules(const TrackStyleRules &rules)
 {
     _settings->setValue("trackStyleRules", rules.toVariant());
+}
+
+LonLatBox
+Settings::getStartingViewArea()
+{
+    if (_settings->contains("startingViewArea")) {
+        QVariantList vars = _settings->value("startingViewArea").toList();
+        if (vars.length() == 4) {
+            double bounds[4];
+            bool ok = true;
+            for (int i=0; i<4 && ok; i++) {
+                bounds[i] = vars[i].toDouble(&ok);
+            }
+            if (ok)
+                return LonLatBox(bounds[0], bounds[1], bounds[2], bounds[3]);
+        }
+    }
+    // Default is centered over Oakland
+    return LonLatBox(-122.37, 37.93, -122.27, 37.73);
+}
+
+void
+Settings::setStartingViewArea(const LonLatBox &viewArea)
+{
+    QVariantList bounds;
+    bounds << QVariant(viewArea.upperLeft.x)
+           << QVariant(viewArea.upperLeft.y)
+           << QVariant(viewArea.lowerRight.x)
+           << QVariant(viewArea.lowerRight.y);
+    _settings->setValue("startingViewArea", bounds);
+}
+
+bool
+Settings::getShowOpenStreetMap()
+{
+    return _settings->value("showOpenStreetMap", QVariant(true)).toBool();
+}
+
+void
+Settings::setShowOpenStreetMap(bool show)
+{
+    _settings->setValue("showOpenStreetMap", show);
+}
+
+bool
+Settings::getFrameLastAddedLayer()
+{
+    return _settings->value("frameLastAddedLayer", QVariant(true)).toBool();
+}
+
+void
+Settings::setFrameLastAddedLayer(bool frame)
+{
+    _settings->setValue("frameLastAddedLayer", frame);
 }
 
 QStringList

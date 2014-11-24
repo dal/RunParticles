@@ -12,11 +12,13 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QTableWidget>
 #include <QVBoxLayout>
 
-PreferencesDialog::PreferencesDialog(QWidget *parent) :
-    QDialog(parent)
+PreferencesDialog::PreferencesDialog(Settings *settings, QWidget *parent) :
+    QDialog(parent),
+    _settings(settings)
 {
     setWindowTitle("Preferences");
     _colorDialog = new QColorDialog(this);
@@ -36,6 +38,12 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     tableBox->setLayout(tableBoxLayout);
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(tableBox);
+    _showOpenStreetMapCheckBox = new QCheckBox("Show OpenStreetMap", this);
+    layout->addWidget(_showOpenStreetMapCheckBox);
+    _frameLastAddedLayerCheckBox = new QCheckBox("Frame last added layer",this);
+    layout->addWidget(_frameLastAddedLayerCheckBox);
+    _resetButton = new QPushButton("Reset to defaults...", this);
+    layout->addWidget(_resetButton);
     _saveButton = new QPushButton("Save Preferences", this);
     _cancelButton = new QPushButton("Cancel", this);
     QHBoxLayout *bottomRow = new QHBoxLayout();
@@ -50,20 +58,41 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
             this, &PreferencesDialog::slotAddRuleButtonClicked);
     connect(_removeRuleAction, &QAction::triggered,
             this, &PreferencesDialog::slotRemoveRule);
+    connect(_resetButton, &QPushButton::clicked,
+            this, &PreferencesDialog::slotResetSettings);
     connect(_saveButton, &QPushButton::clicked, this, &QDialog::accept);
     connect(_cancelButton, &QPushButton::clicked, this, &QDialog::reject);
 }
 
 void
-PreferencesDialog::loadSettings(Settings *settings)
+PreferencesDialog::loadSettings()
 {
-    TrackStyleRules trackRules = settings->getTrackStyleRules();
+    TrackStyleRules trackRules = _settings->getTrackStyleRules();
     _tableWidget->clearContents();
     _tableWidget->setRowCount(0);
     for (int row=0; row < trackRules.prefs.length(); row++) {
         TrackStyleRule myPref = trackRules.prefs[row];
         _addRuleRow(myPref.pattern, myPref.color, myPref.width);
     }
+    if (_settings->getShowOpenStreetMap())
+        _showOpenStreetMapCheckBox->setCheckState(Qt::Checked);
+    else
+        _showOpenStreetMapCheckBox->setCheckState(Qt::Unchecked);
+    
+    if (_settings->getFrameLastAddedLayer())
+        _frameLastAddedLayerCheckBox->setCheckState(Qt::Checked);
+    else
+        _frameLastAddedLayerCheckBox->setCheckState(Qt::Unchecked);
+}
+
+void
+PreferencesDialog::saveSettings()
+{
+    _settings->setTrackStyleRules(getTrackStyleRules());
+    _settings->setShowOpenStreetMap(_showOpenStreetMapCheckBox->checkState()
+                                    == Qt::Checked);
+    _settings->setFrameLastAddedLayer(_frameLastAddedLayerCheckBox->checkState()
+                                      == Qt::Checked);
 }
 
 TrackStyleRules
@@ -116,6 +145,19 @@ PreferencesDialog::slotRemoveRule()
 {
     int row = _tableWidget->currentRow();
     _tableWidget->removeRow(row);
+}
+
+void
+PreferencesDialog::slotResetSettings()
+{
+    if (QMessageBox::Yes == QMessageBox::question(this,
+                                                  "Reset preferences?",
+                                                  "Reset preferences "
+                                                  "to defaults?"))
+    {
+        _settings->clear();
+        loadSettings();
+    }
 }
 
 void

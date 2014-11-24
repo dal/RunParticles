@@ -16,6 +16,9 @@
 #include <QString>
 #include <QWidget>
 
+#include "BoundingBox.h"
+#include "Types.h"
+
 struct TrackStyleRule
 {
     TrackStyleRule();
@@ -37,7 +40,7 @@ struct TrackStyleRules
     
     static TrackStyleRules fromVariant(const QVariant &var);
     
-    static TrackStyleRules getDefaultPrefs();
+    static TrackStyleRules getDefaultRules();
 };
 
 class Settings : public QObject
@@ -49,6 +52,8 @@ public:
     Settings(QObject *parent=NULL);
     
     virtual ~Settings() { };
+    
+    void clear();
     
     bool restoreWidgetState(QWidget *widget);
     
@@ -65,6 +70,18 @@ public:
     TrackStyleRules getTrackStyleRules();
     
     void setTrackStyleRules(const TrackStyleRules &rules);
+    
+    LonLatBox getStartingViewArea();
+    
+    void setStartingViewArea(const LonLatBox &viewArea);
+    
+    bool getShowOpenStreetMap();
+    
+    void setShowOpenStreetMap(bool show);
+    
+    bool getFrameLastAddedLayer();
+    
+    void setFrameLastAddedLayer(bool frame);
     
 protected:
     

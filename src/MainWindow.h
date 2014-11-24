@@ -102,6 +102,8 @@ public slots:
     
     void slotAddRecentLayer(QAction *layerAction);
     
+    void slotSetStartingViewArea();
+    
     void slotAboutToQuit();
     
 protected:
@@ -131,7 +133,9 @@ protected:
             *_backAction, *_rewindAction, *_pauseAction,
             *_playCtrlWindowAction, *_layerListWindowAction, *_mapWindowAction,
             *_showAboutDialogAction, *_frameSelectedLayersAction,
-            *_lockViewToLayerAction, *_showPreferencesDialogAction;
+            *_lockViewToLayerAction, *_showPreferencesDialogAction,
+            *_clearRecentLayersMenuAction, *_clearRecentMapsMenuAction,
+            *_setStartingViewAreaAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;

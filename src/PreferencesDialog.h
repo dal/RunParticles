@@ -10,6 +10,7 @@
 #define __RunParticles__PreferencesDialog__
 
 #include <QAction>
+#include <QCheckBox>
 #include <QColorDialog>
 #include <QDialog>
 #include <QPushButton>
@@ -24,11 +25,13 @@ class PreferencesDialog : public QDialog
     Q_OBJECT
 public:
     
-    PreferencesDialog(QWidget *parent=NULL);
+    PreferencesDialog(Settings *settings, QWidget *parent=NULL);
     
     virtual ~PreferencesDialog() { };
     
-    void loadSettings(Settings *settings);
+    void loadSettings();
+    
+    void saveSettings();
     
     TrackStyleRules getTrackStyleRules() const;
     
@@ -39,6 +42,8 @@ public slots:
     void slotAddRuleButtonClicked();
     
     void slotRemoveRule();
+    
+    void slotResetSettings();
     
 protected:
     enum {
@@ -52,8 +57,11 @@ protected:
     
     TableWidgetDragRows *_tableWidget;
     QAction *_removeRuleAction;
-    QPushButton *_addRuleButton, *_saveButton, *_cancelButton;
+    QPushButton *_addRuleButton, *_resetButton, *_saveButton, *_cancelButton;
     QColorDialog *_colorDialog;
+    QCheckBox *_showOpenStreetMapCheckBox, *_frameLastAddedLayerCheckBox;
+    
+    Settings *_settings;
 
 };
 

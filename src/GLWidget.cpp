@@ -28,11 +28,6 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     if (_map == NULL)
         _map = new Map();
     elapsedTimer.start();
-    // Center the camera on Oakland, California, USA
-    MapPoint lr = _map->getProjection().toProjection(LonLat(-122.27, 37.73));
-    MapPoint ul = _map->getProjection().toProjection(LonLat(-122.37, 37.93));
-    BoundingBox defBbox(ul, lr);
-    frameBoundingBox(defBbox);
     connect(_map, SIGNAL(signalLayerAdded(LayerId)),
             this, SLOT(updateGL()));
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),

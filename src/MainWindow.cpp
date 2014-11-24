@@ -23,8 +23,7 @@ MainWindow::MainWindow(QWidget * parent,
     _trackFileReader(new TrackFileReader(this)),
     _numPendingLayers(0),
     _aboutDialog(new AboutDialog(this)),
-    _settings(new Settings(this)),
-    _preferencesDialog(new PreferencesDialog(this))
+    _settings(new Settings(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -32,6 +31,8 @@ MainWindow::MainWindow(QWidget * parent,
     QString cacheDir = getNetworkCacheDir();
     _diskCache->setCacheDirectory(cacheDir);
     _networkAccessManager->setCache(_diskCache);
+    
+    _preferencesDialog = new PreferencesDialog(_settings, this);
     
     /* The trackFileReader reads tracks in the background */
     connect(_trackFileReader, &TrackFileReader::signalReady,
@@ -57,13 +58,19 @@ MainWindow::MainWindow(QWidget * parent,
     _fileMenu->addAction(_newMapAction);
     _fileMenu->addSeparator();
     _fileMenu->addAction(_addLayerAction);
-    _recentLayersMenu = new QMenu("Add recent layer");
+    _recentLayersMenu = new QMenu("Add recent track file");
+    _clearRecentLayersMenuAction = new QAction("Clear menu", this);
+    connect(_clearRecentLayersMenuAction, &QAction::triggered,
+            _recentLayersMenu, &QMenu::clear);
     _fileMenu->addMenu(_recentLayersMenu);
     connect(_recentLayersMenu, &QMenu::triggered,
             this, &MainWindow::slotAddRecentLayer);
     _fileMenu->addSeparator();
     _fileMenu->addAction(_openMapFileAction);
     _recentMapsMenu = new QMenu("Open recent map");
+    _clearRecentMapsMenuAction = new QAction("Clear menu", this);
+    connect(_clearRecentMapsMenuAction, &QAction::triggered,
+             _recentMapsMenu, &QMenu::clear);
     _fileMenu->addMenu(_recentMapsMenu);
     connect(_recentMapsMenu, &QMenu::triggered,
             this, &MainWindow::slotOpenRecentMapFile);
@@ -85,12 +92,17 @@ MainWindow::MainWindow(QWidget * parent,
     QMenu *_viewMenu = _menuBar->addMenu("View");
     _frameSelectedLayersAction = new QAction("Frame selected layers", this);
     _lockViewToLayerAction = new QAction("Lock view to selected layer", this);
+    _setStartingViewAreaAction = new QAction("Set starting view area", this);
     _viewMenu->addAction(_frameSelectedLayersAction);
     _viewMenu->addAction(_lockViewToLayerAction);
+    _viewMenu->addSeparator();
+    _viewMenu->addAction(_setStartingViewAreaAction);
     connect(_lockViewToLayerAction, &QAction::triggered,
             this, &MainWindow::slotLockViewToSelectedLayer);
     connect(_frameSelectedLayersAction, &QAction::triggered,
             this, &MainWindow::slotFrameSelectedLayers);
+    connect(_setStartingViewAreaAction, &QAction::triggered,
+            this, &MainWindow::slotSetStartingViewArea);
     
     /* Window menu */
     QMenu *_windowMenu = _menuBar->addMenu("Window");
@@ -179,6 +191,7 @@ MainWindow::MainWindow(QWidget * parent,
     
     slotTimeChanged(0);
     restoreSettings();
+    _glWidget->frameLonLatBox(_settings->getStartingViewArea());
     _layerListWidget->show();
     _playbackWidget->show();
     _glWidget->show();
@@ -420,7 +433,9 @@ MainWindow::slotNewMap()
 void
 MainWindow::_loadBaseMap()
 {
-    _glWidget->getMap()->addLayer(new OsmLayer());
+    OsmLayer *layer = new OsmLayer();
+    layer->setVisible(_settings->getShowOpenStreetMap());
+    _glWidget->getMap()->addLayer(layer);
 }
 
 void
@@ -429,9 +444,12 @@ MainWindow::_addPathToRecentMenu(QMenu *theMenu, const QString &path)
     QFileInfo thisFile(path);
     QList<QAction*> recents = theMenu->actions();
     QAction *action;
+    QAction *recentSep = NULL;
     foreach(action, recents) {
         if (action->data().toString() == path) {
             return;
+        } else if (action->isSeparator()) {
+            recentSep = action;
         }
     }
     
@@ -441,7 +459,16 @@ MainWindow::_addPathToRecentMenu(QMenu *theMenu, const QString &path)
     
     QAction *thisAction = new QAction(thisFile.fileName(), this);
     thisAction->setData(QVariant(path));
-    theMenu->addAction(thisAction);
+    if (recentSep) {
+        theMenu->insertAction(recentSep, thisAction);
+    } else {
+        theMenu->addAction(thisAction);
+        theMenu->addSeparator();
+        if (theMenu == _recentMapsMenu)
+            theMenu->addAction(_clearRecentMapsMenuAction);
+        else if (theMenu == _recentLayersMenu)
+            theMenu->addAction(_clearRecentLayersMenuAction);
+    }
 }
 
 void
@@ -512,7 +539,8 @@ MainWindow::slotLayerAdded(LayerId layerId)
     /* If the user explicitly added a path and the map is done projecting,
        frame all the layers that came from that path.
      */
-    if (!_layersToFrame.empty() && _layersToFrame.length() == _numPendingLayers)
+    if (_settings->getFrameLastAddedLayer() &&
+        !_layersToFrame.empty() && _layersToFrame.length() == _numPendingLayers)
     {
         slotFrameLayers(_layersToFrame);
         _layerListWidget->slotSetSelectedLayers(_layersToFrame);
@@ -554,8 +582,9 @@ MainWindow::slotShowAboutDialog()
 void
 MainWindow::slotShowPreferencesDialog()
 {
-    _preferencesDialog->loadSettings(_settings);
+    _preferencesDialog->loadSettings();
     if (_preferencesDialog->exec() == QDialog::Accepted) {
+        _preferencesDialog->saveSettings();
         TrackStyleRules rules = _preferencesDialog->getTrackStyleRules();
         _settings->setTrackStyleRules(rules);
         applyTrackStyleRules(rules);
@@ -632,9 +661,9 @@ MainWindow::slotFrameSelectedLayers()
 void
 MainWindow::slotOpenRecentMapFile(QAction *mapAction)
 {
-    if (!confirmAbandonMap())
-        return;
     QString path = mapAction->data().toString();
+    if (path.isEmpty() || !confirmAbandonMap())
+        return;
     slotOpenMapFile(path);
 }
 
@@ -642,7 +671,15 @@ void
 MainWindow::slotAddRecentLayer(QAction *layerAction)
 {
     QString path = layerAction->data().toString();
-    slotAddLayer(path);
+    if (!path.isEmpty())
+        slotAddLayer(path);
+}
+
+void
+MainWindow::slotSetStartingViewArea()
+{
+    LonLatBox area = _glWidget->getViewArea();
+    _settings->setStartingViewArea(area);
 }
 
 void

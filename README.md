@@ -3,7 +3,8 @@
 ## A tool for mapping and animating GPS tracklogs by Doug Letterman
 
 ## Description
-RunParticles displays multiple GPS tracklogs in .TCX or .GPX format and 
+RunParticles displays multiple GPS tracklogs in .TCX, .GPX or 
+[.FIT](http://www.thisisant.com/resources/fit) format and 
 animates them on an [OpenStreetMap](http://openstreetmap.org). 
 
 ## Requirements

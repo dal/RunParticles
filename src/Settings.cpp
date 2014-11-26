@@ -87,14 +87,16 @@ TrackStyleRules
 TrackStyleRules::getDefaultRules()
 {
     TrackStyleRules myPrefs;
-    TrackStyleRule runPref, bikePref, otherPrefs;
+    TrackStyleRule runPref, bikePref, cyclingPref, otherPrefs;
     runPref.pattern = QString("Running");
     runPref.color = QColor(255, 0, 0);
     bikePref.pattern = QString("Biking");
     bikePref.color = QColor(0, 0, 255);
+    cyclingPref.pattern = QString("Cycling");
+    cyclingPref.color = QColor(0, 0, 255);
     otherPrefs.pattern = QString("*");
     otherPrefs.color = QColor(0, 255, 0);
-    myPrefs.prefs << runPref << bikePref << otherPrefs;
+    myPrefs.prefs << runPref << bikePref << cyclingPref << otherPrefs;
     return myPrefs;
 }
 

@@ -8,6 +8,9 @@
 
 #include "Settings.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
+
 #include <fnmatch.h>
 
 TrackStyleRule::TrackStyleRule() :
@@ -129,9 +132,18 @@ Settings::restoreWidgetState(QWidget *widget)
 void
 Settings::saveWidgetState(const QWidget *widget)
 {
+    /* There is a Qt bug where pos() does not properly account for the size 
+       of the application's menu bar, so calling move() on the result of pos()
+       causes QWidgets to creep slowly down the screen after each restore.
+     */
+    QDesktopWidget *desktop = QApplication::desktop();
+    int yOffset = desktop->screenGeometry().height() -
+                desktop->availableGeometry().height() - 4;
     _settings->beginGroup(QString("widgetGeometry/%0").arg(widget->objectName()));
+    QPoint pos = widget->pos();
+    pos.setY(pos.y() - yOffset);
     _settings->setValue("size", widget->size());
-    _settings->setValue("pos", widget->pos());
+    _settings->setValue("pos", pos);
     _settings->endGroup();
 }
 

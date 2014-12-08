@@ -139,8 +139,11 @@ TrackFileReader::_readXml(QFile &theFile,
     case TrackFileType_Gpx:
         {
         GpxHandler gpxHandler(tracks);
-        reader.setContentHandler(&gpxHandler);
-        reader.setErrorHandler(&gpxHandler);
+        bool ok = gpxHandler.parse(&theFile);
+        if (!ok && whyNot) {
+            whyNot->assign(gpxHandler.getError().toStdString());
+        }
+        return ok;
         break;
         }
     case TrackFileType_Tcx:
@@ -152,11 +155,13 @@ TrackFileReader::_readXml(QFile &theFile,
         }
     default:
         {
-        *whyNot = "Unrecognized file type";
+        if (whyNot)
+            *whyNot = "Unrecognized file type";
         return false;
         break;
         }
     }
+    theFile.seek(0);
     source.reset();
     reader.parse(&source, true /*incremental*/);
     while (reader.parseContinue()) { };

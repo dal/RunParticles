@@ -2,32 +2,24 @@
 #ifndef TCXHANDLER_H
 #define TCXHANDLER_H
 
+#include <QFile>
 #include <QString>
 #include <QList>
-#include <QXmlDefaultHandler>
-#include <QXmlAttributes>
 #include <vector>
 
 #include "Types.h"
 
 using namespace std;
 
-class TcxHandler : public QXmlDefaultHandler
+class TcxHandler
 {
     
 public:
 
     TcxHandler(QList<Track*>*);
     
-    bool startDocument();
-    bool characters(const QString & ch);
-    bool startElement(const QString&, 
-                      const QString&, 
-                      const QString&, 
-                      const QXmlAttributes&);
-    
-    bool endElement(const QString&, const QString&, const QString&);
-    bool endDocument();
+    bool parse(QFile *tcxFile);
+    QString getError() const { return _error; };
     
 protected:
     QList<Track*> *_tracks;
@@ -36,10 +28,11 @@ protected:
     
     Track *_currentTrack;
     
+    QString _error;
+    
     int _depth;
     
-    bool _inPoint, _inTime, _inId, _inLatitudeDegrees, _inLongitudeDegrees,
-        _foundLat, _foundLon, _foundTime;
+    bool _inPoint, _inTime, _foundLat, _foundLon, _foundTime;
     
 };
 

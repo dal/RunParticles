@@ -21,7 +21,6 @@ _foundTime(false)
 bool
 GpxHandler::parse(QFile *gpxFile)
 {
-    gpxFile->seek(0);
     QXmlStreamReader xml(gpxFile);
 
     while (!xml.atEnd() && !xml.hasError()) {

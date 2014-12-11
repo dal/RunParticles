@@ -1,19 +1,15 @@
 
 #include "TcxHandler.h"
 
+#include <QXmlStreamReader>
 #include <QtDebug>
 
 #include "Util.h"
 
 TcxHandler::TcxHandler(QList<Track*> *tracks) :
-QXmlDefaultHandler(),
 _tracks(tracks),
 _currentTrack(NULL),
 _depth(0),
-_inTime(false),
-_inId(false),
-_inLatitudeDegrees(false),
-_inLongitudeDegrees(false),
 _foundLat(false),
 _foundLon(false),
 _foundTime(false)
@@ -22,145 +18,119 @@ _foundTime(false)
 }
 
 bool
-TcxHandler::startDocument()
+TcxHandler::parse(QFile *tcxFile)
 {
-    _depth = 0;
-    _inTime = false;
-    _inId = false;
-    _inLatitudeDegrees = false;
-    _inLongitudeDegrees = false;
-    _foundLat = false;
-    _foundLon = false;
-    return true;
-}
-
-bool 
-TcxHandler::startElement(const QString& /* namespaceURI */,
-                      const QString & localName, 
-                      const QString& /* qName */,
-                      const QXmlAttributes & atts )
-{
-    if (localName == "Activity") {
-        if (_depth != 0) {
-            qWarning("Nested activites!");
-        }
-        int sportIdx = atts.index(QString(""), "Sport");
-        if (sportIdx != -1) {
-            QString mysport = atts.value(sportIdx);
-            _currentTrack = new Track();
-            _currentTrack->sport = mysport;
-            _tracks->append(_currentTrack);
-        } else {
-            qWarning("Could not determine activity type");
-        }
-    } else if (localName == "Lap") {
-        _depth += 1;
-    } else if (localName == "Track") {
-        _depth += 1;
-    } else if (localName == "Id") {
-        _inId = true;
-    } else if (localName == "Trackpoint") {
-        if (_currentTrack) {
-            _depth += 1;
-            _foundLat = false;
-            _foundLon = false;
-            _inPoint = true;
-        }
-    } else if (localName == "Time") {
-        if (_inPoint) {
-            _inTime = true;
-        }
-    } else if (localName == "Position") {
-        _depth += 1;
-    } else if (localName == "LatitudeDegrees") {
-        if (_inPoint) {
-            _inLatitudeDegrees = true;
-        } else {
-            qWarning("Found LatitudeDegrees outside TrackPoint");
-        }
-    } else if (localName == "LongitudeDegrees") {
-        if (_inPoint) {
-            _inLongitudeDegrees = true;
-        } else {
-            qWarning("Found LongitudeDegrees outside TrackPoint");
-        }
-    }
-    return true;
-}
-
-bool 
-TcxHandler::characters ( const QString & ch )
-{
-    bool ok = false;
-    if (_inLatitudeDegrees) {
-        _currentPoint.pos.y = ch.toDouble(&ok);
-        if (ok) {
-            _foundLat = true;
-        } else {
-            qWarning() << "Invalid latitude: " << ch;
-        }
-    } else if (_inLongitudeDegrees) {
-        _currentPoint.pos.x = ch.toDouble(&ok);
-        if (ok) {
-            _foundLon = true;
-        } else {
-            qWarning() << "Invalid longitude: " << ch;
-        }
-    } else if (_inTime && _inPoint) {
-        QByteArray ba = ch.toLocal8Bit();
-        _currentPoint.time = Util::parseTime(ba.constData());
-        _foundTime = true;
-    } else if (_inId && _currentTrack) {
-        _currentTrack->name = QString(ch);
-    }
-    return true;
-}
-
-bool 
-TcxHandler::endElement(const QString & /* namespaceURI */,
-                    const QString & localName, 
-                    const QString & /* qName */)
-{
-    if (localName == "Activity") {
-        if (_currentTrack != NULL) {
-            _currentTrack = NULL;
-        }
-        _depth -= 1;
-    } else if (localName == "Lap") {
-        _depth -= 1;
-    } else if (localName == "Track") {
-        _depth -= 1;
-    } else if (localName == "Id") {
-        _inId = false;
-    } else if (localName == "Trackpoint") {
-        _depth -= 1;
-        if (_inPoint && _foundLat && _foundLon && _foundTime) {
-            if (_currentTrack) {
-                _currentTrack->points.push_back(_currentPoint);
+    QXmlStreamReader xml(tcxFile);
+    
+    while (!xml.atEnd() && !xml.hasError()) {
+        xml.readNext();
+        QString name = xml.name().toString();
+        if (xml.isStartElement()) {
+            if (name == "Activity") {
+                if (_depth != 0) {
+                    qWarning() << "Nested activites at line "
+                        << xml.lineNumber() << " column " << xml.columnNumber();
+                }
+                _currentTrack = new Track();
+                QXmlStreamAttributes attrs = xml.attributes();
+                if (attrs.hasAttribute("Sport")) {
+                    _currentTrack->sport = attrs.value("Sport").toString();
+                } else {
+                    qWarning() << "Could not determine activity type at line "
+                        << xml.lineNumber() << " column " << xml.columnNumber();
+                }
+                _tracks->append(_currentTrack);
+            } else if (name == "Lap") {
+                _depth += 1;
+            } else if (name == "Track") {
+                _depth += 1;
+            } else if (name == "Id") {
+                QXmlStreamReader::TokenType token = xml.readNext();
+                if (_currentTrack && token == QXmlStreamReader::Characters)
+                    _currentTrack->name = xml.text().toString();
+            } else if (name == "Trackpoint") {
+                if (_currentTrack) {
+                    _depth += 1;
+                    _foundLat = false;
+                    _foundLon = false;
+                    _inPoint = true;
+                }
+            } else if (name == "Time") {
+                if (_inPoint) {
+                    QXmlStreamReader::TokenType token = xml.readNext();
+                    if (token == QXmlStreamReader::Characters) {
+                        QByteArray theTime = xml.text().toLocal8Bit();
+                        _currentPoint.time = Util::parseTime(theTime.constData());
+                        _foundTime = true;
+                    }
+                }
+            } else if (name == "LatitudeDegrees") {
+                if (_inPoint) {
+                    QXmlStreamReader::TokenType token = xml.readNext();
+                    if (token == QXmlStreamReader::Characters) {
+                        bool ok = false;
+                        _currentPoint.pos.y = xml.text().toDouble(&ok);
+                        if (ok) {
+                            _foundLat = true;
+                        } else {
+                            qWarning() << "Invalid latitude: '" << xml.text()
+                                << "' at line " << xml.lineNumber()
+                                << " column " << xml.columnNumber();
+                        }
+                    }
+                }
+            } else if (name == "LongitudeDegrees") {
+                if (_inPoint) {
+                    QXmlStreamReader::TokenType token = xml.readNext();
+                    if (token == QXmlStreamReader::Characters) {
+                        bool ok = false;
+                        _currentPoint.pos.x = xml.text().toDouble(&ok);
+                        if (ok) {
+                            _foundLon = true;
+                        } else {
+                            qWarning() << "Invalid longitude: '" << xml.text()
+                            << "' at line " << xml.lineNumber()
+                            << " column " << xml.columnNumber();
+                        }
+                    }
+                }
             }
-            _inPoint = false;
+        } else if (xml.isEndElement()) {
+            if (name == "Activity") {
+                _depth -= 1;
+                _currentTrack = NULL;
+            } else if (name == "Lap" || name == "Track" || name == "Id") {
+                _depth -= 1;
+            } else if (name == "Trackpoint") {
+                _depth -= 1;
+                if (_inPoint && _foundLat && _foundLon && _foundTime) {
+                    if (_currentTrack) {
+                        _currentTrack->points.push_back(_currentPoint);
+                    }
+                    _inPoint = false;
+                }
+            } else if (name == "Position") {
+                _depth -= 1;
+                if (!_foundLat) {
+                    qWarning() << "Position element was missing a valid "
+                         "latitude at line " << xml.lineNumber() << " column "
+                        << xml.columnNumber();
+                }
+                if (!_foundLon) {
+                    qWarning() << "Position element was missing a valid "
+                        "longitude at line " << xml.lineNumber() << " column "
+                        << xml.columnNumber();
+                }
+            }
         }
-    } else if (localName == "Position") {
-        _depth -= 1;
-        if (!_foundLat) {
-            qWarning("Position element was missing a valid latitude");
-        } else if (!_foundLon) {
-            qWarning("Position element was missing a valid longitude");
-        }
-    } else if (localName == "Time") {
-        _inTime = false;
-    } else if (localName == "LatitudeDegrees") {
-        _inLatitudeDegrees = false;
-    } else if (localName == "LongitudeDegrees") {
-        _inLongitudeDegrees = false;
     }
-
+    if (xml.hasError()) {
+        _error = QString("Got an error at line %0 column %1: '%2'")
+                .arg(xml.lineNumber()).arg(xml.columnNumber())
+                .arg(xml.errorString());
+        qWarning() << _error;
+        return false;
+    }
     return true;
-}
 
-bool 
-TcxHandler::endDocument()
-{
-    return true;
 }
-

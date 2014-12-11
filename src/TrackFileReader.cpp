@@ -135,6 +135,7 @@ TrackFileReader::_readXml(QFile &theFile,
     reader.parse(&source, true /*incremental*/);
     while (reader.parseContinue()) { };
     TrackFileType fileType = xmlHandler.getType();
+    theFile.seek(0);
     switch (fileType) {
     case TrackFileType_Gpx:
         {
@@ -149,8 +150,11 @@ TrackFileReader::_readXml(QFile &theFile,
     case TrackFileType_Tcx:
         {
         TcxHandler tcxHandler(tracks);
-        reader.setContentHandler(&tcxHandler);
-        reader.setErrorHandler(&tcxHandler);
+        bool ok = tcxHandler.parse(&theFile);
+        if (!ok && whyNot) {
+            whyNot->assign(tcxHandler.getError().toStdString());
+        }
+        return ok;
         break;
         }
     default:

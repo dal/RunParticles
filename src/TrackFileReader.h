@@ -60,6 +60,7 @@ class TrackFileReader : public QObject
     Q_OBJECT
     
 public:
+    
     TrackFileReader(QObject *parent=NULL);
     
     virtual ~TrackFileReader();
@@ -81,6 +82,7 @@ signals:
     void signalDone();
     
 protected:
+    
     bool _readXml(QFile &theFile,
                  QList<Track*> *tracks,
                  std::string *whyNot=NULL) const;

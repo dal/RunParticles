@@ -3,14 +3,48 @@
 
 #include <stdio.h>
 
-#include <QXmlInputSource>
-#include <QXmlSimpleReader>
+#include <QXmlStreamReader>
 #include <QtDebug>
 
 #include "FitFileReader.h"
-#include "XmlHandler.h"
 #include "GpxHandler.h"
 #include "TcxHandler.h"
+
+enum TrackFileType {
+    TrackFileType_Unknown,
+    TrackFileType_Gpx,
+    TrackFileType_Tcx,
+    TrackFileType_RunParticlesMap
+};
+
+TrackFileType getXmlType(QFile *file, QString *error)
+{
+    QXmlStreamReader xml(file);
+    
+    while (!xml.atEnd() && !xml.hasError()) {
+        xml.readNext();
+        QString name = xml.name().toString();
+        if (xml.isStartElement()) {
+            if (name == "TrainingCenterDatabase") {
+                return TrackFileType_Tcx;
+            } else if (name == "gpx") {
+                return TrackFileType_Gpx;
+            } else if (name == "RunParticlesMap") {
+                return TrackFileType_RunParticlesMap;
+            } else {
+                return TrackFileType_Unknown;
+            }
+        }
+    }
+    if (xml.hasError()) {
+        QString err = QString("Got an error at line %0 column %1: '%2'")
+                      .arg(xml.lineNumber()).arg(xml.columnNumber())
+                      .arg(xml.errorString());
+        qWarning() << err;
+        error->swap(err);
+    }
+    return TrackFileType_Unknown;
+};
 
 TrackFileReaderWorker::TrackFileReaderWorker(TrackFileReader *parent) :
     QThread(parent),
@@ -125,16 +159,8 @@ TrackFileReader::_readXml(QFile &theFile,
                           QList<Track*> *tracks,
                           std::string *whyNot) const
 {
-    XmlHandler xmlHandler;
-    QXmlSimpleReader reader;
-    reader.setContentHandler(&xmlHandler);
-    reader.setErrorHandler(&xmlHandler);
-    
-    QXmlInputSource source(&theFile);
-    
-    reader.parse(&source, true /*incremental*/);
-    while (reader.parseContinue()) { };
-    TrackFileType fileType = xmlHandler.getType();
+    QString error;
+    TrackFileType fileType = getXmlType(&theFile, &error);
     theFile.seek(0);
     switch (fileType) {
     case TrackFileType_Gpx:
@@ -159,16 +185,17 @@ TrackFileReader::_readXml(QFile &theFile,
         }
     default:
         {
-        if (whyNot)
-            *whyNot = "Unrecognized file type";
+        if (whyNot) {
+            if (!error.isEmpty()) {
+                *whyNot = error.toStdString();
+            } else {
+                *whyNot = "Unrecognized file type";
+            }
+        }
         return false;
         break;
         }
     }
-    theFile.seek(0);
-    source.reset();
-    reader.parse(&source, true /*incremental*/);
-    while (reader.parseContinue()) { };
     return true;
 }
 

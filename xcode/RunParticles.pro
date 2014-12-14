@@ -130,7 +130,6 @@ HEADERS = ../src/AboutDialog.h \
           ../src/Types.h \
           ../src/Util.h \
           ../src/ViewCtx.h \
-          ../src/XmlHandler.h \
           ../src/fitsdk/fit.hpp \
           ../src/fitsdk/fit_accumulator.hpp \
           ../src/fitsdk/fit_accumulated_field.hpp \
@@ -265,7 +264,6 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/TrackLayer.cpp \
           ../src/ViewCtx.cpp \
           ../src/Util.cpp \
-          ../src/XmlHandler.cpp \
           ../src/fitsdk/fit.cpp \
           ../src/fitsdk/fit_accumulated_field.cpp \
           ../src/fitsdk/fit_accumulator.cpp \

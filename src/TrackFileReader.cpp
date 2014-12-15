@@ -160,6 +160,7 @@ TrackFileReader::_readXml(QFile &theFile,
                           std::string *whyNot) const
 {
     QString error;
+    theFile.open(QIODevice::ReadOnly);
     TrackFileType fileType = getXmlType(&theFile, &error);
     theFile.seek(0);
     switch (fileType) {

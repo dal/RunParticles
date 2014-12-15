@@ -104,6 +104,7 @@ HEADERS = ../src/AboutDialog.h \
           ../src/BoundingBox.h \
           ../src/Box.h \
           ../src/FitFileReader.h \
+          ../src/ExportImageDialog.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \
           ../src/Layer.h \
@@ -238,6 +239,7 @@ HEADERS = ../src/AboutDialog.h \
           ../src/fitsdk/fit_pad_mesg_listener.hpp
 
 SOURCES = ../src/AboutDialog.cpp \
+          ../src/ExportImageDialog.cpp \
           ../src/FitFileReader.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \

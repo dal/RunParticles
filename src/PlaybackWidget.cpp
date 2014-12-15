@@ -49,11 +49,20 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) :
     connect(_pauseButton, SIGNAL(clicked()), SIGNAL(signalPause()));
     connect(_forwardButton, SIGNAL(clicked()), SIGNAL(signalForward()));
     connect(_playSpeedCombo, SIGNAL(activated(const QString&)),
-            SIGNAL(signalPlaybackRateChanged(const QString&)));
+            this, SLOT(slotPlaybackRateChanged(const QString&)));
     connect(_slider, SIGNAL(valueChanged(int)),
             SIGNAL(signalTimeSliderChanged(int)));
     setTimeSliderMaximum(1800);
     hideProgress();
+}
+
+double
+PlaybackWidget::getPlaybackRate() const
+{
+    QString rate = _playSpeedCombo->currentText();
+    if (rate.endsWith("x"))
+        rate.chop(1);
+    return rate.toDouble();
 }
 
 void
@@ -87,6 +96,18 @@ PlaybackWidget::hideProgress()
 {
     _progressBar->hide();
     _statusBar->clearMessage();
+}
+
+void
+PlaybackWidget::slotPlaybackRateChanged(const QString &rate)
+{
+    QString myRate = rate;
+    if (myRate.endsWith("x"))
+        myRate.chop(1);
+    bool ok = false;
+    double theRate = myRate.toDouble(&ok);
+    if (ok)
+        emit signalPlaybackRateChanged(theRate);
 }
 
 void

@@ -345,6 +345,12 @@ GLWidget::slotRewind()
     update();
 }
 
+double
+GLWidget::getMapSeconds() const
+{
+    return _timeCtx.getMapSeconds();
+}
+
 void
 GLWidget::setMapSeconds(double seconds)
 {

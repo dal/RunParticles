@@ -91,6 +91,8 @@ public:
     
     LonLatBox getViewArea() const;
     
+    double getMapSeconds() const;
+    
 public slots:
     
     void update();

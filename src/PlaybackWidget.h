@@ -26,18 +26,21 @@ public:
     
     virtual ~PlaybackWidget() { };
     
+    double getPlaybackRate() const;
+    
 public slots:
     void setTime(double);
     void setTimeSliderMaximum(int);
     void updateStatus(const QString &message, int total, int done);
     void hideProgress();
+    void slotPlaybackRateChanged(const QString &rate);
     
 signals:
     void signalRewind();
     void signalBack();
     void signalPause();
     void signalForward();
-    void signalPlaybackRateChanged(const QString&);
+    void signalPlaybackRateChanged(double);
     void signalTimeSliderChanged(int);
     
 protected:

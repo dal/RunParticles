@@ -12,6 +12,7 @@
 #include <QNetworkDiskCache>
 
 #include "AboutDialog.h"
+#include "ExportImageDialog.h"
 #include "GLWidget.h"
 #include "LayerListWidget.h"
 #include "MapFileIO.h"
@@ -66,7 +67,7 @@ public slots:
     
     void slotAddLayer(const QString &path);
     
-    void slotPlaybackRateChanged(const QString &newRate);
+    void slotPlaybackRateChanged(double newRate);
     
     void slotTimeChanged(double mapSeconds);
     
@@ -135,7 +136,7 @@ protected:
             *_showAboutDialogAction, *_frameSelectedLayersAction,
             *_lockViewToLayerAction, *_showPreferencesDialogAction,
             *_clearRecentLayersMenuAction, *_clearRecentMapsMenuAction,
-            *_setStartingViewAreaAction;
+            *_setStartingViewAreaAction, *_showExportImagesDialogAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;
@@ -150,6 +151,7 @@ protected:
     AboutDialog *_aboutDialog;
     Settings *_settings;
     PreferencesDialog *_preferencesDialog;
+    ExportImageDialog *_exportImageDialog;
 };
 
 #endif

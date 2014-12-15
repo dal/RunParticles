@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget * parent,
     
     _preferencesDialog = new PreferencesDialog(_settings, this);
     
+    /* export images dialog */
+    _exportImageDialog = new ExportImageDialog(_glWidget, _playbackWidget, this);
+    
     /* The trackFileReader reads tracks in the background */
     connect(_trackFileReader, &TrackFileReader::signalReady,
             this, &MainWindow::slotTrackFileLoaded);
@@ -77,6 +80,8 @@ MainWindow::MainWindow(QWidget * parent,
     _fileMenu->addSeparator();
     _fileMenu->addAction(_saveMapFileAction);
     _fileMenu->addAction(_saveAsMapFileAction);
+    _showExportImagesDialogAction = new QAction("Export images...", this);
+    _fileMenu->addAction(_showExportImagesDialogAction);
     connect(_newMapAction, SIGNAL(triggered(bool)),
             this, SLOT(slotNewMap()));
     connect(_openMapFileAction, SIGNAL(triggered(bool)),
@@ -87,6 +92,8 @@ MainWindow::MainWindow(QWidget * parent,
             this, SLOT(slotSaveMapFileAs()));
     connect(_addLayerAction, SIGNAL(triggered(bool)),
             this, SLOT(slotAddLayer()));
+    connect(_showExportImagesDialogAction, SIGNAL(triggered(bool)),
+            _exportImageDialog, SLOT(show()));
     
     /* View menu */
     QMenu *_viewMenu = _menuBar->addMenu("View");
@@ -132,8 +139,8 @@ MainWindow::MainWindow(QWidget * parent,
             _pauseAction, SLOT(trigger()));
     connect(_playbackWidget, SIGNAL(signalRewind()),
             _rewindAction, SLOT(trigger()));
-    connect(_playbackWidget, SIGNAL(signalPlaybackRateChanged(const QString&)),
-            this, SLOT(slotPlaybackRateChanged(const QString&)));
+    connect(_playbackWidget, SIGNAL(signalPlaybackRateChanged(double)),
+            this, SLOT(slotPlaybackRateChanged(double)));
     
     connect(_forwardAction, SIGNAL(triggered()),
             _glWidget, SLOT(slotPlay()));
@@ -498,15 +505,9 @@ MainWindow::slotAddLayer(const QString &path)
 }
 
 void
-MainWindow::slotPlaybackRateChanged(const QString &newRate)
+MainWindow::slotPlaybackRateChanged(double newRate)
 {
-    QString rate(newRate);
-    if (rate.endsWith("x"))
-        rate.chop(1);
-    bool ok = false;
-    double theRate = rate.toDouble(&ok);
-    if (ok)
-        _glWidget->setPlaybackRate(theRate);
+    _glWidget->setPlaybackRate(newRate);
 }
 
 void

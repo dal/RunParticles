@@ -32,6 +32,7 @@ ExportImageDialog::ExportImageDialog(GLWidget *target,
     _outputFrameCount = new QSpinBox(this);
     _outputFrameCount->setValue(60);
     _outputFrameCount->setMinimum(1);
+    _outputFrameCount->setMaximum(99999);
     _exportButton = new QPushButton("Export images", this);
     _cancelButton = new QPushButton("Cancel", this);
     QLabel *baseNameLabel = new QLabel("Base image name", this);
@@ -88,7 +89,7 @@ void ExportImageDialog::slotExportImage()
         _target->setMapSeconds(newTime);
         QString imgName = _baseImageNameLineEdit->text();
         QImage theImage = _target->grabFrameBuffer();
-        QString imgPath = QString("%0/%1.%2.tif")
+        QString imgPath = QString("%0/%1.%2.png")
                             .arg(_outputDir)
                             .arg(imgName)
                             .arg(_currentFrame, 4, 10, QChar('0'));

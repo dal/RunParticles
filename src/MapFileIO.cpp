@@ -9,8 +9,10 @@
 #include "MapFileIO.h"
 #include "MapFileHandler.h"
 
+#include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
+#include <QFileInfo>
 #include <QIODevice>
 #include <QSaveFile>
 #include <QTextStream>
@@ -41,7 +43,7 @@ MapFileIO::MapFileIO(QObject *parent) :
 }
 
 bool
-MapFileIO::writeMapFile()
+MapFileIO::writeMapFile(bool relativePaths)
 {
     QDomDocument doc("RunParticlesMap");
     QDomElement root = doc.createElement("RunParticlesMap");
@@ -51,6 +53,8 @@ MapFileIO::writeMapFile()
     QString trackFilePath;
     foreach(trackFilePath, _trackFiles) {
         QDomElement trackFileElem = doc.createElement("trackFile");
+        if (relativePaths)
+            trackFilePath = relativeizePath(trackFilePath);
         trackFileElem.setAttribute("path", trackFilePath);
         trackFileList.appendChild(trackFileElem);
     }
@@ -88,7 +92,10 @@ MapFileIO::loadMapFile(char **whyNot)
     
     reader.parse(&source, true /*incremental*/);
     while (reader.parseContinue()) { };
-    _trackFiles = handler.getTrackFiles();
+    QString trackFilePath;
+    foreach(trackFilePath, handler.getTrackFiles()) {
+        _trackFiles.append(absoluteizePath(trackFilePath));
+    }
     _viewArea = handler.getViewArea();
     return true;
 }
@@ -118,5 +125,24 @@ void
 MapFileIO::setViewArea(const LonLatBox &bbox)
 {
     _viewArea = bbox;
+}
+
+QString
+MapFileIO::relativeizePath(const QString &path)
+{
+    QFileInfo mapInfo(_filename);
+    QDir mapDir = mapInfo.absoluteDir();
+    return mapDir.relativeFilePath(path);
+}
+
+QString
+MapFileIO::absoluteizePath(const QString &path)
+{
+    QFileInfo pathInfo(path);
+    if (pathInfo.isAbsolute())
+        return path;
+    QFileInfo mapInfo(_filename);
+    QDir mapDir = mapInfo.absoluteDir();
+    return mapDir.absoluteFilePath(path);
 }
 

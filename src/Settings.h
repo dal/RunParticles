@@ -83,6 +83,10 @@ public:
     
     void setFrameLastAddedLayer(bool frame);
     
+    bool getSaveRelativePaths();
+    
+    void setSaveRelativePaths(bool rel);
+    
 protected:
     
     QStringList _getList(const QString &key);

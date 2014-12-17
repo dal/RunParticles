@@ -42,6 +42,8 @@ PreferencesDialog::PreferencesDialog(Settings *settings, QWidget *parent) :
     layout->addWidget(_showOpenStreetMapCheckBox);
     _frameLastAddedLayerCheckBox = new QCheckBox("Frame last added layer",this);
     layout->addWidget(_frameLastAddedLayerCheckBox);
+    _saveMapRelativePaths = new QCheckBox("Relative paths in map files", this);
+    layout->addWidget(_saveMapRelativePaths);
     _resetButton = new QPushButton("Reset to defaults...", this);
     layout->addWidget(_resetButton);
     _saveButton = new QPushButton("Save Preferences", this);
@@ -83,6 +85,10 @@ PreferencesDialog::loadSettings()
         _frameLastAddedLayerCheckBox->setCheckState(Qt::Checked);
     else
         _frameLastAddedLayerCheckBox->setCheckState(Qt::Unchecked);
+    if (_settings->getSaveRelativePaths())
+        _saveMapRelativePaths->setCheckState(Qt::Checked);
+    else
+        _saveMapRelativePaths->setCheckState(Qt::Unchecked);
 }
 
 void
@@ -93,6 +99,8 @@ PreferencesDialog::saveSettings()
                                     == Qt::Checked);
     _settings->setFrameLastAddedLayer(_frameLastAddedLayerCheckBox->checkState()
                                       == Qt::Checked);
+    _settings->setSaveRelativePaths(_saveMapRelativePaths->checkState()
+                                    == Qt::Checked);
 }
 
 TrackStyleRules

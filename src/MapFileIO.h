@@ -23,7 +23,7 @@ class MapFileIO : public QObject
 public:
     MapFileIO(QObject *parent=NULL);
     
-    bool writeMapFile();
+    bool writeMapFile(bool relativePaths = false);
     
     bool loadMapFile(char **whyNot=NULL);
     
@@ -42,6 +42,10 @@ public:
     void setViewArea(const LonLatBox &bbox);
     
     bool isDirty() const { return _dirty; }
+    
+    QString relativeizePath(const QString &path);
+    
+    QString absoluteizePath(const QString &path);
     
 protected:
     

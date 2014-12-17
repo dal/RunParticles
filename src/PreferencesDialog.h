@@ -59,7 +59,8 @@ protected:
     QAction *_removeRuleAction;
     QPushButton *_addRuleButton, *_resetButton, *_saveButton, *_cancelButton;
     QColorDialog *_colorDialog;
-    QCheckBox *_showOpenStreetMapCheckBox, *_frameLastAddedLayerCheckBox;
+    QCheckBox *_showOpenStreetMapCheckBox, *_frameLastAddedLayerCheckBox,
+              *_saveMapRelativePaths;
     
     Settings *_settings;
 

@@ -302,7 +302,7 @@ bool
 MainWindow::saveMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
-    return _fileIO->writeMapFile();
+    return _fileIO->writeMapFile(_settings->getSaveRelativePaths());
 }
 
 bool

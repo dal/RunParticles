@@ -239,6 +239,18 @@ Settings::setFrameLastAddedLayer(bool frame)
     _settings->setValue("frameLastAddedLayer", frame);
 }
 
+bool
+Settings::getSaveRelativePaths()
+{
+    return _settings->value("saveRelativePaths", QVariant(false)).toBool();
+}
+
+void
+Settings::setSaveRelativePaths(bool rel)
+{
+    _settings->setValue("saveRelativePaths", rel);
+}
+
 QStringList
 Settings::_getList(const QString &key)
 {

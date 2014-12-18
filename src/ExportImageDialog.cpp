@@ -35,8 +35,13 @@ ExportImageDialog::ExportImageDialog(GLWidget *target,
     _outputFrameCount->setMaximum(99999);
     _exportButton = new QPushButton("Export images", this);
     _cancelButton = new QPushButton("Cancel", this);
-    QLabel *baseNameLabel = new QLabel("Base image name", this);
+    QLabel *baseNameLabel = new QLabel("Image name", this);
     _baseImageNameLineEdit = new QLineEdit("RunParticlesExport", this);
+    _baseImageNameLineEdit->setToolTip("Image filename without extension");
+    QLabel *extensionLabel = new QLabel("Extension", this);
+    _imageExtensionLineEdit = new QLineEdit("png", this);
+    _imageExtensionLineEdit->setToolTip("Image extension determines file type "
+                                        "(png, tif, etc...)");
     QGridLayout *grid = new QGridLayout(this);
     QHBoxLayout *bottomRow = new QHBoxLayout();
     bottomRow->addStretch();
@@ -48,7 +53,9 @@ ExportImageDialog::ExportImageDialog(GLWidget *target,
     grid->addWidget(_outputFrameCount, 1, 1);
     grid->addWidget(baseNameLabel, 2, 0);
     grid->addWidget(_baseImageNameLineEdit, 2, 1);
-    grid->addLayout(bottomRow, 3, 0, 1, 3);
+    grid->addWidget(extensionLabel, 3, 0);
+    grid->addWidget(_imageExtensionLineEdit, 3, 1);
+    grid->addLayout(bottomRow, 4, 0, 1, 3);
     
     _progressDialog = new QProgressDialog("Exporting", "stop", 0, 100, this);
     _timer->setInterval(30);
@@ -88,11 +95,13 @@ void ExportImageDialog::slotExportImage()
         double newTime = nowTime + (playbackRate / fps);
         _target->setMapSeconds(newTime);
         QString imgName = _baseImageNameLineEdit->text();
+        QString ext = _imageExtensionLineEdit->text();
         QImage theImage = _target->grabFrameBuffer();
-        QString imgPath = QString("%0/%1.%2.png")
+        QString imgPath = QString("%0/%1.%2.%3")
                             .arg(_outputDir)
                             .arg(imgName)
-                            .arg(_currentFrame, 4, 10, QChar('0'));
+                            .arg(_currentFrame, 4, 10, QChar('0'))
+                            .arg(ext);
         theImage.save(imgPath);
         _progressDialog->setValue(_currentFrame);
     } else {

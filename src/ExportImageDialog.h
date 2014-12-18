@@ -38,7 +38,7 @@ protected:
     QSpinBox *_outputFrameCount;
     QPushButton *_exportButton, *_cancelButton;
     GLWidget *_target;
-    QLineEdit *_baseImageNameLineEdit;
+    QLineEdit *_baseImageNameLineEdit, *_imageExtensionLineEdit;
     PlaybackWidget *_playbackWidget;
     QTimer *_timer;
     QProgressDialog *_progressDialog;

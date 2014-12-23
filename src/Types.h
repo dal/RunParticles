@@ -11,6 +11,7 @@
 #define TYPES_H
 
 #include <set>
+#include <vector>
 
 #include "cinder/Vector.h"
 

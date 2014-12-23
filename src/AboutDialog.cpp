@@ -32,7 +32,10 @@ AboutDialog::AboutDialog(QWidget *parent) :
     p.setColor(QPalette::Base, p.color(QPalette::Background));
     _textEdit->setPalette(p);
     
-    _version = new QLabel(QString("Version %0").arg(qApp->applicationVersion()));
+    _version = new QLabel(QString("Version %0 (%1 %2)")
+                          .arg(qApp->applicationVersion())
+                          .arg(__DATE__)
+                          .arg(__TIME__));
     
     _closeButton = new QPushButton("Close", this);
     

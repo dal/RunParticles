@@ -118,9 +118,15 @@ OsmTileSource::onRequestFinished()
     
     cinder::Buffer buffer((void*)bytes.constData(), bytes.size() + 1);
     cinder::DataSourceBufferRef data = cinder::DataSourceBuffer::create(buffer);
-    cinder::Surface8u *surf = new cinder::Surface8u(cinder::loadImage(data,
-                                                    cinder::ImageSource::Options(),
-                                                    "png"));
+    cinder::Surface8u *surf;
+    try {
+        surf = new cinder::Surface8u(cinder::loadImage(data,
+                                                cinder::ImageSource::Options(),
+                                                "png"));
+    } catch (cinder::ImageIoException e) {
+        qWarning() << "Image load exception: " << e.what();
+        return;
+    }
     OsmTileRef tileRef = OsmTileRef(new OsmTile(index, surf));
     _memoryTileCache.insert(
         std::pair<OsmIndex, OsmTileRef>(index, tileRef));

@@ -43,7 +43,9 @@ LayerListWidgetItem::operator<(const QTreeWidgetItem & other) const
 LayerListWidget::LayerListWidget(QWidget *parent)
     : QTreeWidget(parent),
     _frameLayerAction(new QAction("Frame selected layers", this)),
-    _lockViewAction(new QAction("Lock View to layer", this))
+    _lockViewAction(new QAction("Lock View to layer", this)),
+    _showLayersAction(new QAction("Show layers", this)),
+    _hideLayersAction(new QAction("Hide layers", this))
 {
     setObjectName("LayerListWidget");
     setWindowTitle("Layer list");
@@ -55,13 +57,19 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     addAction(_frameLayerAction);
     addAction(_lockViewAction);
-    connect(_frameLayerAction, SIGNAL(triggered()),
-            this, SLOT(onFrameLayersSelected()));
-    connect(_lockViewAction, SIGNAL(triggered()),
-            this, SLOT(onLockViewSelected()));
+    addAction(_showLayersAction);
+    addAction(_hideLayersAction);
+    connect(_frameLayerAction, &QAction::triggered,
+            this, &LayerListWidget::onFrameLayersSelected);
+    connect(_lockViewAction, &QAction::triggered,
+            this, &LayerListWidget::onLockViewSelected);
     setContextMenuPolicy(Qt::ActionsContextMenu);
-    connect(this, SIGNAL(itemSelectionChanged()),
-            this, SLOT(onSelectionChanged()));
+    connect(this, &LayerListWidget::itemSelectionChanged,
+            this, &LayerListWidget::onSelectionChanged);
+    connect(_showLayersAction, &QAction::triggered,
+            this, &LayerListWidget::onShowLayersSelected);
+    connect(_hideLayersAction, &QAction::triggered,
+            this, &LayerListWidget::onHideLayersSelected);
     sortByColumn(ColumnStartTime, Qt::AscendingOrder);
     resizeColumnToContents(ColumnVisible);
 }
@@ -137,6 +145,22 @@ void
 LayerListWidget::onFrameLayersSelected()
 {
     emit signalFrameLayers(selectedLayerIds());
+}
+
+void LayerListWidget::onShowLayersSelected()
+{
+    QTreeWidgetItem *myItem;
+    foreach(myItem, selectedItems()) {
+        myItem->setCheckState(ColumnVisible, Qt::Checked);
+    }
+}
+
+void LayerListWidget::onHideLayersSelected()
+{
+    QTreeWidgetItem *myItem;
+    foreach(myItem, selectedItems()) {
+        myItem->setCheckState(ColumnVisible, Qt::Unchecked);
+    }
 }
 
 void

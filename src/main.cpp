@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     app.setApplicationName("RunParticles");
     app.setOrganizationDomain("renderfast.com");
     app.setOrganizationName("Renderfast");
-    app.setApplicationVersion("1.0");
+    app.setApplicationVersion("1.01");
     
     MainWindow mainWindow;
     

@@ -62,10 +62,14 @@ protected slots:
     void onSelectionChanged();
     void onFrameLayersSelected();
     void onLockViewSelected();
+    void onShowLayersSelected();
+    void onHideLayersSelected();
     
 protected:
     QAction *_frameLayerAction;
     QAction *_lockViewAction;
+    QAction *_showLayersAction;
+    QAction *_hideLayersAction;
     
 };
 

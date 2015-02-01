@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget * parent,
     /* file menu */
     QMenu *_fileMenu = _menuBar->addMenu("File");
     _newMapAction = new QAction("&New Map", this);
-    _addLayerAction = new QAction("&Add Track File...", this);
+    _addLayerAction = new QAction("&Add Track Files...", this);
     _openMapFileAction = new QAction("&Open Map...", this);
     _saveAsMapFileAction = new QAction("Save Map As...", this);
     _saveMapFileAction = new QAction("&Save Map", this);
@@ -181,11 +181,11 @@ MainWindow::MainWindow(QWidget * parent,
     _setupShortcuts();
     
     // Connect the layer list signals
-    connect(_layerListWidget, SIGNAL(signalFrameLayers(QList<LayerId>)),
-            this, SLOT(slotFrameLayers(const QList<LayerId>)));
+    connect(_layerListWidget, &LayerListWidget::signalFrameLayers,
+            this, &MainWindow::slotFrameLayers);
     connect(_layerListWidget,
-            SIGNAL(signalLayerSelectionChanged(QList<LayerId>)),
-            this, SLOT(slotLayerSelectionChanged(const QList<LayerId>)));
+            &LayerListWidget::signalLayerSelectionChanged,
+            this, &MainWindow::slotLayerSelectionChanged);
     connect(_layerListWidget,
             SIGNAL(signalLayerVisibilityChanged(LayerId, bool)),
             this, SLOT(slotLayerVisibilityChanged(LayerId, bool)));

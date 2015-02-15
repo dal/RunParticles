@@ -94,6 +94,13 @@ TEMPLATE = app
 
 ICON = RunParticles.icns
 
+appIcon.files = RunParticles.icns
+appIcon.path = Contents/Resources
+
+QMAKE_INFO_PLIST = Info.plist
+
+QMAKE_BUNDLE_DATA += appIcon
+
 HEADERS = ../src/AboutDialog.h \
           ../src/BoundingBox.h \
           ../src/Box.h \

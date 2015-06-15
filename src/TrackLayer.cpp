@@ -5,6 +5,8 @@
 #include "Types.h"
 #include "ViewCtx.h"
 
+#include <vector>
+
 #define PARTICLE_RADIUS 12.0
 #define MEDIUM_LOD_RES 10.0
 #define LO_LOD_RES 20.0
@@ -123,27 +125,76 @@ TrackLayer::project(const Projection &projection)
     int startTime = 0;
     for(size_t i=0; i < _track->points.size(); i++) {
         TrackPoint pt = _track->points[i];
-        if (i == 0)
-            startTime = pt.time;
         PathPoint newPt;
         newPt.pos = projection.toProjection(pt.pos);
+        if (i == 0) {
+            startTime = pt.time;
+            _positionOffset = newPt.pos;
+        }
         newPt.time = pt.time - startTime;
         _path_hi.push_back(newPt);
         _bounds += newPt.pos;
     }
     
     _particleRadius *= projection.getScaleMultiplier();
-    _mediumLodRes *= projection.getScaleMultiplier();
-    _loLodRes *= projection.getScaleMultiplier();
-    // Make the medium res path
-    _path_med = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
-    // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_med, _loLodRes);
+    
+}
+
+void
+TrackLayer::_initializeVbo()
+{
+    std::vector<Vec3f> vertices;
+    
+    vertices.reserve( _path_hi.size() + 2);
+    
+    // add an adjacency vertex at the beginning
+    vertices.push_back( 2.0f * Vec3f(_path_hi[0].pos.x - _positionOffset.x,
+                                     _path_hi[0].pos.y - _positionOffset.y, 0.)
+                       - Vec3f(_path_hi[1].pos.x - _positionOffset.x,
+                               _path_hi[1].pos.y - _positionOffset.y, 0.) );
+    
+    PathPoint pt;
+    foreach(pt, _path_hi) {
+        vertices.push_back(Vec3f(pt.pos.x-_positionOffset.x,
+                                 pt.pos.y-_positionOffset.y, 0.));
+    }
+    
+    // add an adjacency vertex at the end
+    size_t n = _path_hi.size();
+    vertices.push_back( 2.0f * Vec3f(_path_hi[n-1].pos.x - _positionOffset.x,
+                                     _path_hi[n-1].pos.y - _positionOffset.y, 0.)
+                       - Vec3f(_path_hi[n-2].pos.x - _positionOffset.x,
+                               _path_hi[n-2].pos.y - _positionOffset.y, 0.) );
+    
+    // now that we have a list of vertices, create the index buffer
+    n = vertices.size() - 2;
+    std::vector<uint32_t> indices;
+    indices.reserve( n * 4 );
+    
+    for(size_t i=1;i<vertices.size()-2;++i) {
+        indices.push_back(i-1);
+        indices.push_back(i);
+        indices.push_back(i+1);
+        indices.push_back(i+2);
+    }
+    
+    // finally, create the mesh
+    gl::VboMesh::Layout layout;
+    layout.setStaticPositions();
+    layout.setStaticIndices();
+    
+    _vboMesh = gl::VboMesh(vertices.size(), indices.size(), layout,
+                           GL_LINES_ADJACENCY_EXT );
+    _vboMesh.bufferPositions( &(vertices.front()), vertices.size() );
+    _vboMesh.bufferIndices( indices );
 }
 
 void
 TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
+    if (!_vboMesh)
+        _initializeVbo();
+    
     if (!visible() || !_bounds.overlaps(viewCtx.getBoundingBox()))
         return;
     bool selected = viewCtx.isSelected(id());
@@ -165,6 +216,21 @@ TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 void
 TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
+    MapPoint w2c = viewCtx.getWorldToCamera();
+    glPushMatrix();
+    glTranslated(w2c.x+_positionOffset.x, w2c.y+_positionOffset.y, 0.);
+    glLineWidth(float(_trackWidth));
+    _particle.draw();
+    gl::enableWireframe();
+    if (viewCtx.isSelected(id()))
+        gl::color(SelectedColor);
+    else
+        gl::color(_trackColor);
+    if (_vboMesh)
+        gl::draw( _vboMesh );
+    gl::disableWireframe();
+    glPopMatrix();
+    /*
     // Choose which path to display
     Path *currentPath = &_path_hi;
     double res = viewCtx.getResolution();
@@ -221,6 +287,7 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     glDrawArrays( GL_LINES, 0, bufferIndex/2 );
     glDisableClientState( GL_VERTEX_ARRAY );
     glLineWidth(1.0f);
+    */
 }
 
 void

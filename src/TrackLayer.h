@@ -7,6 +7,7 @@
 
 #include "cinder/gl/gl.h"
 #include "cinder/gl/DisplayList.h"
+#include "cinder/gl/Vbo.h"
 #include <QString>
 
 class TrackLayer;
@@ -68,6 +69,8 @@ public:
     
 protected:
     
+    void _initializeVbo();
+    
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
     
     void _drawParticle(const ViewCtx &viewCtx);
@@ -82,7 +85,7 @@ protected:
     
     const Track *_track;
     
-    Path _path_hi, _path_med, _path_lo;
+    Path _path_hi; //, _path_med, _path_lo;
     
     BoundingBox _bounds;
     
@@ -98,9 +101,15 @@ protected:
     
     float *_pathBuffer;
     
+    gl::VboMesh vboMesh;
+    
     static bool _isSetup;
     
     static gl::DisplayList _particle, _selectedParticle;
+    
+    gl::VboMesh _vboMesh;
+    
+    MapPoint _positionOffset;
     
 };
 

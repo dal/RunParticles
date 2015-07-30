@@ -150,7 +150,7 @@ OsmTileSource::_requestTile(const OsmIndex index)
                  QNetworkRequest::PreferCache);
     QNetworkAccessManager *network =
         Singleton<QNetworkAccessManager>::Instance();
-    qDebug() << "GET " << host << url;
+    //qDebug() << "GET " << host << url;
     QNetworkReply *reply = network->get(request);
     _pendingReplies.insert(reply, index);
     QObject::connect(reply,

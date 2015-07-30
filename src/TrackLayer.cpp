@@ -1,5 +1,7 @@
 #include "TrackLayer.h"
 
+#include <QFile>
+
 #include "PathUtil.h"
 #include "Projection.h"
 #include "Types.h"
@@ -18,10 +20,38 @@ const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 bool TrackLayer::_isSetup = false;
 gl::DisplayList TrackLayer::_particle;
 gl::DisplayList TrackLayer::_selectedParticle;
+QGLShaderProgram *TrackLayer::_shader;
+
+void
+_loadShader(QGLShader::ShaderType type, const QString &file,
+            QGLShaderProgram *program)
+{
+    QByteArray source;
+    QFile qrcFile(file);
+    if (qrcFile.open(QIODevice::ReadOnly))
+        source = qrcFile.readAll();
+    if (source.size()) {
+        if (!program->addShaderFromSourceCode(type, source)) {
+            qWarning() << "Failed to compile shader '" << file << "':"
+            << program->log();
+        }
+    }
+}
 
 void
 TrackLayer::_setup()
 {
+    // Initialize the shaders
+    _shader = new QGLShaderProgram();
+    _shader->setGeometryInputType(GL_LINES_ADJACENCY_EXT);
+    _shader->setGeometryOutputType(GL_TRIANGLE_STRIP);
+    _shader->setGeometryOutputVertexCount(7);
+    _loadShader(QGLShader::Vertex, ":track1.vert", _shader);
+    _loadShader(QGLShader::Fragment, ":track1.frag", _shader);
+    _loadShader(QGLShader::Geometry, ":track1.geom", _shader);
+    if (!_shader->link())
+        qWarning() << "Failed to link shader program";
+
     _particle = gl::DisplayList(GL_COMPILE);
     _particle.newList();
     gl::drawSolidCircle( Vec2d(0.f, 0.f), 10.);
@@ -219,16 +249,24 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     MapPoint w2c = viewCtx.getWorldToCamera();
     glPushMatrix();
     glTranslated(w2c.x+_positionOffset.x, w2c.y+_positionOffset.y, 0.);
-    glLineWidth(float(_trackWidth));
+    //glLineWidth(float(_trackWidth));
     _particle.draw();
-    gl::enableWireframe();
     if (viewCtx.isSelected(id()))
         gl::color(SelectedColor);
     else
         gl::color(_trackColor);
-    if (_vboMesh)
+    if (_vboMesh) {
+        _shader->bind();
+        _shader->setUniformValue(_shader->uniformLocation("WIN_SCALE"),
+                                 (GLfloat)viewCtx.getViewportWidth(),
+                                 (GLfloat)viewCtx.getViewportHeight() );
+        _shader->setUniformValue(_shader->uniformLocation("MITER_LIMIT"),
+                                 (GLfloat)0.75 );
+        _shader->setUniformValue(_shader->uniformLocation("THICKNESS"),
+                                 (GLfloat)float(_trackWidth) );
         gl::draw( _vboMesh );
-    gl::disableWireframe();
+        _shader->release();
+    }
     glPopMatrix();
     /*
     // Choose which path to display

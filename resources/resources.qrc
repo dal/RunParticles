@@ -2,5 +2,8 @@
 <qresource>
 <file alias="appIcon128">../assets/RunParticles.iconset/icon_128x128.png</file>
 <file alias="about.html">../resources/about.html</file>
+<file alias="track1.frag">../resources/track1.frag</file>
+<file alias="track1.geom">../resources/track1.geom</file>
+<file alias="track1.vert">../resources/track1.vert</file>
 </qresource>
 </RCC>

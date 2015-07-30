@@ -9,6 +9,8 @@
 #include "cinder/gl/DisplayList.h"
 #include "cinder/gl/Vbo.h"
 #include <QString>
+#include <QGLShader>
+#include <QGLShaderProgram>
 
 class TrackLayer;
 
@@ -110,6 +112,8 @@ protected:
     gl::VboMesh _vboMesh;
     
     MapPoint _positionOffset;
+    
+    static QGLShaderProgram *_shader;
     
 };
 

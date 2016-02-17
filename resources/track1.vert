@@ -7,4 +7,5 @@ void main(void)
 	gl_BackColor = gl_Color;
 
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_Position.z = gl_Vertex.z;
 }

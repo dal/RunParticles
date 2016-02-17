@@ -184,9 +184,10 @@ TrackLayer::_initializeVbo()
                                _path_hi[1].pos.y - _positionOffset.y, 0.) );
     
     PathPoint pt;
+    // Store the time (seconds) in the z value
     foreach(pt, _path_hi) {
         vertices.push_back(Vec3f(pt.pos.x-_positionOffset.x,
-                                 pt.pos.y-_positionOffset.y, 0.));
+                                 pt.pos.y-_positionOffset.y, pt.time));
     }
     
     // add an adjacency vertex at the end
@@ -212,6 +213,7 @@ TrackLayer::_initializeVbo()
     gl::VboMesh::Layout layout;
     layout.setStaticPositions();
     layout.setStaticIndices();
+    layout.setStaticTexCoords2d();
     
     _vboMesh = gl::VboMesh(vertices.size(), indices.size(), layout,
                            GL_LINES_ADJACENCY_EXT );
@@ -257,6 +259,7 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         gl::color(_trackColor);
     if (_vboMesh) {
         _shader->bind();
+        float time = timeCtx.getMapSeconds();
         _shader->setUniformValue(_shader->uniformLocation("WIN_SCALE"),
                                  (GLfloat)viewCtx.getViewportWidth(),
                                  (GLfloat)viewCtx.getViewportHeight() );
@@ -264,6 +267,8 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
                                  (GLfloat)0.75 );
         _shader->setUniformValue(_shader->uniformLocation("THICKNESS"),
                                  (GLfloat)float(_trackWidth) );
+        _shader->setUniformValue(_shader->uniformLocation("TIME_SECONDS"),
+                                 (GLfloat)float(time) );
         gl::draw( _vboMesh );
         _shader->release();
     }

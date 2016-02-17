@@ -283,7 +283,12 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/fitsdk/fit_mesg_broadcaster.cpp \
           ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp \
           ../src/fitsdk/fit_buffered_record_mesg_broadcaster.cpp
-          
+
+OTHER_FILES += ../resources/about.html
+               ../resources/track1.frag
+               ../resources/track1.geom
+               ../resources/track1.vert
+
 RESOURCES = ../resources/resources.qrc
           
 QT += opengl network xml

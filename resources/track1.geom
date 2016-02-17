@@ -10,13 +10,15 @@ varying float vtxTimeCoord[4];
 
 varying out vec2 gsTexCoord;
 
-vec2 screen_space(vec4 vertex)
-{
+vec2 screen_space(vec4 vertex) {
 	return vec2( vertex.xy / vertex.w ) * WIN_SCALE;
 }
 
-void main(void)
-{
+vec2 lerp( vec2 A, vec2 B, float t ) {
+    return A*t + B*(1.f-t) ;
+}
+
+void main(void) {
   
     // get the four vertices passed to the shader:
     vec2 p0 = screen_space( gl_PositionIn[0] );	// start of previous segment
@@ -24,8 +26,12 @@ void main(void)
     vec2 p2 = screen_space( gl_PositionIn[2] );	// end of current segment, start of next segment
     vec2 p3 = screen_space( gl_PositionIn[3] );	// end of next segment
   
-    if (TIME_SECONDS < gl_PositionIn[2].z) {
+    if (TIME_SECONDS < gl_PositionIn[1].z) {
         return;
+    } else if (TIME_SECONDS < gl_PositionIn[2].z) {
+        float t = (TIME_SECONDS - gl_PositionIn[1].z) /
+                  (gl_PositionIn[2].z - gl_PositionIn[1].z);
+        p2 = lerp(p1, p2, 1.f-t);
     }
     
 

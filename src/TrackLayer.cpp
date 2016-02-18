@@ -175,6 +175,9 @@ TrackLayer::_initializeVbo()
 {
     std::vector<Vec3f> vertices;
     
+    if (_path_hi.empty() || _path_hi.size() < 2)
+        return;
+    
     vertices.reserve( _path_hi.size() + 2);
     
     // add an adjacency vertex at the beginning
@@ -251,8 +254,6 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     MapPoint w2c = viewCtx.getWorldToCamera();
     glPushMatrix();
     glTranslated(w2c.x+_positionOffset.x, w2c.y+_positionOffset.y, 0.);
-    //glLineWidth(float(_trackWidth));
-    _particle.draw();
     if (viewCtx.isSelected(id()))
         gl::color(SelectedColor);
     else
@@ -273,24 +274,18 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         _shader->release();
     }
     glPopMatrix();
-    /*
     // Choose which path to display
     Path *currentPath = &_path_hi;
+    /*
     double res = viewCtx.getResolution();
     if (res >= _mediumLodRes && res < _loLodRes)
         currentPath = &_path_med;
     else if (res >= _loLodRes)
         currentPath = &_path_lo;
+    */
     
-    if (viewCtx.isSelected(id()))
-        gl::color(SelectedColor);
-    else
-        gl::color(_trackColor);
-    
-    MapPoint w2c = viewCtx.getWorldToCamera();
     PathPoint *lastPathPt;
     MapPoint *lastMapPt;
-    int bufferIndex = 0;
     bool lastInbounds = false;
     for(int i=0; i < currentPath->count(); i++) {
         PathPoint *pt = &(*currentPath)[i];
@@ -298,12 +293,6 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         bool inbounds = viewCtx.getBoundingBox().expand(_particleRadius*2.)
                                                 .contains(*thisMapPt);
         if (i == 0 || pt->time < timeCtx.getMapSeconds()) {
-            if (i > 0 && (inbounds || lastInbounds)) {
-                _pathBuffer[bufferIndex++] = w2c.x + lastMapPt->x;
-                _pathBuffer[bufferIndex++] = w2c.y + lastMapPt->y;
-                _pathBuffer[bufferIndex++] = w2c.x + thisMapPt->x;
-                _pathBuffer[bufferIndex++] = w2c.y + thisMapPt->y;
-            }
             lastMapPt = thisMapPt;
             lastPathPt = pt;
             _particlePos = *lastMapPt;
@@ -314,23 +303,12 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
             double f = (trkElapsed == 0) ? 0. : elapsed / double(trkElapsed);
             if (f > 0.0 && (inbounds || lastInbounds)) {
                 MapPoint finalPt = lerp(*lastMapPt, *thisMapPt, f);
-                _pathBuffer[bufferIndex++] = w2c.x + lastMapPt->x;
-                _pathBuffer[bufferIndex++] = w2c.y + lastMapPt->y;
-                _pathBuffer[bufferIndex++] = w2c.x + finalPt.x;
-                _pathBuffer[bufferIndex++] = w2c.y + finalPt.y;
                 _particlePos = finalPt;
             }
             break;
         }
         lastInbounds = inbounds;
     }
-    glLineWidth(float(_trackWidth));
-    glEnableClientState( GL_VERTEX_ARRAY );
-    glVertexPointer( 2, GL_FLOAT, 0, _pathBuffer );
-    glDrawArrays( GL_LINES, 0, bufferIndex/2 );
-    glDisableClientState( GL_VERTEX_ARRAY );
-    glLineWidth(1.0f);
-    */
 }
 
 void

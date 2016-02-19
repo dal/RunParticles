@@ -270,6 +270,8 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
                                  (GLfloat)float(_trackWidth) );
         _shader->setUniformValue(_shader->uniformLocation("TIME_SECONDS"),
                                  (GLfloat)float(time) );
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         gl::draw( _vboMesh );
         _shader->release();
     }

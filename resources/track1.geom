@@ -10,6 +10,9 @@ varying float vtxTimeCoord[4];
 
 varying out vec2 gsTexCoord;
 
+varying out vec2 gEndpoints[2];
+varying out vec2 gPosition;
+
 vec2 screen_space(vec4 vertex) {
 	return vec2( vertex.xy / vertex.w ) * WIN_SCALE;
 }
@@ -18,13 +21,24 @@ vec2 lerp( vec2 A, vec2 B, float t ) {
     return A*t + B*(1.f-t) ;
 }
 
+void emit()
+{
+    gPosition = gl_Position.xy / gl_Position.w;
+    EmitVertex();
+}
+
 void main(void) {
   
+    
     // get the four vertices passed to the shader:
     vec2 p0 = screen_space( gl_PositionIn[0] );	// start of previous segment
     vec2 p1 = screen_space( gl_PositionIn[1] );	// end of previous segment, start of current segment
     vec2 p2 = screen_space( gl_PositionIn[2] );	// end of current segment, start of next segment
     vec2 p3 = screen_space( gl_PositionIn[3] );	// end of next segment
+    
+    // Pass raytracing inputs to fragment shader:
+    gEndpoints[0] = p1;
+    gEndpoints[1] = p2;
   
     if (TIME_SECONDS < gl_PositionIn[1].z) {
         return;
@@ -70,29 +84,29 @@ void main(void) {
             gsTexCoord = vec2(0, 0);
             gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 + THICKNESS * n0) / WIN_SCALE, 0.0, 1.0 );
-            EmitVertex();
+            emit();
             gsTexCoord = vec2(0, 0);
             gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 + THICKNESS * n1) / WIN_SCALE, 0.0, 1.0 );
-            EmitVertex();
+            emit();
             gsTexCoord = vec2(0, 0.5);
             gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( p1 / WIN_SCALE, 0.0, 1.0 );
-            EmitVertex();
+            emit();
             EndPrimitive();
         } else {
             gsTexCoord = vec2(0, 1);
             gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 - THICKNESS * n1) / WIN_SCALE, 0.0, 1.0 );
-            EmitVertex();
+            emit();
             gsTexCoord = vec2(0, 1);
             gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 - THICKNESS * n0) / WIN_SCALE, 0.0, 1.0 );
-            EmitVertex();
+            emit();
             gsTexCoord = vec2(0, 0.5);
             gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( p1 / WIN_SCALE, 0.0, 1.0 );
-            EmitVertex();
+            emit();
             EndPrimitive();
         }
     }

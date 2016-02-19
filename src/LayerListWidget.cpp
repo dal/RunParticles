@@ -45,7 +45,8 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     _frameLayerAction(new QAction("Frame selected layers", this)),
     _lockViewAction(new QAction("Lock View to layer", this)),
     _showLayersAction(new QAction("Show layers", this)),
-    _hideLayersAction(new QAction("Hide layers", this))
+    _hideLayersAction(new QAction("Hide layers", this)),
+    _inLayerAdd(false)
 {
     setObjectName("LayerListWidget");
     setWindowTitle("Layer list");
@@ -90,11 +91,13 @@ LayerListWidget::addLayer(Layer *layer)
             << layer->startTime().toString(DATE_FMT) 
             << Util::secondsToString(layer->duration());
     LayerListWidgetItem *item = new LayerListWidgetItem(this, colData);
+    _inLayerAdd = true;
     item->setCheckState(ColumnVisible, ( layer->visible()
                                         ? Qt::Checked : Qt::Unchecked));
     item->setData(ColumnName, LayerIdRole, QVariant(layer->id()));
     item->setData(ColumnStartTime, DateTimeRole, QVariant(layer->startTime()));
     item->setData(ColumnDuration, NumericRole, QVariant(layer->duration()));
+    _inLayerAdd = false;
 }
 
 QList<LayerId>
@@ -114,7 +117,8 @@ LayerListWidget::itemChecked(LayerListWidgetItem *which, int column)
 {
     if (column == ColumnVisible) {
         LayerId layerId = which->data(ColumnName, LayerIdRole).toUInt();
-        emit signalLayerVisibilityChanged(layerId,
+        if (!_inLayerAdd)
+            emit signalLayerVisibilityChanged(layerId,
                                       which->checkState(column) == Qt::Checked);
     }
 }

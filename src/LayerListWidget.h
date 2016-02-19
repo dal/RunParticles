@@ -70,7 +70,7 @@ protected:
     QAction *_lockViewAction;
     QAction *_showLayersAction;
     QAction *_hideLayersAction;
-    
+    bool _inLayerAdd;
 };
 
 #endif

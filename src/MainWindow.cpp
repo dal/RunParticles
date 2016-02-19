@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget * parent,
             this, &MainWindow::slotTrackFileLoadError);
     connect(_trackFileReader, &TrackFileReader::signalUpdate,
             _playbackWidget, &PlaybackWidget::updateStatus);
+    connect(_trackFileReader, &TrackFileReader::signalUpdate,
+            _glWidget, &GLWidget::update);
     connect(_trackFileReader, &TrackFileReader::signalDone,
             _playbackWidget, &PlaybackWidget::hideProgress);
     
@@ -554,8 +556,6 @@ MainWindow::slotLayerAdded(LayerId layerId)
     const char* es = (layerCount == 1) ? "" : "s";
     QString layerCountStr = QString("%1 Layer%2").arg(layerCount).arg(es);
     _layerListWidget->setWindowTitle(layerCountStr);
-    /* pump the event loop */
-    qApp->processEvents();
 }
 
 void
@@ -624,13 +624,12 @@ MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
     TrackStyleRules rules = _settings->getTrackStyleRules();
     foreach(thisTrack, *tracks) {
         TrackLayer *thisLayer = new TrackLayer(thisTrack);
-        // See if the layer came from an explicitly-added path
         applyTrackStyleRule(rules, thisLayer);
+        // See if the layer came from an explicitly-added path
         if (!_lastLayerPathAdded.isEmpty() &&
             thisLayer->sourceFilePath() == _lastLayerPathAdded)
             _numPendingLayers++;
         trackLayers.append(thisLayer);
-        qApp->processEvents();
     }
     _glWidget->getMap()->addLayers(trackLayers);
 }

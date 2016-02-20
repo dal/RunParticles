@@ -168,16 +168,14 @@ TrackLayer::project(const Projection &projection)
     
     _particleRadius *= projection.getScaleMultiplier();
     
+    _mediumLodRes *= projection.getScaleMultiplier();
+    _loLodRes *= projection.getScaleMultiplier();
 }
 
-void
-TrackLayer::_initializeVbo()
+gl::VboMesh
+TrackLayer::_makeVbo(const Path &path)
 {
     std::vector<Vec3f> vertices;
-    
-    if (_path_hi.empty() || _path_hi.size() < 2)
-        return;
-    
     vertices.reserve( _path_hi.size() + 2);
     
     // add an adjacency vertex at the beginning
@@ -218,17 +216,32 @@ TrackLayer::_initializeVbo()
     layout.setStaticIndices();
     layout.setStaticTexCoords2d();
     
-    _vboMesh = gl::VboMesh(vertices.size(), indices.size(), layout,
+    gl::VboMesh vboMesh = gl::VboMesh(vertices.size(), indices.size(), layout,
                            GL_LINES_ADJACENCY_EXT );
-    _vboMesh.bufferPositions( &(vertices.front()), vertices.size() );
-    _vboMesh.bufferIndices( indices );
+    vboMesh.bufferPositions( &(vertices.front()), vertices.size() );
+    vboMesh.bufferIndices( indices );
+    return vboMesh;
+}
+
+void
+TrackLayer::_initializeVbos()
+{
+    if (_path_hi.empty() || _path_hi.size() < 2)
+        return;
+    // Make the medium res path
+    Path path_md = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
+    // Make the low res path
+    Path path_lo = PathUtil::DouglasPeucker(path_md, _loLodRes);
+    _vboHi = _makeVbo(_path_hi);
+    _vboMd = _makeVbo(path_md);
+    _vboLo = _makeVbo(path_lo);
 }
 
 void
 TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
-    if (!_vboMesh)
-        _initializeVbo();
+    if (!_vboHi)
+        _initializeVbos();
     
     if (!visible() || !_bounds.overlaps(viewCtx.getBoundingBox()))
         return;
@@ -259,7 +272,13 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         gl::color(SelectedColor);
     else
         gl::color(_trackColor);
-    if (_vboMesh) {
+    if (_vboHi) {
+        gl::VboMesh *theMesh = &_vboHi;
+        double res = viewCtx.getResolution();
+        if (res >= _mediumLodRes && res < _loLodRes)
+            theMesh = &_vboMd;
+        else if (res >= _loLodRes)
+            theMesh = &_vboLo;
         _shader->bind();
         float time = timeCtx.getMapSeconds();
         _shader->setUniformValue(_shader->uniformLocation("WIN_SCALE"),
@@ -275,7 +294,7 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
                                  selected);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        gl::draw( _vboMesh );
+        gl::draw(*theMesh);
         _shader->release();
     }
     glPopMatrix();

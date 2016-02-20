@@ -71,7 +71,9 @@ public:
     
 protected:
     
-    void _initializeVbo();
+    gl::VboMesh _makeVbo(const Path &path);
+    
+    void _initializeVbos();
     
     void _drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx);
     
@@ -87,7 +89,7 @@ protected:
     
     const Track *_track;
     
-    Path _path_hi; //, _path_med, _path_lo;
+    Path _path_hi;
     
     BoundingBox _bounds;
     
@@ -103,13 +105,11 @@ protected:
     
     float *_pathBuffer;
     
-    gl::VboMesh vboMesh;
+    gl::VboMesh _vboHi, _vboMd, _vboLo;
     
     static bool _isSetup;
     
     static gl::DisplayList _particle, _selectedParticle;
-    
-    gl::VboMesh _vboMesh;
     
     MapPoint _positionOffset;
     

@@ -254,7 +254,8 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     MapPoint w2c = viewCtx.getWorldToCamera();
     glPushMatrix();
     glTranslated(w2c.x+_positionOffset.x, w2c.y+_positionOffset.y, 0.);
-    if (viewCtx.isSelected(id()))
+    bool selected = viewCtx.isSelected(id());
+    if (selected)
         gl::color(SelectedColor);
     else
         gl::color(_trackColor);
@@ -270,6 +271,8 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
                                  (GLfloat)float(_trackWidth) );
         _shader->setUniformValue(_shader->uniformLocation("TIME_SECONDS"),
                                  (GLfloat)float(time) );
+        _shader->setUniformValue(_shader->uniformLocation("SELECTED"),
+                                 selected);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         gl::draw( _vboMesh );
@@ -320,6 +323,8 @@ TrackLayer::_drawParticle(const ViewCtx &viewCtx)
     float radius = _particleRadius * viewCtx.getDevicePixelRatio();
     if (radius < viewCtx.getResolution()*2.)
         radius = viewCtx.getResolution()*2.;
+    else if (radius / viewCtx.getResolution() > 24.)
+        radius = viewCtx.getResolution() * 24.;
     const Vec2d particlePosCamera = viewCtx.getWorldToCamera() + _particlePos;
     gl::color(1.0, 1.0, 1.0);
     glPushMatrix();

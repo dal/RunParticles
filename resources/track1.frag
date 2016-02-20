@@ -1,5 +1,7 @@
 #version 120
 
+uniform bool SELECTED;
+
 varying vec2 gsTexCoord;
 
 varying vec2 gEndpoints[2];
@@ -36,14 +38,17 @@ void main(void)
     else
         gl_FragColor = vec4(0, 0, 0, 1);
     */
-    float yVal = gsTexCoord.y;
-    if (gsTexCoord.y <= 0.5)
-        yVal = gsTexCoord.y / 0.5;
-    else if (gsTexCoord.y > 0.5)
-        yVal = (1.0 - gsTexCoord.y) / 0.5;
-    yVal *= 0.5;
-    gl_FragColor = vec4(gl_Color.x*yVal, gl_Color.y*yVal, gl_Color.z * yVal,
-                        yVal);
+    if (!SELECTED) {
+        float yVal = gsTexCoord.y;
+        if (gsTexCoord.y <= 0.5)
+            yVal = gsTexCoord.y / 0.5;
+        else if (gsTexCoord.y > 0.5)
+            yVal = (1.0 - gsTexCoord.y) / 0.5;
+        yVal *= 0.5;
+        gl_FragColor = gl_Color * yVal;
+    } else {
+        gl_FragColor = gl_Color;
+    }
     //gl_FragColor.a = alpha;
     //gl_FragColor = vec4(vec3(1.0 - 12.0 * d), 1.0);
 }

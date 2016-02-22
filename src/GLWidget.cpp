@@ -195,7 +195,8 @@ void
 GLWidget::update()
 {
     if (_playMode == PlayMode_Play && elapsedTimer.isValid())
-        _timeCtx.update(elapsedTimer.restart());
+        _timeCtx.setMapSeconds(_playbackStartTime + _timeCtx.getPlaybackRate()
+                               * (elapsedTimer.elapsed() / 1000.));
     
     // If the view is locked to a layer, recenter
     if (_lockToLayer) {
@@ -205,7 +206,7 @@ GLWidget::update()
             _updateViewCtx();
         }
     }
-        
+    
     updateGL();
     emit signalTimeChanged(_timeCtx.getMapSeconds());
 }
@@ -303,6 +304,7 @@ GLWidget::getViewArea() const
 void
 GLWidget::slotPlay()
 {
+    _playbackStartTime = _timeCtx.getMapSeconds();
     if (_timeCtx.getPlaybackRate() <= 0)
         _timeCtx.setPlaybackRate(-_timeCtx.getPlaybackRate());
     _playMode = PlayMode_Play;
@@ -331,6 +333,7 @@ void
 GLWidget::slotReverse()
 {
     _playMode = PlayMode_Play;
+    _playbackStartTime = _timeCtx.getMapSeconds();
     if (_timeCtx.getPlaybackRate() >= 0)
         _timeCtx.setPlaybackRate(-_timeCtx.getPlaybackRate());
     elapsedTimer.restart();
@@ -361,6 +364,10 @@ GLWidget::setMapSeconds(double seconds)
 void
 GLWidget::setPlaybackRate(double rate)
 {
+    if (_playMode == PlayMode_Play) {
+        _playbackStartTime = _timeCtx.getMapSeconds();
+        elapsedTimer.restart();
+    }
     _timeCtx.setPlaybackRate(rate);
 }
 

@@ -164,6 +164,8 @@ protected:
     bool _in_mouseClick;
     
     LayerId _lockedLayer;
+    
+    double _playbackStartTime;
 
 };
 

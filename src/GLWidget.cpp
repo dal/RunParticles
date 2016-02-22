@@ -28,8 +28,6 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     if (_map == NULL)
         _map = new Map();
     elapsedTimer.start();
-    //connect(_map, SIGNAL(signalLayerAdded(LayerId)),
-    //        this, SLOT(updateGL()));
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
             this, SLOT(slotLayerSelected(LayerId)));
     connect(_timer, SIGNAL(timeout()), this, SLOT(update()));

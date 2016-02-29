@@ -59,6 +59,12 @@ Map::addLayers(QList<Layer*> layers)
     _projector->project(layerPtrs);
 }
 
+int
+Map::getLayerCount() const
+{
+    return _layers.size();
+}
+
 Layer*
 Map::getLayer(const LayerId id)
 {

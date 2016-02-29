@@ -45,6 +45,8 @@ public:
     
     int getDuration() const { return _duration; }
     
+    int getLayerCount() const;
+    
     Layer* getLayer(const LayerId id);
     
     const Projection getProjection() const { return _projection; }

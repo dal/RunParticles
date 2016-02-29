@@ -293,6 +293,7 @@ MainWindow::clearMap()
     _fileIO->clear();
     _glWidget->getMap()->clearLayers();
     _layerListWidget->clear();
+    _layerListWidget->setWindowTitle("Layers");
     _loadBaseMap();
     _playbackWidget->setTimeSliderMaximum(1800); /* 30 minutes */
     _glWidget->update();
@@ -549,6 +550,10 @@ MainWindow::slotLayerAdded(LayerId layerId)
         _layersToFrame.clear();
         _numPendingLayers = 0;
     }
+    int layerCount = _glWidget->getMap()->getLayerCount();
+    const char* es = (layerCount == 1) ? "" : "s";
+    QString layerCountStr = QString("%1 Layer%2").arg(layerCount).arg(es);
+    _layerListWidget->setWindowTitle(layerCountStr);
     /* pump the event loop */
     qApp->processEvents();
 }

@@ -10,8 +10,8 @@
 #include <vector>
 
 #define PARTICLE_RADIUS 12.0
-#define MEDIUM_LOD_RES 1.0
-#define LO_LOD_RES 2.0
+#define MEDIUM_LOD_RES 4.0
+#define LO_LOD_RES 10.0
 
 using namespace cinder;
 
@@ -229,9 +229,9 @@ TrackLayer::_initializeVbos()
     if (_path_hi.empty() || _path_hi.size() < 2)
         return;
     // Make the medium res path
-    _path_md = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes*4.);
+    _path_md = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
     // Make the low res path
-    _path_lo = PathUtil::DouglasPeucker(_path_md, _loLodRes*4.);
+    _path_lo = PathUtil::DouglasPeucker(_path_md, _loLodRes*2.);
     _vboHi = _makeVbo(_path_hi);
     _vboMd = _makeVbo(_path_md);
     _vboLo = _makeVbo(_path_lo);

@@ -89,7 +89,7 @@ protected:
     
     const Track *_track;
     
-    Path _path_hi;
+    Path _path_hi, _path_md, _path_lo;
     
     BoundingBox _bounds;
     

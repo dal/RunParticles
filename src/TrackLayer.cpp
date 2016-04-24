@@ -10,8 +10,8 @@
 #include <vector>
 
 #define PARTICLE_RADIUS 12.0
-#define MEDIUM_LOD_RES 10.0
-#define LO_LOD_RES 20.0
+#define MEDIUM_LOD_RES 1.0
+#define LO_LOD_RES 2.0
 
 using namespace cinder;
 
@@ -176,27 +176,27 @@ gl::VboMesh
 TrackLayer::_makeVbo(const Path &path)
 {
     std::vector<Vec3f> vertices;
-    vertices.reserve( _path_hi.size() + 2);
+    vertices.reserve( path.size() + 2);
     
     // add an adjacency vertex at the beginning
-    vertices.push_back( 2.0f * Vec3f(_path_hi[0].pos.x - _positionOffset.x,
-                                     _path_hi[0].pos.y - _positionOffset.y, 0.)
-                       - Vec3f(_path_hi[1].pos.x - _positionOffset.x,
-                               _path_hi[1].pos.y - _positionOffset.y, 0.) );
+    vertices.push_back( 2.0f * Vec3f(path[0].pos.x - _positionOffset.x,
+                                     path[0].pos.y - _positionOffset.y, 0.)
+                       - Vec3f(path[1].pos.x - _positionOffset.x,
+                               path[1].pos.y - _positionOffset.y, 0.) );
     
     PathPoint pt;
     // Store the time (seconds) in the z value
-    foreach(pt, _path_hi) {
+    foreach(pt, path) {
         vertices.push_back(Vec3f(pt.pos.x-_positionOffset.x,
                                  pt.pos.y-_positionOffset.y, pt.time));
     }
     
     // add an adjacency vertex at the end
-    size_t n = _path_hi.size();
-    vertices.push_back( 2.0f * Vec3f(_path_hi[n-1].pos.x - _positionOffset.x,
-                                     _path_hi[n-1].pos.y - _positionOffset.y, 0.)
-                       - Vec3f(_path_hi[n-2].pos.x - _positionOffset.x,
-                               _path_hi[n-2].pos.y - _positionOffset.y, 0.) );
+    size_t n = path.size();
+    vertices.push_back( 2.0f * Vec3f(path[n-1].pos.x - _positionOffset.x,
+                                     path[n-1].pos.y - _positionOffset.y, 0.)
+                       - Vec3f(path[n-2].pos.x - _positionOffset.x,
+                               path[n-2].pos.y - _positionOffset.y, 0.) );
     
     // now that we have a list of vertices, create the index buffer
     n = vertices.size() - 2;
@@ -229,12 +229,12 @@ TrackLayer::_initializeVbos()
     if (_path_hi.empty() || _path_hi.size() < 2)
         return;
     // Make the medium res path
-    Path path_md = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
+    _path_md = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes*4.);
     // Make the low res path
-    Path path_lo = PathUtil::DouglasPeucker(path_md, _loLodRes);
+    _path_lo = PathUtil::DouglasPeucker(_path_md, _loLodRes*4.);
     _vboHi = _makeVbo(_path_hi);
-    _vboMd = _makeVbo(path_md);
-    _vboLo = _makeVbo(path_lo);
+    _vboMd = _makeVbo(_path_md);
+    _vboLo = _makeVbo(_path_lo);
 }
 
 void
@@ -298,15 +298,14 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
         _shader->release();
     }
     glPopMatrix();
+    
     // Choose which path to display
     Path *currentPath = &_path_hi;
-    /*
     double res = viewCtx.getResolution();
     if (res >= _mediumLodRes && res < _loLodRes)
-        currentPath = &_path_med;
+        currentPath = &_path_md;
     else if (res >= _loLodRes)
         currentPath = &_path_lo;
-    */
     
     PathPoint *lastPathPt;
     MapPoint *lastMapPt;

@@ -426,6 +426,7 @@ GLWidget::_updateViewCtx()
                          height() * pixelRatio);
     _viewCamera.setOrtho(0., right-left, 0., top-bottom, -1, 1);
     _viewCtx.setCameraToWorld(Vec2d(left, bottom));
+    qDebug("Resolution %f", _viewCtx.getResolution());
 }
 
 void

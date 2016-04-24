@@ -64,7 +64,7 @@ MapView::zoom(const float size)
 {
     double oldLeft, oldTop, oldRight, oldBottom;
     getFrustum(oldLeft, oldTop, oldRight, oldBottom);
-    float width = fabsf(oldRight - oldLeft);
+    float width = fabsf(float(oldRight - oldLeft));
     MapPoint ctr((oldLeft+oldRight)*0.5, (oldBottom+oldTop)*0.5);
     float hsize = width * size * 0.5;
     hsize = (hsize*2. > MAX_WIDTH) ? MAX_WIDTH/2. : hsize;

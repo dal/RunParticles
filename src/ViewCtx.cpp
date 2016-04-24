@@ -50,7 +50,7 @@ ViewCtx::setViewport(const MapPoint upperLeft, const MapPoint lowerRight,
     _lowerRight = lowerRight;
     _width = width;
     _height = height;
-    double mapWidth = abs(lowerRight.x - upperLeft.x);
+    double mapWidth = fabs(lowerRight.x - upperLeft.x);
     _resolution = (width != 0) ? mapWidth / double(width)
                                : 1.0;
 }

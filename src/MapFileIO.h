@@ -23,9 +23,14 @@ class MapFileIO : public QObject
 public:
     MapFileIO(QObject *parent=NULL);
     
+    // Deprecated: Use exportMap
     bool writeMapFile(bool relativePaths = false);
     
+    bool exportMap(const LayerPtrList& layers);
+    
     bool loadMapFile(char **whyNot=NULL);
+    
+    bool importMapFile(QList<Track*> &tracks, char **whyNot=NULL);
     
     void addTrackFile(const QString &filename);
     
@@ -56,6 +61,12 @@ protected:
     QString _filename;
     
     LonLatBox _viewArea;
+    
+private:
+    
+    static const QByteArray _fileHeaderByteArray;
+    
+    static const quint16 _fileVersion;
     
 };
 

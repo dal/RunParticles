@@ -17,6 +17,10 @@ using namespace cinder;
 
 const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
 
+const quint32 TrackLayer::_streamHeader = 4;
+
+const quint16 TrackLayer::_classVersion = 1;
+
 bool TrackLayer::_isSetup = false;
 gl::DisplayList TrackLayer::_particle;
 gl::DisplayList TrackLayer::_selectedParticle;
@@ -153,7 +157,7 @@ TrackLayer::project(const Projection &projection)
 {
     // Project the track into the hi-res path and compute the bounding box
     int startTime = 0;
-    for(size_t i=0; i < _track->points.size(); i++) {
+    for(int i=0; i < _track->points.size(); i++) {
         TrackPoint pt = _track->points[i];
         PathPoint newPt;
         newPt.pos = projection.toProjection(pt.pos);
@@ -396,4 +400,10 @@ void
 TrackLayer::setTrackWidth(unsigned int width)
 {
     _trackWidth = width;
+}
+
+const Track*
+TrackLayer::getTrack() const
+{
+    return _track;
 }

@@ -15,6 +15,7 @@
 
 #include "cinder/Vector.h"
 
+#include <QDataStream>
 #include <QDateTime>
 #include <QList>
 #include <QString>
@@ -39,15 +40,23 @@ public:
     double lat() const { return y; };
 };
 
+QDataStream& operator<<(QDataStream &stream, const LonLat& point);
+
+QDataStream& operator>>(QDataStream &stream, LonLat& point);
+
 typedef Vec2d MapPoint;
 
 struct TrackPoint
 {
     LonLat pos;
-    unsigned int time;
+    quint32 time;
 };
 
-typedef std::vector<TrackPoint> TrackPath;
+QDataStream& operator<<(QDataStream &stream, const TrackPoint& point);
+
+QDataStream& operator>>(QDataStream &stream, TrackPoint& point);
+
+typedef QList<TrackPoint> TrackPath;
 
 struct Track
 {
@@ -55,7 +64,13 @@ struct Track
     QString name;
     QString sourceFilePath;
     TrackPath points;
+    
+    static const quint16 classVersion;
 };
+
+QDataStream& operator<<(QDataStream &stream, const Track& track);
+
+QDataStream& operator>>(QDataStream &stream, Track& track);
 
 struct PathPoint
 {

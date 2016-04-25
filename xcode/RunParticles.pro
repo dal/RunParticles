@@ -265,6 +265,7 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/TimeCtx.cpp \
           ../src/TrackFileReader.cpp \
           ../src/TrackLayer.cpp \
+          ../src/Types.cpp \
           ../src/ViewCtx.cpp \
           ../src/Util.cpp \
           ../src/fitsdk/fit.cpp \

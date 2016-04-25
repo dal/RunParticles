@@ -8,6 +8,7 @@
 
 #include "MapFileIO.h"
 #include "MapFileHandler.h"
+#include "TrackLayer.h"
 
 #include <QDir>
 #include <QDomDocument>
@@ -18,6 +19,10 @@
 #include <QTextStream>
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
+
+const QByteArray MapFileIO::_fileHeaderByteArray("RunParticlesMap");
+
+const quint16 MapFileIO::_fileVersion = 1;
 
 QDomElement _encodePoint(QDomDocument &doc, const QString &name,
                          const LonLat &pt)
@@ -45,6 +50,7 @@ MapFileIO::MapFileIO(QObject *parent) :
 bool
 MapFileIO::writeMapFile(bool relativePaths)
 {
+    // Deprecated: Use exportMap now
     QDomDocument doc("RunParticlesMap");
     QDomElement root = doc.createElement("RunParticlesMap");
     doc.appendChild(root);
@@ -69,6 +75,35 @@ MapFileIO::writeMapFile(bool relativePaths)
     ts << doc.toString();
     saveFile.commit();
     _dirty = false;
+    return true;
+}
+
+
+bool
+MapFileIO::exportMap(const LayerPtrList& layers)
+{
+    QSaveFile saveFile(_filename);
+    saveFile.open(QIODevice::WriteOnly);
+    QDataStream dataStream(&saveFile);
+    dataStream.setVersion( QDataStream::Qt_4_6 );
+    dataStream.writeRawData(_fileHeaderByteArray.constData(),
+                            _fileHeaderByteArray.size() );
+    dataStream << _fileVersion;
+    dataStream << _viewArea.upperLeft;
+    dataStream << _viewArea.lowerRight;
+    QList<Track> tracks;
+    LayerPtrList::const_iterator it;
+    for (it = layers.begin(); it != layers.end(); it++)
+    {
+        std::shared_ptr<TrackLayer> myLayer =
+        std::dynamic_pointer_cast<TrackLayer>(*it);
+        if (myLayer) {
+            Track theTrack = *myLayer->getTrack();
+            tracks.append(theTrack);
+        }
+    }
+    dataStream << tracks;
+    saveFile.commit();
     return true;
 }
 
@@ -97,6 +132,69 @@ MapFileIO::loadMapFile(char **whyNot)
         _trackFiles.append(absoluteizePath(trackFilePath));
     }
     _viewArea = handler.getViewArea();
+    return true;
+}
+
+bool
+MapFileIO::importMapFile(QList<Track*> &tracks, char **whyNot)
+{
+    QFile *theFile = new QFile(_filename);
+    if (!theFile->exists()) {
+        if (whyNot) {
+            QString tmpWhyNot = QString("'%0' doesn't exist").arg(_filename);
+            *whyNot = tmpWhyNot.toLocal8Bit().data();
+        }
+        return false;
+    }
+    theFile->open( QIODevice::ReadOnly );
+    QDataStream dataStream(theFile);
+    dataStream.setVersion( QDataStream::Qt_4_6 );
+    const int len  = _fileHeaderByteArray.size();
+    QByteArray actualFileHeaderByteArray( len, '\0' );
+    dataStream.readRawData( actualFileHeaderByteArray.data(), len );
+    
+    if ( actualFileHeaderByteArray != _fileHeaderByteArray )
+    {
+        // prefixes don't match
+        theFile->close();
+        if ( actualFileHeaderByteArray.startsWith("<!DOCTYPE")) {
+            // It looks like the old XML-format list of paths
+            return loadMapFile(whyNot);
+        }
+        qWarning("File prefix mismatch error");
+        QString tmpWhyNot = QString( "Map file prefix mismatch error." );
+        *whyNot = tmpWhyNot.toLocal8Bit().data();
+        return false;
+    }
+    qDebug("At position: %lld", dataStream.device()->pos());
+    quint16 actualFileVersion = 0;
+    dataStream >> actualFileVersion;
+    qDebug("At position: %lld", dataStream.device()->pos());
+    if ( actualFileVersion == 0 || actualFileVersion > _fileVersion )
+    {
+        // file is from a future version that we don't know how to load
+        QString tmpWhyNot = QString("Compatibility error: actualFileVersion = "
+                                    "%1 and fileVersion = %2" )
+                                    .arg( actualFileVersion )
+                                    .arg( _fileVersion );
+        qWarning("File version mismatch %d > %d", actualFileVersion,
+                 _fileVersion);
+        theFile->close();
+        return false;
+    }
+    dataStream >> _viewArea.upperLeft;
+    dataStream >> _viewArea.lowerRight;
+    QList <Track> trackData;
+    dataStream >> trackData;
+    Track thisTrack;
+    foreach(thisTrack, trackData) {
+        Track* trackPtr = new Track();
+        trackPtr->name = thisTrack.name;
+        trackPtr->sport = thisTrack.sport;
+        trackPtr->points = thisTrack.points;
+        tracks.append(trackPtr);
+    }
+    theFile->close();
     return true;
 }
 

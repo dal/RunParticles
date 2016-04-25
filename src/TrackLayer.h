@@ -8,6 +8,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/gl/DisplayList.h"
 #include "cinder/gl/Vbo.h"
+#include <QDataStream>
 #include <QString>
 #include <QGLShader>
 #include <QGLShaderProgram>
@@ -69,6 +70,8 @@ public:
     
     void setTrackWidth(unsigned int width);
     
+    const Track* getTrack() const;
+
 protected:
     
     gl::VboMesh _makeVbo(const Path &path);
@@ -114,6 +117,12 @@ protected:
     MapPoint _positionOffset;
     
     static QGLShaderProgram *_shader;
+
+private:
+    
+    static const quint32 _streamHeader;
+    
+    static const quint16 _classVersion;
     
 };
 

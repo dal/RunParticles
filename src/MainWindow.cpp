@@ -277,14 +277,20 @@ bool
 MainWindow::loadMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
-    _fileIO->loadMapFile();
-    QString trackFile;
-    foreach(trackFile, _fileIO->getTrackFiles()) {
-        loadTrackFile(trackFile);
-    }
-    LonLatBox mapViewArea = _fileIO->getViewArea();
-    if (mapViewArea.valid()) {
-        _glWidget->frameLonLatBox(mapViewArea);
+    QList<Track*> tracks;
+    _fileIO->importMapFile(tracks);
+    //_fileIO->loadMapFile();
+    if (!tracks.empty()) {
+        slotTrackFileLoaded(_fileIO->getFilename(), &tracks);
+    } else {
+        QString trackFile;
+        foreach(trackFile, _fileIO->getTrackFiles()) {
+            loadTrackFile(trackFile);
+        }
+        LonLatBox mapViewArea = _fileIO->getViewArea();
+        if (mapViewArea.valid()) {
+            _glWidget->frameLonLatBox(mapViewArea);
+        }
     }
     return true;
 }
@@ -305,7 +311,8 @@ bool
 MainWindow::saveMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
-    return _fileIO->writeMapFile(_settings->getSaveRelativePaths());
+    //return _fileIO->writeMapFile(_settings->getSaveRelativePaths());
+    return _fileIO->exportMap(_glWidget->getMap()->getLayers());
 }
 
 bool

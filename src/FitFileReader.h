@@ -14,6 +14,8 @@
 
 
 #include "fitsdk/fit_decode.hpp"
+#include "fitsdk/fit_activity_mesg.hpp"
+#include "fitsdk/fit_activity_mesg_listener.hpp"
 #include "fitsdk/fit_file_id_mesg.hpp"
 #include "fitsdk/fit_file_id_mesg_listener.hpp"
 #include "fitsdk/fit_mesg_broadcaster.hpp"
@@ -29,6 +31,7 @@
 #include "Types.h"
 
 class FitListener : public fit::FileIdMesgListener,
+                    public fit::ActivityMesgListener,
                     public fit::RecordMesgListener,
                     public fit::SessionMesgListener
 {
@@ -39,9 +42,11 @@ public:
     
     void OnMesg(fit::FileIdMesg& mesg);
     
-    void OnMesg(fit::RecordMesg& mesg);
+    void OnMesg(fit::ActivityMesg& mesg);
     
     void OnMesg(fit::SessionMesg& mesg);
+    
+    void OnMesg(fit::RecordMesg& mesg);
     
     bool success;
     
@@ -51,6 +56,8 @@ protected:
     QList<Track*> *_tracks;
     
     Track *_currentTrack;
+    
+    FIT_DATE_TIME _timeZoneOffset;
     
 };
 

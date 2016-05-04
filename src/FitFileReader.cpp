@@ -20,7 +20,8 @@
 FitListener::FitListener(QList<Track*> *tracks) :
     success(true),
     _tracks(tracks),
-    _currentTrack(new Track())
+    _currentTrack(new Track()),
+    _timeZoneOffset(0)
 {
     
 }
@@ -30,6 +31,27 @@ FitListener::OnMesg(fit::FileIdMesg& mesg)
 {
     if (mesg.GetType() != FIT_FILE_ACTIVITY)
         throw fit::RuntimeException("File is not a FIT activity file");
+}
+
+void
+FitListener::OnMesg(fit::ActivityMesg& mesg)
+{
+    // The activity records the time offset
+    _timeZoneOffset = mesg.GetLocalTimestamp() - mesg.GetTimestamp();
+    // We will probably get the Activity message *after* all of the records,
+    // so go back through and adjust all of the track points and the name of
+    // the track.
+    Track *myTrack;
+    foreach(myTrack, *_tracks) {
+        for (auto i=myTrack->points.begin(); i != myTrack->points.end(); i++) {
+            i->time += _timeZoneOffset;
+        }
+        if (!myTrack->points.empty()) {
+            // Reset the track name with the new start timestamp
+            myTrack->name = QDateTime::fromTime_t(myTrack->points[0].time)
+                .toString("yyyy-MM-ddThh:mm:ss");
+        }
+    }
 }
 
 void
@@ -74,9 +96,10 @@ FitListener::OnMesg(fit::SessionMesg& mesg)
         _currentTrack->sport = "Unknown";
     
     // Set the name from the timestamp
-    FIT_DATE_TIME tstmp = mesg.GetStartTime() + FIT_EPOCH_OFFSET;
+    FIT_DATE_TIME tstmp = mesg.GetStartTime() + _timeZoneOffset +
+        FIT_EPOCH_OFFSET;
     _currentTrack->name = QDateTime::fromTime_t(tstmp)
-                          .toString("yyyy-MM-ddThh:mm:ssZ");
+                          .toString("yyyy-MM-ddThh:mm:ss");
     
     _tracks->append(_currentTrack);
     _currentTrack = new Track();
@@ -87,7 +110,8 @@ FitListener::OnMesg(fit::RecordMesg& mesg)
 {
     if (!_currentTrack)
         return;
-    FIT_DATE_TIME timestamp = mesg.GetTimestamp() + FIT_EPOCH_OFFSET;
+    FIT_DATE_TIME timestamp = mesg.GetTimestamp() + _timeZoneOffset +
+        FIT_EPOCH_OFFSET;
     FIT_SINT32 lat = mesg.GetPositionLat();
     FIT_SINT32 lng = mesg.GetPositionLong();
     TrackPoint point;
@@ -150,6 +174,7 @@ FitFileReader::readFile(const QString &path, std::string *whyNot)
     }
     
     broadcaster.AddListener((fit::FileIdMesgListener &)listener);
+    broadcaster.AddListener((fit::ActivityMesgListener &)listener);
     broadcaster.AddListener((fit::SessionMesgListener &)listener);
     broadcaster.AddListener((fit::RecordMesgListener &)listener);
     

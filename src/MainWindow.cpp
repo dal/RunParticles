@@ -311,7 +311,7 @@ bool
 MainWindow::saveMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
-    //return _fileIO->writeMapFile(_settings->getSaveRelativePaths());
+    _fileIO->setViewArea(_glWidget->getViewArea());
     return _fileIO->exportMap(_glWidget->getMap()->getLayers());
 }
 
@@ -404,9 +404,7 @@ MainWindow::slotSaveMapFile()
 {
     if (_fileIO->getFilename().isEmpty())
         return slotSaveMapFileAs();
-    _fileIO->setViewArea(_glWidget->getViewArea());
-    _fileIO->writeMapFile();
-    return true;
+    return saveMapFile(_fileIO->getFilename());
 }
 
 bool

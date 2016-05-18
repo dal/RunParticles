@@ -43,11 +43,15 @@ public:
     
     void addLayers(QList<Layer*>);
     
+    void removeLayers(const QList<LayerId> &layerIds);
+    
     int getDuration() const { return _duration; }
     
     int getLayerCount() const;
     
     Layer* getLayer(const LayerId id);
+    
+    LayerPtr getLayerPtr(const LayerId id);
     
     const Projection getProjection() const { return _projection; }
     
@@ -66,6 +70,8 @@ protected slots:
 signals:
     
     void layerUpdated();
+    
+    void signalLayersRemoved(QList<LayerId>);
     
 private:
     

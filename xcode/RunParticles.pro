@@ -132,6 +132,8 @@ HEADERS = ../src/AboutDialog.h \
           ../src/Types.h \
           ../src/Util.h \
           ../src/ViewCtx.h \
+          ../src/commands/AddLayersCommand.h \
+          ../src/commands/RemoveLayersCommand.h \
           ../src/fitsdk/fit.hpp \
           ../src/fitsdk/fit_accumulator.hpp \
           ../src/fitsdk/fit_accumulated_field.hpp \
@@ -268,6 +270,8 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/Types.cpp \
           ../src/ViewCtx.cpp \
           ../src/Util.cpp \
+          ../src/commands/AddLayersCommand.cpp \
+          ../src/commands/RemoveLayersCommand.cpp \
           ../src/fitsdk/fit.cpp \
           ../src/fitsdk/fit_accumulated_field.cpp \
           ../src/fitsdk/fit_accumulator.cpp \

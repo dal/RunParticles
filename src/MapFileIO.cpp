@@ -10,6 +10,8 @@
 #include "MapFileHandler.h"
 #include "TrackLayer.h"
 
+#include <stdio.h>
+
 #include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
@@ -19,6 +21,11 @@
 #include <QTextStream>
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
+
+#define WHY_NOT(format, ...) \
+    if (whyNot) { \
+        sprintf(*whyNot , format, ##__VA_ARGS__); \
+}
 
 const QByteArray MapFileIO::_fileHeaderByteArray("RunParticlesMap");
 
@@ -42,13 +49,14 @@ LonLat _getPoint()
 
 MapFileIO::MapFileIO(QObject *parent) :
     QObject(parent),
-    _dirty(false)
+    _dirty(false),
+    _isLegacyMapFile(false)
 {
     
 }
 
 bool
-MapFileIO::writeMapFile(bool relativePaths)
+MapFileIO::writeLegacyMapFile(bool relativePaths)
 {
     // Deprecated: Use exportMap now
     QDomDocument doc("RunParticlesMap");
@@ -108,14 +116,11 @@ MapFileIO::exportMap(const LayerPtrList& layers)
 }
 
 bool
-MapFileIO::loadMapFile(char **whyNot)
+MapFileIO::loadLegacyMapFile(char **whyNot)
 {
     QFile *theFile = new QFile(_filename);
     if (!theFile->exists()) {
-        if (whyNot) {
-            QString tmpWhyNot = QString("'%0' doesn't exist").arg(_filename);
-            *whyNot = tmpWhyNot.toLocal8Bit().data();
-        }
+        WHY_NOT("File '%s' doesn't exist", _filename.toLocal8Bit().data());
         return false;
     }
     QXmlSimpleReader reader;
@@ -136,14 +141,11 @@ MapFileIO::loadMapFile(char **whyNot)
 }
 
 bool
-MapFileIO::importMapFile(QList<Track*> &tracks, char **whyNot)
+MapFileIO::loadMapFile(QList<Track*> &tracks, char **whyNot)
 {
     QFile *theFile = new QFile(_filename);
     if (!theFile->exists()) {
-        if (whyNot) {
-            QString tmpWhyNot = QString("'%0' doesn't exist").arg(_filename);
-            *whyNot = tmpWhyNot.toLocal8Bit().data();
-        }
+        WHY_NOT("File '%s' does not exist", _filename.toLocal8Bit().data());
         return false;
     }
     theFile->open( QIODevice::ReadOnly );
@@ -157,28 +159,21 @@ MapFileIO::importMapFile(QList<Track*> &tracks, char **whyNot)
     {
         // prefixes don't match
         theFile->close();
-        if ( actualFileHeaderByteArray.startsWith("<!DOCTYPE")) {
-            // It looks like the old XML-format list of paths
-            return loadMapFile(whyNot);
+        if ( actualFileHeaderByteArray.startsWith("<!DOCTYPE RunParticlesMap")) {
+            // It looks like the legacy-style list of paths in XML
+            _isLegacyMapFile = true;
+            return loadLegacyMapFile(whyNot);
         }
-        qWarning("File prefix mismatch error");
-        QString tmpWhyNot = QString( "Map file prefix mismatch error." );
-        *whyNot = tmpWhyNot.toLocal8Bit().data();
+        WHY_NOT("Map file prefix mismatch error.");
         return false;
     }
-    qDebug("At position: %lld", dataStream.device()->pos());
     quint16 actualFileVersion = 0;
     dataStream >> actualFileVersion;
-    qDebug("At position: %lld", dataStream.device()->pos());
     if ( actualFileVersion == 0 || actualFileVersion > _fileVersion )
     {
         // file is from a future version that we don't know how to load
-        QString tmpWhyNot = QString("Compatibility error: actualFileVersion = "
-                                    "%1 and fileVersion = %2" )
-                                    .arg( actualFileVersion )
-                                    .arg( _fileVersion );
-        qWarning("File version mismatch %d > %d", actualFileVersion,
-                 _fileVersion);
+        WHY_NOT("Compatibility error: actualFileVersion = "
+                "%d and fileVersion = %d", actualFileVersion, _fileVersion );
         theFile->close();
         return false;
     }
@@ -199,16 +194,10 @@ MapFileIO::importMapFile(QList<Track*> &tracks, char **whyNot)
 }
 
 void
-MapFileIO::addTrackFile(const QString &filename)
-{
-    _trackFiles.append(filename);
-    _dirty = true;
-}
-
-void
 MapFileIO::setFilename(const QString &filename)
 {
     _filename = filename;
+    _isLegacyMapFile = false; // (we don't know yet)
 }
 
 void

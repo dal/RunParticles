@@ -9,8 +9,10 @@
 #include <QMenu>
 #include <QMessageBox>
 
+#include "AddLayersCommand.h"
 #include "MapFileIO.h"
 #include "OsmLayer.h"
+#include "RemoveLayersCommand.h"
 
 MainWindow::MainWindow(QWidget * parent,
                        Qt::WindowFlags flags) :
@@ -23,7 +25,8 @@ MainWindow::MainWindow(QWidget * parent,
     _trackFileReader(new TrackFileReader(this)),
     _numPendingLayers(0),
     _aboutDialog(new AboutDialog(this)),
-    _settings(new Settings(this))
+    _settings(new Settings(this)),
+    _undoStack(new QUndoStack(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -93,9 +96,26 @@ MainWindow::MainWindow(QWidget * parent,
     connect(_saveAsMapFileAction, SIGNAL(triggered(bool)),
             this, SLOT(slotSaveMapFileAs()));
     connect(_addLayerAction, SIGNAL(triggered(bool)),
-            this, SLOT(slotAddLayer()));
+            this, SLOT(slotAddLayers()));
     connect(_showExportImagesDialogAction, SIGNAL(triggered(bool)),
             _exportImageDialog, SLOT(show()));
+    
+    /* Edit menu */
+    QMenu *editMenu = _menuBar->addMenu("Edit");
+    _undoAction = new QAction("Undo", this);
+    _undoAction->setShortcuts(QKeySequence::Undo);
+    _undoAction->setEnabled(false);
+    _redoAction = new QAction("Redo", this);
+    _redoAction->setShortcuts(QKeySequence::Redo);
+    _redoAction->setEnabled(false);
+    editMenu->addAction(_undoAction);
+    editMenu->addAction(_redoAction);
+    connect(_undoAction, &QAction::triggered, _undoStack, &QUndoStack::undo);
+    connect(_redoAction, &QAction::triggered, _undoStack, &QUndoStack::redo);
+    connect(_undoStack, &QUndoStack::canRedoChanged,
+            _redoAction, &QAction::setEnabled);
+    connect(_undoStack, &QUndoStack::canUndoChanged,
+            _undoAction, &QAction::setEnabled);
     
     /* View menu */
     QMenu *_viewMenu = _menuBar->addMenu("View");
@@ -160,6 +180,8 @@ MainWindow::MainWindow(QWidget * parent,
             this, SLOT(slotTimeChanged(double)));
     connect(_glWidget->getMap(), SIGNAL(signalLayerAdded(LayerId)),
             this, SLOT(slotLayerAdded(LayerId)));
+    connect(_glWidget->getMap(), &Map::signalLayersRemoved,
+            this, &MainWindow::slotLayersRemoved);
     connect(_glWidget, SIGNAL(signalLayersSelected(QList<LayerId>)),
             _layerListWidget, SLOT(slotSetSelectedLayers(QList<LayerId>)));
     
@@ -194,6 +216,8 @@ MainWindow::MainWindow(QWidget * parent,
     connect(_layerListWidget,
             SIGNAL(signalLockViewToLayer(LayerId)),
             _glWidget, SLOT(slotLockViewToLayer(LayerId)));
+    connect(_layerListWidget, &LayerListWidget::signalRemoveLayersSelected,
+            this, &MainWindow::slotRemoveLayers);
     
     connect(qApp, &QCoreApplication::aboutToQuit,
             this, &MainWindow::slotAboutToQuit);
@@ -278,11 +302,14 @@ MainWindow::loadMapFile(const QString &path)
 {
     _fileIO->setFilename(path);
     QList<Track*> tracks;
-    _fileIO->importMapFile(tracks);
-    //_fileIO->loadMapFile();
+    _fileIO->loadMapFile(tracks);
     if (!tracks.empty()) {
         slotTrackFileLoaded(_fileIO->getFilename(), &tracks);
-    } else {
+    } else if (_fileIO->isLegacyMapFile()) {
+        /* Legacy map files don't contain actual tracks, but they yield paths
+         * to a bunch of track files (.FIT, .GPX) etc . . . that we have to
+         * load ourselves.
+         */
         QString trackFile;
         foreach(trackFile, _fileIO->getTrackFiles()) {
             loadTrackFile(trackFile);
@@ -295,6 +322,30 @@ MainWindow::loadMapFile(const QString &path)
     return true;
 }
 
+bool
+MainWindow::addLayer(Layer *layer)
+{
+    return _glWidget->getMap()->addLayer(layer);
+}
+
+LayerPtr
+MainWindow::getLayerPtr(LayerId layerId)
+{
+    return _glWidget->getMap()->getLayerPtr(layerId);
+}
+
+LayerPtrList
+MainWindow::getLayers() const
+{
+    return _glWidget->getMap()->getLayers();
+}
+
+void
+MainWindow::removeLayers(const QList<LayerId> &layerIds)
+{
+    _glWidget->getMap()->removeLayers(layerIds);
+}
+
 void
 MainWindow::clearMap()
 {
@@ -305,6 +356,7 @@ MainWindow::clearMap()
     _loadBaseMap();
     _playbackWidget->setTimeSliderMaximum(1800); /* 30 minutes */
     _glWidget->update();
+    _undoStack->clear();
 }
 
 bool
@@ -487,7 +539,7 @@ MainWindow::_addPathToRecentMenu(QMenu *theMenu, const QString &path)
 }
 
 void
-MainWindow::slotAddLayer()
+MainWindow::slotAddLayers()
 {
     QStringList paths = QFileDialog::getOpenFileNames(this,
                                         "Select track files (.gpx, .tcx, .fit)",
@@ -495,21 +547,29 @@ MainWindow::slotAddLayer()
                                         "Tracklogs (*.gpx *.tcx *.fit)");
     if (!paths.isEmpty()) {
         QString path;
+        slotAddLayers(paths);
         foreach(path, paths) {
-            slotAddLayer(path);
             _addPathToRecentMenu(_recentLayersMenu, path);
         }
     }
 }
 
 void
-MainWindow::slotAddLayer(const QString &path)
+MainWindow::slotAddLayers(const QStringList &paths)
 {
-    loadTrackFile(path);
-    _fileIO->addTrackFile(path);
+    QUndoCommand *cmd = new AddLayersCommand(this, paths);
+    _undoStack->push(cmd);
     /* remember the last layer path explicitly added because we'll
      frame up all tracks in it when the map is ready */
-    _lastLayerPathAdded = path;
+    if (!paths.empty())
+        _lastLayerPathAdded = paths.last();
+}
+
+void
+MainWindow::slotRemoveLayers(const QList<LayerId> &layerIds)
+{
+    QUndoCommand *cmd = new RemoveLayerCommand(this, layerIds);
+    _undoStack->push(cmd);
 }
 
 void
@@ -561,6 +621,12 @@ MainWindow::slotLayerAdded(LayerId layerId)
     const char* es = (layerCount == 1) ? "" : "s";
     QString layerCountStr = QString("%1 Layer%2").arg(layerCount).arg(es);
     _layerListWidget->setWindowTitle(layerCountStr);
+}
+
+void
+MainWindow::slotLayersRemoved(const QList<LayerId> layerIds)
+{
+    _layerListWidget->removeLayers(layerIds);
 }
 
 void
@@ -680,9 +746,9 @@ MainWindow::slotOpenRecentMapFile(QAction *mapAction)
 void
 MainWindow::slotAddRecentLayer(QAction *layerAction)
 {
-    QString path = layerAction->data().toString();
-    if (!path.isEmpty())
-        slotAddLayer(path);
+    QStringList paths;
+    paths << layerAction->data().toString();
+    slotAddLayers(paths);
 }
 
 void

@@ -10,6 +10,7 @@
 #include <QSlider>
 #include <QNetworkAccessManager>
 #include <QNetworkDiskCache>
+#include <QUndoStack>
 
 #include "AboutDialog.h"
 #include "ExportImageDialog.h"
@@ -35,6 +36,14 @@ public:
     void loadTrackFile(const QString &trackFilePath);
     
     bool loadMapFile(const QString &path);
+    
+    bool addLayer(Layer *layer);
+    
+    LayerPtr getLayerPtr(LayerId layerId);
+    
+    LayerPtrList getLayers() const;
+    
+    void removeLayers(const QList<LayerId> &layerIds);
     
     void clearMap();
     
@@ -63,9 +72,11 @@ public slots:
     
     void slotNewMap();
     
-    void slotAddLayer();
+    void slotAddLayers();
     
-    void slotAddLayer(const QString &path);
+    void slotAddLayers(const QStringList &paths);
+    
+    void slotRemoveLayers(const QList<LayerId> &layerIds);
     
     void slotPlaybackRateChanged(double newRate);
     
@@ -74,6 +85,8 @@ public slots:
     void onTimeSliderDrag(int seconds);
     
     void slotLayerAdded(LayerId);
+    
+    void slotLayersRemoved(const QList<LayerId> layerIds);
     
     void slotFrameLayers(const QList<LayerId> layerIds);
     
@@ -136,7 +149,8 @@ protected:
             *_showAboutDialogAction, *_frameSelectedLayersAction,
             *_lockViewToLayerAction, *_showPreferencesDialogAction,
             *_clearRecentLayersMenuAction, *_clearRecentMapsMenuAction,
-            *_setStartingViewAreaAction, *_showExportImagesDialogAction;
+            *_setStartingViewAreaAction, *_showExportImagesDialogAction,
+            *_undoAction, *_redoAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;
@@ -152,6 +166,7 @@ protected:
     Settings *_settings;
     PreferencesDialog *_preferencesDialog;
     ExportImageDialog *_exportImageDialog;
+    QUndoStack *_undoStack;
 };
 
 #endif

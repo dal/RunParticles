@@ -80,7 +80,8 @@ _loLodRes(LO_LOD_RES),
 _track(track),
 _duration(0),
 _trackColor(Color(1,0,0)),
-_trackWidth(1)
+_trackWidth(1),
+_projected(false)
 {
     if (!_isSetup)
         _setup();
@@ -155,6 +156,8 @@ TrackLayer::duration() const
 void
 TrackLayer::project(const Projection &projection)
 {
+    if (_projected)
+        return;
     // Project the track into the hi-res path and compute the bounding box
     int startTime = 0;
     for(int i=0; i < _track->points.size(); i++) {
@@ -174,6 +177,7 @@ TrackLayer::project(const Projection &projection)
     
     _mediumLodRes *= projection.getScaleMultiplier();
     _loLodRes *= projection.getScaleMultiplier();
+    _projected = true;
 }
 
 gl::VboMesh

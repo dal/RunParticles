@@ -2,6 +2,7 @@
 #include "LayerListWidget.h"
 
 #include <QString>
+#include <QSet>
 
 #include "Util.h"
 
@@ -46,6 +47,7 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     _lockViewAction(new QAction("Lock View to layer", this)),
     _showLayersAction(new QAction("Show layers", this)),
     _hideLayersAction(new QAction("Hide layers", this)),
+    _removeLayersAction(new QAction("Remove layers", this)),
     _inLayerAdd(false)
 {
     setObjectName("LayerListWidget");
@@ -60,6 +62,7 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     addAction(_lockViewAction);
     addAction(_showLayersAction);
     addAction(_hideLayersAction);
+    addAction(_removeLayersAction);
     connect(_frameLayerAction, &QAction::triggered,
             this, &LayerListWidget::onFrameLayersSelected);
     connect(_lockViewAction, &QAction::triggered,
@@ -71,6 +74,8 @@ LayerListWidget::LayerListWidget(QWidget *parent)
             this, &LayerListWidget::onShowLayersSelected);
     connect(_hideLayersAction, &QAction::triggered,
             this, &LayerListWidget::onHideLayersSelected);
+    connect(_removeLayersAction, &QAction::triggered,
+            this, &LayerListWidget::onRemoveLayersSelected);
     sortByColumn(ColumnStartTime, Qt::AscendingOrder);
     resizeColumnToContents(ColumnVisible);
 }
@@ -98,6 +103,20 @@ LayerListWidget::addLayer(Layer *layer)
     item->setData(ColumnStartTime, DateTimeRole, QVariant(layer->startTime()));
     item->setData(ColumnDuration, NumericRole, QVariant(layer->duration()));
     _inLayerAdd = false;
+}
+
+void
+LayerListWidget::removeLayers(const QList<LayerId> &layerIds)
+{
+    QSet<LayerId> layerIdsSet = QSet<LayerId>().fromList(layerIds);
+    QTreeWidgetItemIterator it(this);
+    while(*it) {
+        LayerId myLayerId = (*it)->data(ColumnName, LayerIdRole).toUInt();
+        if (layerIdsSet.remove(myLayerId)) {
+            delete (*it);
+        }
+        ++it;
+    }
 }
 
 QList<LayerId>
@@ -175,3 +194,10 @@ LayerListWidget::onLockViewSelected()
         emit signalLockViewToLayer(layerIds.last());
 }
 
+void
+LayerListWidget::onRemoveLayersSelected()
+{
+    QList<LayerId> layerIds = selectedLayerIds();
+    if (!layerIds.empty())
+        emit signalRemoveLayersSelected(layerIds);
+}

@@ -45,6 +45,7 @@ public:
     LayerListWidget(QWidget *parent=0);
     ~LayerListWidget();
     void addLayer(Layer *layer);
+    void removeLayers(const QList<LayerId> &layerIds);
     QList<LayerId> selectedLayerIds() const;
     
     void itemChecked(LayerListWidgetItem *which, int column);
@@ -54,6 +55,7 @@ signals:
     void signalFrameLayers(QList<LayerId>);
     void signalLayerVisibilityChanged(LayerId, bool);
     void signalLockViewToLayer(LayerId);
+    void signalRemoveLayersSelected(QList<LayerId>);
     
 public slots:
     void slotSetSelectedLayers(QList<LayerId> layerIds);
@@ -64,12 +66,14 @@ protected slots:
     void onLockViewSelected();
     void onShowLayersSelected();
     void onHideLayersSelected();
+    void onRemoveLayersSelected();
     
 protected:
     QAction *_frameLayerAction;
     QAction *_lockViewAction;
     QAction *_showLayersAction;
     QAction *_hideLayersAction;
+    QAction *_removeLayersAction;
     bool _inLayerAdd;
 };
 

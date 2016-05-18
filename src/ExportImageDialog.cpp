@@ -21,6 +21,7 @@ ExportImageDialog::ExportImageDialog(GLWidget *target,
     _target(target),
     _playbackWidget(playbackWidget),
     _timer(new QTimer(this)),
+    _progressDialog(Q_NULLPTR),
     _currentFrame(0)
 {
     setWindowTitle("Export images");
@@ -57,7 +58,6 @@ ExportImageDialog::ExportImageDialog(GLWidget *target,
     grid->addWidget(_imageExtensionLineEdit, 3, 1);
     grid->addLayout(bottomRow, 4, 0, 1, 3);
     
-    _progressDialog = new QProgressDialog("Exporting", "stop", 0, 100, this);
     _timer->setInterval(30);
     
     connect(_cancelButton, &QPushButton::clicked, this, &QDialog::reject);
@@ -67,15 +67,15 @@ ExportImageDialog::ExportImageDialog(GLWidget *target,
             this, &ExportImageDialog::_export);
     connect(_timer, &QTimer::timeout,
             this, &ExportImageDialog::slotExportImage);
-    connect(_progressDialog, &QProgressDialog::canceled, _timer, &QTimer::stop);
 }
 
 void ExportImageDialog::_export()
 {
+    if (!_progressDialog)
+        _progressDialog = new QProgressDialog("Exporting", "stop", 0, 100, this);
     _outputDir = QFileDialog::getExistingDirectory(this);
     _currentFrame = 0;
     _progressDialog->setMaximum(_outputFrameCount->value());
-    _progressDialog->show();
     _timer->start();
 }
 
@@ -88,7 +88,7 @@ void ExportImageDialog::slotExportImage()
         return;
     }
     
-    if (_currentFrame++ < numFrames) {
+    if (_currentFrame++ < numFrames && !_progressDialog->wasCanceled()) {
         int fps = (double)_outputFpsSpinBox->value();
         double playbackRate = _playbackWidget->getPlaybackRate();
         double nowTime = _target->getMapSeconds();
@@ -106,7 +106,8 @@ void ExportImageDialog::slotExportImage()
         _progressDialog->setValue(_currentFrame);
     } else {
         _timer->stop();
-        _progressDialog->hide();
+        delete _progressDialog;
+        _progressDialog = Q_NULLPTR;
         close();
     }
 }

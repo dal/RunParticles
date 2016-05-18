@@ -59,6 +59,21 @@ Map::addLayers(QList<Layer*> layers)
     _projector->project(layerPtrs);
 }
 
+void
+Map::removeLayers(const QList<LayerId> &layerIds)
+{
+    for (auto i=_layers.begin(); i != std::end(_layers); /* !! */) {
+        if (layerIds.contains((*i)->id())) {
+            _layerMap.erase(_layerMap.find((*i)->id()));
+            (*i)->disconnect();
+            i = _layers.erase(i);
+        } else {
+            ++i;
+        }
+    }
+    emit(signalLayersRemoved(layerIds));
+}
+
 int
 Map::getLayerCount() const
 {
@@ -71,6 +86,15 @@ Map::getLayer(const LayerId id)
     if (_layerMap.find(id) != _layerMap.end())
         return _layerMap[id].get();
     return NULL;
+}
+
+LayerPtr
+Map::getLayerPtr(const LayerId id)
+{
+    if (_layerMap.find(id) != _layerMap.end())
+        return _layerMap[id];
+    return LayerPtr();
+
 }
 
 LayerPtrList

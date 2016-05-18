@@ -52,7 +52,7 @@ public:
     
     unsigned int duration() const;
     
-    void project(const Projection&);
+    virtual void project(const Projection&);
     
     virtual void draw(uint pass, const ViewCtx&, const TimeCtx&);
     
@@ -123,6 +123,8 @@ private:
     static const quint32 _streamHeader;
     
     static const quint16 _classVersion;
+    
+    bool _projected;
     
 };
 

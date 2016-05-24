@@ -2,10 +2,24 @@
 #define LAYERLISTWIDGET_H
 
 #include <QAction>
+#include <QStyledItemDelegate>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
 #include "Layer.h"
+
+/* 
+ * Do-nothing delegate that allows for selectively disabling editing for
+ * specific columns in the TreeWidget. (http://stackoverflow.com/a/4657065)
+ */
+class NoEditDelegate: public QStyledItemDelegate {
+public:
+    NoEditDelegate(QObject* parent=0): QStyledItemDelegate(parent) {}
+    virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem&,
+                                  const QModelIndex&) const {
+        return 0;
+    }
+};
 
 class LayerListWidgetItem : public QTreeWidgetItem
 {
@@ -46,6 +60,7 @@ public:
     ~LayerListWidget();
     void addLayer(Layer *layer);
     void removeLayers(const QList<LayerId> &layerIds);
+    void updateLayer(const Layer *layer);
     QList<LayerId> selectedLayerIds() const;
     
     void itemChecked(LayerListWidgetItem *which, int column);
@@ -56,9 +71,12 @@ signals:
     void signalLayerVisibilityChanged(LayerId, bool);
     void signalLockViewToLayer(LayerId);
     void signalRemoveLayersSelected(QList<LayerId>);
+    void signalLayerNameChanged(LayerId, const QString&);
+    void signalLayerSportChanged(LayerId, const QString&);
     
 public slots:
     void slotSetSelectedLayers(QList<LayerId> layerIds);
+    void slotItemChanged(QTreeWidgetItem *item, int column);
     
 protected slots:
     void onSelectionChanged();
@@ -74,7 +92,7 @@ protected:
     QAction *_showLayersAction;
     QAction *_hideLayersAction;
     QAction *_removeLayersAction;
-    bool _inLayerAdd;
+    bool _inLayerAdd, _inLayerUpdate;
 };
 
 #endif

@@ -6,3 +6,8 @@ bool
 Layer::ephemeral() const {
     return false;
 }
+
+bool
+Layer::userEditable() const {
+    return false;
+}

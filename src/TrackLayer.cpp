@@ -73,7 +73,7 @@ TrackLayer::_setup()
     _isSetup = true;
 }
 
-TrackLayer::TrackLayer(const Track *track) : Layer(),
+TrackLayer::TrackLayer(Track *track) : Layer(),
 _particleRadius(PARTICLE_RADIUS),
 _mediumLodRes(MEDIUM_LOD_RES),
 _loLodRes(LO_LOD_RES),
@@ -106,6 +106,12 @@ TrackLayer::name() const
     return _track->name;
 }
 
+void
+TrackLayer::setName(const QString &newName)
+{
+    _track->name = QString(newName);
+}
+
 QString
 TrackLayer::sourceFilePath() const
 {
@@ -116,6 +122,12 @@ QString
 TrackLayer::sport() const
 {
     return _track->sport;
+}
+
+void
+TrackLayer::setSport(const QString &newSport)
+{
+    _track->sport = newSport;
 }
 
 QDateTime
@@ -380,6 +392,12 @@ bool
 TrackLayer::ephemeral() const
 {
     return false;
+}
+
+bool
+TrackLayer::userEditable() const
+{
+    return true;
 }
 
 ColorA

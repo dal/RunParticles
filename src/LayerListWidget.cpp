@@ -48,7 +48,8 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     _showLayersAction(new QAction("Show layers", this)),
     _hideLayersAction(new QAction("Hide layers", this)),
     _removeLayersAction(new QAction("Remove layers", this)),
-    _inLayerAdd(false)
+    _inLayerAdd(false),
+    _inLayerUpdate(false)
 {
     setObjectName("LayerListWidget");
     setWindowTitle("Layer list");
@@ -58,6 +59,9 @@ LayerListWidget::LayerListWidget(QWidget *parent)
     setHeaderLabels(columns);
     setSortingEnabled(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+    /* Disable editing for date, duration columns */
+    setItemDelegateForColumn(ColumnStartTime, new NoEditDelegate(this));
+    setItemDelegateForColumn(ColumnDuration, new NoEditDelegate(this));
     addAction(_frameLayerAction);
     addAction(_lockViewAction);
     addAction(_showLayersAction);
@@ -76,6 +80,8 @@ LayerListWidget::LayerListWidget(QWidget *parent)
             this, &LayerListWidget::onHideLayersSelected);
     connect(_removeLayersAction, &QAction::triggered,
             this, &LayerListWidget::onRemoveLayersSelected);
+    connect(this, &LayerListWidget::itemChanged,
+            this, &LayerListWidget::slotItemChanged);
     sortByColumn(ColumnStartTime, Qt::AscendingOrder);
     resizeColumnToContents(ColumnVisible);
 }
@@ -97,6 +103,8 @@ LayerListWidget::addLayer(Layer *layer)
             << Util::secondsToString(layer->duration());
     LayerListWidgetItem *item = new LayerListWidgetItem(this, colData);
     _inLayerAdd = true;
+    if (layer->userEditable())
+        item->setFlags(item->flags() | Qt::ItemIsEditable);
     item->setCheckState(ColumnVisible, ( layer->visible()
                                         ? Qt::Checked : Qt::Unchecked));
     item->setData(ColumnName, LayerIdRole, QVariant(layer->id()));
@@ -117,6 +125,23 @@ LayerListWidget::removeLayers(const QList<LayerId> &layerIds)
         }
         ++it;
     }
+}
+
+void
+LayerListWidget::updateLayer(const Layer *layer)
+{
+    _inLayerUpdate = true;
+    QTreeWidgetItemIterator it(this);
+    while(*it) {
+        LayerId myLayerId = (*it)->data(ColumnName, LayerIdRole).toUInt();
+        if (myLayerId == layer->id()) {
+            (*it)->setData(ColumnName, Qt::DisplayRole, QVariant(layer->name()));
+            (*it)->setData(ColumnSport, Qt::DisplayRole, QVariant(layer->sport()));
+            break;
+        }
+        ++it;
+    }
+    _inLayerUpdate = false;
 }
 
 QList<LayerId>
@@ -154,6 +179,32 @@ LayerListWidget::slotSetSelectedLayers(QList<LayerId> layerIds)
             item->setSelected(true);
             if (layerIds.length() == 1)
                 setCurrentItem(item);
+        }
+    }
+}
+
+void
+LayerListWidget::slotItemChanged(QTreeWidgetItem *item, int column)
+{
+    if (_inLayerAdd || _inLayerUpdate)
+        return;
+    LayerId thisId = item->data(ColumnName, LayerIdRole).toUInt();
+    switch (column) {
+        case ColumnName:
+        {
+            QString name = item->data(ColumnName, Qt::DisplayRole).toString();
+            emit signalLayerNameChanged(thisId, name);
+            break;
+        }
+        case ColumnSport:
+        {
+            QString sport = item->data(ColumnSport, Qt::DisplayRole).toString();
+            emit signalLayerSportChanged(thisId, sport);
+            break;
+        }
+        default:
+        {
+            break;
         }
     }
 }

@@ -71,6 +71,8 @@ public:
     
     virtual bool ephemeral() const;
     
+    virtual bool userEditable() const;
+    
     static LayerId getLastId() { return _gid; }
     
 signals:

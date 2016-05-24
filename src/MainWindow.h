@@ -47,6 +47,10 @@ public:
     
     void clearMap();
     
+    void setLayerName(LayerId layerId, const QString &name);
+    
+    void setLayerSport(LayerId layerId, const QString &sport);
+    
     bool saveMapFile(const QString &path);
     
     bool confirmAbandonMap();
@@ -86,13 +90,17 @@ public slots:
     
     void slotLayerAdded(LayerId);
     
-    void slotLayersRemoved(const QList<LayerId> layerIds);
-    
     void slotFrameLayers(const QList<LayerId> layerIds);
     
     void slotLayerSelectionChanged(const QList<LayerId> layerIds);
     
     void slotLayerVisibilityChanged(LayerId layerId, bool visible);
+    
+    /* Slot for when the user edits a layer's name */
+    void slotUserChangedLayerName(LayerId layerId, const QString &newName);
+    
+    /* Slot for when the user edits the layer's sport field */
+    void slotUserChangedLayerSport(LayerId layerId, const QString &newSport);
     
     void slotShowAboutDialog();
     

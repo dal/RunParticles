@@ -10,6 +10,7 @@
 #include <QMessageBox>
 
 #include "AddLayersCommand.h"
+#include "EditLayerCommand.h"
 #include "MapFileIO.h"
 #include "OsmLayer.h"
 #include "RemoveLayersCommand.h"
@@ -180,8 +181,6 @@ MainWindow::MainWindow(QWidget * parent,
             this, SLOT(slotTimeChanged(double)));
     connect(_glWidget->getMap(), SIGNAL(signalLayerAdded(LayerId)),
             this, SLOT(slotLayerAdded(LayerId)));
-    connect(_glWidget->getMap(), &Map::signalLayersRemoved,
-            this, &MainWindow::slotLayersRemoved);
     connect(_glWidget, SIGNAL(signalLayersSelected(QList<LayerId>)),
             _layerListWidget, SLOT(slotSetSelectedLayers(QList<LayerId>)));
     
@@ -218,6 +217,10 @@ MainWindow::MainWindow(QWidget * parent,
             _glWidget, SLOT(slotLockViewToLayer(LayerId)));
     connect(_layerListWidget, &LayerListWidget::signalRemoveLayersSelected,
             this, &MainWindow::slotRemoveLayers);
+    connect(_layerListWidget, &LayerListWidget::signalLayerNameChanged,
+            this, &MainWindow::slotUserChangedLayerName);
+    connect(_layerListWidget, &LayerListWidget::signalLayerSportChanged,
+            this, &MainWindow::slotUserChangedLayerSport);
     
     connect(qApp, &QCoreApplication::aboutToQuit,
             this, &MainWindow::slotAboutToQuit);
@@ -344,6 +347,7 @@ void
 MainWindow::removeLayers(const QList<LayerId> &layerIds)
 {
     _glWidget->getMap()->removeLayers(layerIds);
+    _layerListWidget->removeLayers(layerIds);
 }
 
 void
@@ -357,6 +361,32 @@ MainWindow::clearMap()
     _playbackWidget->setTimeSliderMaximum(1800); /* 30 minutes */
     _glWidget->update();
     _undoStack->clear();
+}
+
+void
+MainWindow::setLayerName(LayerId layerId, const QString &name)
+{
+    LayerPtr layer = getLayerPtr(layerId);
+    if (!layer)
+        return;
+    auto trackLayer = std::dynamic_pointer_cast<TrackLayer>(layer);
+    if (trackLayer) {
+        trackLayer->setName(name);
+    }
+    _layerListWidget->updateLayer(layer.get());
+}
+
+void
+MainWindow::setLayerSport(LayerId layerId, const QString &sport)
+{
+    LayerPtr layer = getLayerPtr(layerId);
+    if (!layer)
+        return;
+    auto trackLayer = std::dynamic_pointer_cast<TrackLayer>(layer);
+    if (trackLayer) {
+        trackLayer->setSport(sport);
+    }
+    _layerListWidget->updateLayer(layer.get());
 }
 
 bool
@@ -624,12 +654,6 @@ MainWindow::slotLayerAdded(LayerId layerId)
 }
 
 void
-MainWindow::slotLayersRemoved(const QList<LayerId> layerIds)
-{
-    _layerListWidget->removeLayers(layerIds);
-}
-
-void
 MainWindow::slotFrameLayers(const QList<LayerId> layerIds)
 {
     _glWidget->slotFrameLayers(layerIds);
@@ -648,6 +672,22 @@ MainWindow::slotLayerVisibilityChanged(LayerId layerId, bool visible)
     if (layer)
         layer->setVisible(visible);
     _glWidget->update();
+}
+
+void
+MainWindow::slotUserChangedLayerName(LayerId layerId, const QString &newName)
+{
+    EditLayerCommand *cmd = new EditLayerCommand(this, layerId, EditTypeName, 
+                                                 newName);
+    _undoStack->push(cmd);
+}
+
+void
+MainWindow::slotUserChangedLayerSport(LayerId layerId, const QString &newSport)
+{
+    EditLayerCommand *cmd = new EditLayerCommand(this, layerId, EditTypeSport,
+                                                 newSport);
+    _undoStack->push(cmd);
 }
 
 void

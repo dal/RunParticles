@@ -30,15 +30,19 @@ public:
     
     static const Color SelectedColor;
     
-    TrackLayer(const Track *track);
+    TrackLayer(Track *track);
     
     virtual ~TrackLayer();
     
     QString name() const;
     
+    void setName(const QString &newName);
+    
     QString sourceFilePath() const;
     
     QString sport() const;
+    
+    void setSport(const QString &newSport);
     
     QDateTime startTime() const;
     
@@ -61,6 +65,8 @@ public:
     MapPoint position() const;
     
     bool ephemeral() const;
+    
+    bool userEditable() const;
     
     ColorA getTrackColor() const;
     
@@ -90,7 +96,7 @@ protected:
     
     float _loLodRes;
     
-    const Track *_track;
+    Track *_track;
     
     Path _path_hi, _path_md, _path_lo;
     

@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef AddLayersCommand_hpp
-#define AddLayersCommand_hpp
+#ifndef AddLayersCommand_h
+#define AddLayersCommand_h
 
 #include <QUndoCommand>
 #include <QString>
@@ -30,4 +30,4 @@ protected:
     LayerId _sentinel;
 };
 
-#endif /* AddLayersCommand_hpp */
+#endif /* AddLayersCommand_h */

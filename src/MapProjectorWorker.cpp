@@ -60,6 +60,12 @@ MapProjectorWorker::project(QList<LayerPtr> layers)
     start();
 }
 
+int
+MapProjectorWorker::queue() const
+{
+    return _input.length();
+}
+
 void
 MapProjectorWorker::cancel()
 {

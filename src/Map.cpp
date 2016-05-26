@@ -64,7 +64,8 @@ Map::removeLayers(const QList<LayerId> &layerIds)
 {
     for (auto i=_layers.begin(); i != std::end(_layers); /* !! */) {
         if (layerIds.contains((*i)->id())) {
-            _layerMap.erase(_layerMap.find((*i)->id()));
+            if (_layerMap.find((*i)->id()) != _layerMap.end())
+                _layerMap.erase(_layerMap.find((*i)->id()));
             (*i)->disconnect();
             i = _layers.erase(i);
         } else {
@@ -113,6 +114,12 @@ Map::clearLayers()
     _passes.clear();
     _layers.clear();
     _layerMap.clear();
+}
+
+bool
+Map::ready() const
+{
+    return (_projector->queue() <= 0);
 }
 
 bool

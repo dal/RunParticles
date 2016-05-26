@@ -183,10 +183,7 @@ MapFileIO::loadMapFile(QList<Track*> &tracks, char **whyNot)
     dataStream >> trackData;
     Track thisTrack;
     foreach(thisTrack, trackData) {
-        Track* trackPtr = new Track();
-        trackPtr->name = thisTrack.name;
-        trackPtr->sport = thisTrack.sport;
-        trackPtr->points = thisTrack.points;
+        Track* trackPtr = new Track(thisTrack);
         tracks.append(trackPtr);
     }
     theFile->close();

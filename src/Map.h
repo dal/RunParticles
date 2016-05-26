@@ -59,6 +59,10 @@ public:
     
     void clearLayers();
     
+    /* Returns true if all queued layers have been projected and can be 
+     displayed */
+    bool ready() const;
+    
 public slots:
     
     bool onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const;

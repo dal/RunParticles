@@ -35,6 +35,8 @@ public:
     
     void project(QList<LayerPtr> layers);
     
+    int queue() const;
+    
 public slots:
     
     void cancel();

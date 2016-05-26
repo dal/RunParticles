@@ -27,7 +27,8 @@ MainWindow::MainWindow(QWidget * parent,
     _numPendingLayers(0),
     _aboutDialog(new AboutDialog(this)),
     _settings(new Settings(this)),
-    _undoStack(new QUndoStack(this))
+    _undoStack(new QUndoStack(this)),
+    _deferredUpdateTimer(new QTimer(this))
 {
     _networkAccessManager = Singleton<QNetworkAccessManager>::Instance();
     _networkAccessManager->setParent(this);
@@ -225,6 +226,10 @@ MainWindow::MainWindow(QWidget * parent,
     connect(qApp, &QCoreApplication::aboutToQuit,
             this, &MainWindow::slotAboutToQuit);
     
+    _deferredUpdateTimer->setSingleShot(true);
+    connect(_deferredUpdateTimer, &QTimer::timeout,
+            this, &MainWindow::slotUpdate);
+    
     slotTimeChanged(0);
     restoreSettings();
     _glWidget->frameLonLatBox(_settings->getStartingViewArea());
@@ -328,7 +333,9 @@ MainWindow::loadMapFile(const QString &path)
 bool
 MainWindow::addLayer(Layer *layer)
 {
-    return _glWidget->getMap()->addLayer(layer);
+    bool result = _glWidget->getMap()->addLayer(layer);
+    deferredUpdate();
+    return result;
 }
 
 LayerPtr
@@ -348,6 +355,7 @@ MainWindow::removeLayers(const QList<LayerId> &layerIds)
 {
     _glWidget->getMap()->removeLayers(layerIds);
     _layerListWidget->removeLayers(layerIds);
+    deferredUpdate();
 }
 
 void
@@ -481,6 +489,12 @@ MainWindow::applyTrackStyleRules(const TrackStyleRules &rules)
     _glWidget->update();
 }
 
+void
+MainWindow::deferredUpdate()
+{
+    _deferredUpdateTimer->start(100);
+}
+
 bool
 MainWindow::slotSaveMapFile()
 {
@@ -598,6 +612,16 @@ MainWindow::slotAddLayers(const QStringList &paths)
 void
 MainWindow::slotRemoveLayers(const QList<LayerId> &layerIds)
 {
+    LayerId theId;
+    foreach(theId, layerIds) {
+        LayerPtr theLayer = getLayerPtr(theId);
+        if (!std::dynamic_pointer_cast<TrackLayer>(theLayer)) {
+            QString msg = QString("Cannot remove layer '%1' because it "
+                                  "is not a track layer").arg(theLayer->name());
+            QMessageBox::warning(this, "Cannot remove layer", msg);
+            return;
+        }
+    }
     QUndoCommand *cmd = new RemoveLayerCommand(this, layerIds);
     _undoStack->push(cmd);
 }
@@ -651,6 +675,11 @@ MainWindow::slotLayerAdded(LayerId layerId)
     const char* es = (layerCount == 1) ? "" : "s";
     QString layerCountStr = QString("%1 Layer%2").arg(layerCount).arg(es);
     _layerListWidget->setWindowTitle(layerCountStr);
+    /* Defer redrawing the map in case we're going to get more added layers
+     * (we're loading a large map file, for example).
+     */
+    if (_glWidget->getMap()->ready())
+        deferredUpdate();
 }
 
 void
@@ -802,6 +831,12 @@ void
 MainWindow::slotAboutToQuit()
 {
     saveSettings();
+}
+
+void
+MainWindow::slotUpdate()
+{
+    _glWidget->update();
 }
 
 void

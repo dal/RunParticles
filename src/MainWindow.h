@@ -11,6 +11,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkDiskCache>
 #include <QUndoStack>
+#include <QTimer>
 
 #include "AboutDialog.h"
 #include "ExportImageDialog.h"
@@ -64,6 +65,12 @@ public:
     void applyTrackStyleRule(const TrackStyleRules &rules, TrackLayer *layer);
     
     void applyTrackStyleRules(const TrackStyleRules &rules);
+    
+    /* Deferred update restarts a timer that will update the map after a short
+     interval of time. This is used to prevent unnecessary redraws from 
+     happening when loading thousands of new layers.
+     */
+    void deferredUpdate();
     
 public slots:
     bool slotSaveMapFile();
@@ -128,6 +135,8 @@ public slots:
     
     void slotAboutToQuit();
     
+    void slotUpdate();
+    
 protected:
     
     enum {
@@ -175,6 +184,7 @@ protected:
     PreferencesDialog *_preferencesDialog;
     ExportImageDialog *_exportImageDialog;
     QUndoStack *_undoStack;
+    QTimer *_deferredUpdateTimer;
 };
 
 #endif

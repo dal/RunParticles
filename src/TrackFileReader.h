@@ -10,8 +10,11 @@
 
 #include "Types.h"
 
-typedef QPair<QString, QList<Track*>*> WorkPair;
-typedef QList<WorkPair> WorkList;
+struct DeferredLoadRequest : DeferredRequest
+{
+    QString path;
+    QList<Track*> tracks;
+};
 
 class TrackFileReader;
 
@@ -26,16 +29,16 @@ public:
     
     void run();
     
-    void read(const QString &path, QList<Track*> *tracks);
+    void read(DeferredLoadRequest *request);
 
 public slots:
     
     void cancel();
     
 signals:
-    void signalReady(const QString&, QList<Track*>*);
+    void signalReady(DeferredLoadRequest *request);
     
-    void signalError(const QString&, const QString&);
+    void signalError(DeferredLoadRequest *request);
     
     void signalUpdate(const QString& what, int total, int done);
     
@@ -44,7 +47,7 @@ signals:
 protected:
     QMutex _inMutex;
     
-    WorkList _input;
+    QList<DeferredLoadRequest*> _requests;
     
     TrackFileReader *_reader;
     
@@ -66,16 +69,16 @@ public:
     virtual ~TrackFileReader();
     
     bool read(const QString &path,
-              QList<Track*> *tracks,
+              QList<Track*> &tracks,
               std::string *whyNot=NULL) const;
     
-    void readDeferred(const QString &path, QList<Track*> *tracks);
+    DeferredLoadRequest* readDeferred(const QString &path);
     
 signals:
     
-    void signalReady(const QString&, QList<Track*>*);
+    void signalReady(DeferredLoadRequest *request);
     
-    void signalError(const QString&, const QString&);
+    void signalError(DeferredLoadRequest *request);
     
     void signalUpdate(const QString&, int, int);
     
@@ -84,11 +87,11 @@ signals:
 protected:
     
     bool _readXml(QFile &theFile,
-                 QList<Track*> *tracks,
+                 QList<Track*> &tracks,
                  std::string *whyNot=NULL) const;
 
     bool _readFit(const QString &path,
-                 QList<Track*> *tracks,
+                 QList<Track*> &tracks,
                  std::string *whyNot=NULL) const;
     
     TrackFileReaderWorker *_worker;

@@ -41,6 +41,13 @@ Map::draw(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 }
 
 bool
+Map::addLayer(LayerPtr layer)
+{
+    _projector->project(layer);
+    return true;
+}
+
+bool
 Map::addLayer(Layer *layer)
 {
     LayerPtr layerPtr(layer);
@@ -48,7 +55,7 @@ Map::addLayer(Layer *layer)
     return true;
 }
 
-void
+QList<LayerPtr>
 Map::addLayers(QList<Layer*> layers)
 {
     QList<LayerPtr> layerPtrs;
@@ -57,6 +64,7 @@ Map::addLayers(QList<Layer*> layers)
         layerPtrs.append(LayerPtr(layer));
     }
     _projector->project(layerPtrs);
+    return layerPtrs;
 }
 
 void
@@ -151,7 +159,7 @@ Map::_onLayerProjected(LayerPtr layerPtr)
     _layers.push_back(layerPtr);
     std::pair<LayerId, LayerPtr> mypair(layerPtr->id(), layerPtr);
     _layerMap.insert(mypair);
-    PassMap layerPasses = layerPtr->passes();
+    PassMap layerPasses = layerPtr->passes(); // FIXME (crash in RemoveLayersCommand undo)
     _passes.insert(layerPasses.begin(), layerPasses.end());
     _duration = (layerPtr->duration() > _duration) ? layerPtr->duration() : _duration;
     connect(layerPtr.get(), SIGNAL(layerUpdated()), SIGNAL(layerUpdated()));

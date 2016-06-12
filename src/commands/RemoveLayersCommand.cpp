@@ -37,6 +37,7 @@ void
 RemoveLayerCommand::undo()
 {
     for (auto i=_layers.begin(); i != _layers.end(); ++i) {
-        _mainWindow->addLayer(i->get());
+        _mainWindow->addLayer(*i);
     }
+    _layers.clear();
 }

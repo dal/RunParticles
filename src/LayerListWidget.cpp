@@ -117,13 +117,18 @@ void
 LayerListWidget::removeLayers(const QList<LayerId> &layerIds)
 {
     QSet<LayerId> layerIdsSet = QSet<LayerId>().fromList(layerIds);
+    QList<QTreeWidgetItem*> toRemove;
     QTreeWidgetItemIterator it(this);
     while(*it) {
         LayerId myLayerId = (*it)->data(ColumnName, LayerIdRole).toUInt();
         if (layerIdsSet.remove(myLayerId)) {
-            delete (*it);
+            toRemove.append(*it);
         }
         ++it;
+    }
+    QTreeWidgetItem *i;
+    foreach(i, toRemove) {
+        delete i;
     }
 }
 

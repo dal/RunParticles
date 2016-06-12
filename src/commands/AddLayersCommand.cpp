@@ -7,6 +7,8 @@
 //
 
 #include "AddLayersCommand.h"
+
+#include "Layer.h"
 #include "MainWindow.h"
 
 AddLayersCommand::AddLayersCommand(MainWindow *mainWindow,
@@ -25,22 +27,33 @@ AddLayersCommand::redo()
 {
     QString path;
     _sentinel = Layer::getLastId();
-    foreach(path, _layerPaths) {
-        _mainWindow->loadTrackFile(path);
+    if (_loadRequests.empty()) {
+        foreach(path, _layerPaths) {
+            LoadTrackLayerRequestPtr myReq = _mainWindow->loadTrackFile(path);
+            _loadRequests.append(myReq);
+        }
+    } else {
+        foreach(auto myReq, _loadRequests) {
+            if (myReq->status == RequestStatusReady) {
+                foreach (LayerPtr myLayerPtr, myReq->layers) {
+                    _mainWindow->addLayer(myLayerPtr);
+                }
+            }
+        }
     }
 }
 
 void
 AddLayersCommand::undo()
 {
-    LayerPtrList layers = _mainWindow->getLayers();
-    LayerPtr thisLayer;
-    QList<LayerId> layerIds;
-    foreach(thisLayer, layers) {
-        if (_layerPaths.contains(thisLayer->sourceFilePath())
-            && thisLayer->id() >= _sentinel) {
-            layerIds.append(thisLayer->id());
+    foreach(auto myReq, _loadRequests) {
+        if (myReq->status == RequestStatusReady) {
+            QList<LayerId> myLayerIds;
+            foreach (LayerPtr myLayer, myReq->layers) {
+                myLayerIds.append(myLayer->id());
+            }
+            if (!myLayerIds.empty())
+                _mainWindow->removeLayers(myLayerIds);
         }
     }
-    _mainWindow->removeLayers(layerIds);
 }

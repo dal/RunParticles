@@ -41,7 +41,9 @@ public:
     
     bool addLayer(Layer*);
     
-    void addLayers(QList<Layer*>);
+    bool addLayer(LayerPtr layer);
+    
+    QList<LayerPtr> addLayers(QList<Layer*>);
     
     void removeLayers(const QList<LayerId> &layerIds);
     

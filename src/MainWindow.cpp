@@ -298,11 +298,13 @@ MainWindow::_setupShortcuts()
             _newMapAction, SLOT(trigger()));
 }
 
-void
+LoadTrackLayerRequestPtr
 MainWindow::loadTrackFile(const QString &trackFilePath)
 {
-    QList<Track*> *tracks = new QList<Track*>();
-    _trackFileReader->readDeferred(trackFilePath, tracks);
+    LoadTrackLayerRequestPtr myReq = std::make_shared<LoadTrackLayerRequest>();
+    myReq->loadRequest = _trackFileReader->readDeferred(trackFilePath);
+    _pendingTrackLoadRequests[myReq->loadRequest] = myReq;
+    return myReq;
 }
 
 bool
@@ -312,7 +314,7 @@ MainWindow::loadMapFile(const QString &path)
     QList<Track*> tracks;
     _fileIO->loadMapFile(tracks);
     if (!tracks.empty()) {
-        slotTrackFileLoaded(_fileIO->getFilename(), &tracks);
+        addLayersFromTracks(_fileIO->getFilename(), tracks);
     } else if (_fileIO->isLegacyMapFile()) {
         /* Legacy map files don't contain actual tracks, but they yield paths
          * to a bunch of track files (.FIT, .GPX) etc . . . that we have to
@@ -330,8 +332,27 @@ MainWindow::loadMapFile(const QString &path)
     return true;
 }
 
+QList<LayerPtr>
+MainWindow::addLayersFromTracks(const QString &path, QList<Track*> &tracks)
+{
+    _trackFiles.append(path);
+    Track *thisTrack;
+    QList<Layer*> trackLayers;
+    TrackStyleRules rules = _settings->getTrackStyleRules();
+    foreach(thisTrack, tracks) {
+        TrackLayer *thisLayer = new TrackLayer(thisTrack);
+        applyTrackStyleRule(rules, thisLayer);
+        // See if the layer came from an explicitly-added path
+        if (!_lastLayerPathAdded.isEmpty() &&
+            thisLayer->sourceFilePath() == _lastLayerPathAdded)
+            _numPendingLayers++;
+        trackLayers.append(thisLayer);
+    }
+    return _glWidget->getMap()->addLayers(trackLayers);
+}
+
 bool
-MainWindow::addLayer(Layer *layer)
+MainWindow::addLayer(LayerPtr layer)
 {
     bool result = _glWidget->getMap()->addLayer(layer);
     deferredUpdate();
@@ -615,7 +636,10 @@ MainWindow::slotRemoveLayers(const QList<LayerId> &layerIds)
     LayerId theId;
     foreach(theId, layerIds) {
         LayerPtr theLayer = getLayerPtr(theId);
-        if (!std::dynamic_pointer_cast<TrackLayer>(theLayer)) {
+        if (!theLayer) {
+            // Layer doesn't exist anymore . . .
+            return;
+        } else if (!std::dynamic_pointer_cast<TrackLayer>(theLayer)) {
             QString msg = QString("Cannot remove layer '%1' because it "
                                   "is not a track layer").arg(theLayer->name());
             QMessageBox::warning(this, "Cannot remove layer", msg);
@@ -756,28 +780,20 @@ MainWindow::slotShowMapWindow()
 }
 
 void
-MainWindow::slotTrackFileLoaded(const QString &path, QList<Track*> *tracks)
+MainWindow::slotTrackFileLoaded(DeferredLoadRequest *request)
 {
-    _trackFiles.append(path);
-    Track *thisTrack;
-    QList<Layer*> trackLayers;
-    TrackStyleRules rules = _settings->getTrackStyleRules();
-    foreach(thisTrack, *tracks) {
-        TrackLayer *thisLayer = new TrackLayer(thisTrack);
-        applyTrackStyleRule(rules, thisLayer);
-        // See if the layer came from an explicitly-added path
-        if (!_lastLayerPathAdded.isEmpty() &&
-            thisLayer->sourceFilePath() == _lastLayerPathAdded)
-            _numPendingLayers++;
-        trackLayers.append(thisLayer);
+    QList<LayerPtr> layers = addLayersFromTracks(request->path, request->tracks);
+    if (_pendingTrackLoadRequests.contains(request)) {
+        _pendingTrackLoadRequests[request]->layers = layers;
+        _pendingTrackLoadRequests[request]->status.store(request->status);
     }
-    _glWidget->getMap()->addLayers(trackLayers);
 }
 
 void
-MainWindow::slotTrackFileLoadError(const QString &path, const QString &what)
+MainWindow::slotTrackFileLoadError(DeferredLoadRequest *request)
 {
-    QString err = QString("Error loading file '%0': %1").arg(path).arg(what);
+    QString err = QString("Error loading file '%0': %1").arg(request->path)
+                  .arg(request->error);
     QMessageBox::critical(_glWidget, "Could not load file", err);
 }
 

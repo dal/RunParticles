@@ -15,6 +15,7 @@
 #include "Layer.h"
 #include "Map.h"
 
+struct LoadTrackLayerRequest;
 class MainWindow;
 
 class AddLayersCommand : public QUndoCommand
@@ -26,6 +27,7 @@ public:
     void undo();
 protected:
     MainWindow *_mainWindow;
+    QList<std::shared_ptr<LoadTrackLayerRequest>> _loadRequests;
     QStringList _layerPaths;
     LayerId _sentinel;
 };

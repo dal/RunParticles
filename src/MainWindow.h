@@ -24,6 +24,15 @@
 #include "TrackFileReader.h"
 #include "TrackLayer.h"
 
+struct LoadTrackLayerRequest : DeferredRequest
+{
+    QString trackLayerPath;
+    QList<LayerPtr> layers;
+    DeferredLoadRequest *loadRequest;
+};
+
+typedef std::shared_ptr<LoadTrackLayerRequest> LoadTrackLayerRequestPtr;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -34,11 +43,13 @@ public:
     
     virtual ~MainWindow();
     
-    void loadTrackFile(const QString &trackFilePath);
+    LoadTrackLayerRequestPtr loadTrackFile(const QString &trackFilePath);
     
     bool loadMapFile(const QString &path);
     
-    bool addLayer(Layer *layer);
+    QList<LayerPtr> addLayersFromTracks(const QString &path, QList<Track*> &tracks);
+    
+    bool addLayer(LayerPtr);
     
     LayerPtr getLayerPtr(LayerId layerId);
     
@@ -119,9 +130,9 @@ public slots:
     
     void slotShowMapWindow();
     
-    void slotTrackFileLoaded(const QString &path, QList<Track*> *tracks);
+    void slotTrackFileLoaded(DeferredLoadRequest *request);
     
-    void slotTrackFileLoadError(const QString &path, const QString &what);
+    void slotTrackFileLoadError(DeferredLoadRequest *request);
     
     void slotLockViewToSelectedLayer();
     
@@ -185,6 +196,7 @@ protected:
     ExportImageDialog *_exportImageDialog;
     QUndoStack *_undoStack;
     QTimer *_deferredUpdateTimer;
+    QMap<DeferredLoadRequest*, LoadTrackLayerRequestPtr> _pendingTrackLoadRequests;
 };
 
 #endif

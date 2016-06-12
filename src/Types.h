@@ -80,4 +80,18 @@ struct PathPoint
 
 typedef QList<PathPoint> Path;
 
+enum RequestStatus {
+    RequestStatusPending,
+    RequestStatusReady,
+    RequestStatusError,
+    RequestStatusCount
+};
+
+struct DeferredRequest
+{
+    DeferredRequest();
+    std::atomic<RequestStatus> status;
+    QString error;
+};
+
 #endif

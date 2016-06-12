@@ -58,37 +58,42 @@ TrackFileReaderWorker::TrackFileReaderWorker(TrackFileReader *parent) :
 void
 TrackFileReaderWorker::run() {
     while (!_cancelRequested) {
-        WorkPair work;
-        _inMutex.lock();
-        if (!_input.isEmpty()) {
-            work = _input.first();
-            _input.pop_front();
-            QString what = QString("Parsing %0").arg(work.first);
-            emit signalUpdate(what, _workCount, _workCount - _input.length());
-        } else {
-            _workCount = 0;
-            emit signalDone();
-            _inMutex.unlock();
-            break;
+        DeferredLoadRequest *req = Q_NULLPTR;
+        {
+            QMutexLocker locker(&_inMutex);
+            if (!_requests.isEmpty()) {
+                req = _requests.first();
+                _requests.pop_front();
+                QString what = QString("Parsing %0").arg(req->path);
+                emit signalUpdate(what, _workCount,
+                                  _workCount - _requests.length());
+            } else {
+                _workCount = 0;
+                emit signalDone();
+                break;
+            }
         }
-        _inMutex.unlock();
+        if (!req)
+            return;
         std::string whyNot;
-        if (!_reader->read(work.first, work.second, &whyNot)) {
-            QString error = QString::fromStdString(whyNot);
-            emit signalError(work.first, error);
+        if (!_reader->read(req->path, req->tracks, &whyNot)) {
+            req->error = QString::fromStdString(whyNot);
+            req->status.store(RequestStatusError);
+            emit signalError(req);
         } else {
-            emit signalReady(work.first, work.second);
+            req->status.store(RequestStatusReady);
+            emit signalReady(req);
         }
     }
 };
     
 void
-TrackFileReaderWorker::read(const QString &path, QList<Track*> *tracks) {
+TrackFileReaderWorker::read(DeferredLoadRequest *request) {
     QMutexLocker locker(&_inMutex);
     _cancelRequested = false;
-    if (_input.length() == 0)
+    if (_requests.length() == 0)
         _workCount = 0;
-    _input.append(WorkPair(path, tracks));
+    _requests.append(request);
     _workCount++;
     start();
 };
@@ -98,7 +103,7 @@ TrackFileReaderWorker::cancel()
 {
     _cancelRequested = true;
     wait();
-    _input.clear();
+    _requests.clear();
 }
 
 TrackFileReader::TrackFileReader(QObject *parent) :
@@ -121,7 +126,7 @@ TrackFileReader::~TrackFileReader()
 
 bool
 TrackFileReader::read(const QString &path, 
-                      QList<Track*> *tracks,
+                      QList<Track*> &tracks,
                       std::string *whyNot) const
 {
     bool success = false;
@@ -140,23 +145,25 @@ TrackFileReader::read(const QString &path,
     
     /* Make sure all the tracks return their source file path */
     if (success) {
-        Track *track;
-        foreach(track, *tracks)
+        foreach(Track *track, tracks)
             track->sourceFilePath = path;
     }
     
     return success;
 }
 
-void
-TrackFileReader::readDeferred(const QString &path, QList<Track *> *tracks)
+DeferredLoadRequest*
+TrackFileReader::readDeferred(const QString &path)
 {
-    _worker->read(path, tracks);
+    DeferredLoadRequest *request = new DeferredLoadRequest();
+    request->path = path;
+    _worker->read(request);
+    return request;
 }
 
 bool
 TrackFileReader::_readXml(QFile &theFile,
-                          QList<Track*> *tracks,
+                          QList<Track*> &tracks,
                           std::string *whyNot) const
 {
     QString error;
@@ -166,7 +173,7 @@ TrackFileReader::_readXml(QFile &theFile,
     switch (fileType) {
     case TrackFileType_Gpx:
         {
-        GpxHandler gpxHandler(tracks);
+        GpxHandler gpxHandler(&tracks);
         bool ok = gpxHandler.parse(&theFile);
         if (!ok && whyNot) {
             whyNot->assign(gpxHandler.getError().toStdString());
@@ -176,7 +183,7 @@ TrackFileReader::_readXml(QFile &theFile,
         }
     case TrackFileType_Tcx:
         {
-        TcxHandler tcxHandler(tracks);
+        TcxHandler tcxHandler(&tracks);
         bool ok = tcxHandler.parse(&theFile);
         if (!ok && whyNot) {
             whyNot->assign(tcxHandler.getError().toStdString());
@@ -202,10 +209,10 @@ TrackFileReader::_readXml(QFile &theFile,
 
 bool
 TrackFileReader::_readFit(const QString &path,
-                          QList<Track*> *tracks,
+                          QList<Track*> &tracks,
                           string *whyNot) const
 {
-    FitFileReader reader(tracks);
+    FitFileReader reader(&tracks);
     return reader.readFile(path, whyNot);
 }
 

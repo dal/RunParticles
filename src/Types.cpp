@@ -57,3 +57,9 @@ QDataStream& operator>>(QDataStream &stream, Track& track)
     return stream;
 }
 
+DeferredRequest::DeferredRequest() :
+    status(RequestStatusPending)
+{
+    
+}
+

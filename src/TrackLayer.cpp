@@ -12,6 +12,7 @@
 #define PARTICLE_RADIUS 12.0
 #define MEDIUM_LOD_RES 4.0
 #define LO_LOD_RES 10.0
+#define XLO_LOD_RES 350.0
 
 using namespace cinder;
 
@@ -77,6 +78,7 @@ TrackLayer::TrackLayer(Track *track) : Layer(),
 _particleRadius(PARTICLE_RADIUS),
 _mediumLodRes(MEDIUM_LOD_RES),
 _loLodRes(LO_LOD_RES),
+_xLoLodRes(XLO_LOD_RES),
 _track(track),
 _duration(0),
 _trackColor(Color(1,0,0)),
@@ -172,6 +174,7 @@ TrackLayer::project(const Projection &projection)
         return;
     // Project the track into the hi-res path and compute the bounding box
     int startTime = 0;
+    MapPoint lastPt;
     for(int i=0; i < _track->points.size(); i++) {
         TrackPoint pt = _track->points[i];
         PathPoint newPt;
@@ -179,16 +182,21 @@ TrackLayer::project(const Projection &projection)
         if (i == 0) {
             startTime = pt.time;
             _positionOffset = newPt.pos;
+            lastPt = newPt.pos;
+        } else if ((newPt.pos - lastPt).length() < 4.) {
+            continue;
         }
         newPt.time = pt.time - startTime;
         _path_hi.push_back(newPt);
         _bounds += newPt.pos;
+        lastPt = newPt.pos;
     }
     
     _particleRadius *= projection.getScaleMultiplier();
     
     _mediumLodRes *= projection.getScaleMultiplier();
     _loLodRes *= projection.getScaleMultiplier();
+    _xLoLodRes *= projection.getScaleMultiplier();
     _projected = true;
 }
 
@@ -252,9 +260,11 @@ TrackLayer::_initializeVbos()
     _path_md = PathUtil::DouglasPeucker(_path_hi, _mediumLodRes);
     // Make the low res path
     _path_lo = PathUtil::DouglasPeucker(_path_md, _loLodRes*2.);
+    _path_xlo = PathUtil::DouglasPeucker(_path_lo, _xLoLodRes);
     _vboHi = _makeVbo(_path_hi);
     _vboMd = _makeVbo(_path_md);
     _vboLo = _makeVbo(_path_lo);
+    _vboXLo = _makeVbo(_path_xlo);
 }
 
 void
@@ -295,17 +305,23 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
     if (_vboHi) {
         gl::VboMesh *theMesh = &_vboHi;
         double res = viewCtx.getResolution();
-        if (res >= _mediumLodRes && res < _loLodRes)
+        float miter_limit = 0.75;
+        if (res >= _mediumLodRes && res < _loLodRes) {
             theMesh = &_vboMd;
-        else if (res >= _loLodRes)
+        } else if (res >= _loLodRes && res < _xLoLodRes) {
             theMesh = &_vboLo;
+            miter_limit = -0.5;
+        } else if (res >= _xLoLodRes) {
+            theMesh = &_vboXLo;
+            miter_limit = -1.0;
+        }
         _shader->bind();
         float time = timeCtx.getMapSeconds();
         _shader->setUniformValue(_shader->uniformLocation("WIN_SCALE"),
                                  (GLfloat)viewCtx.getViewportWidth(),
                                  (GLfloat)viewCtx.getViewportHeight() );
         _shader->setUniformValue(_shader->uniformLocation("MITER_LIMIT"),
-                                 (GLfloat)0.75 );
+                                 (GLfloat)miter_limit ); /* -1.0 never, 1.0 always */
         _shader->setUniformValue(_shader->uniformLocation("THICKNESS"),
                                  (GLfloat)float(_trackWidth) );
         _shader->setUniformValue(_shader->uniformLocation("TIME_SECONDS"),

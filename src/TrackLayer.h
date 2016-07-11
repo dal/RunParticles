@@ -96,9 +96,11 @@ protected:
     
     float _loLodRes;
     
+    float _xLoLodRes;
+    
     Track *_track;
     
-    Path _path_hi, _path_md, _path_lo;
+    Path _path_hi, _path_md, _path_lo, _path_xlo;
     
     BoundingBox _bounds;
     
@@ -114,7 +116,7 @@ protected:
     
     float *_pathBuffer;
     
-    gl::VboMesh _vboHi, _vboMd, _vboLo;
+    gl::VboMesh _vboHi, _vboMd, _vboLo, _vboXLo;
     
     static bool _isSetup;
     

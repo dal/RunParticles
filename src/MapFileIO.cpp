@@ -49,7 +49,6 @@ LonLat _getPoint()
 
 MapFileIO::MapFileIO(QObject *parent) :
     QObject(parent),
-    _dirty(false),
     _isLegacyMapFile(false)
 {
     
@@ -82,7 +81,6 @@ MapFileIO::writeLegacyMapFile(bool relativePaths)
     QTextStream ts(&saveFile);
     ts << doc.toString();
     saveFile.commit();
-    _dirty = false;
     return true;
 }
 
@@ -202,7 +200,6 @@ MapFileIO::clear()
 {
     _filename.clear();
     _trackFiles.clear();
-    _dirty = false;
 }
 
 void

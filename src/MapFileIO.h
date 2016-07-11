@@ -59,15 +59,11 @@ public:
     
     bool isLegacyMapFile() const { return _isLegacyMapFile; }
     
-    bool isDirty() const { return _dirty; }
-    
     QString relativeizePath(const QString &path);
     
     QString absoluteizePath(const QString &path);
     
 protected:
-    
-    bool _dirty;
     
     QStringList _trackFiles;
     

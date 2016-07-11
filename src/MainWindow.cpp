@@ -101,6 +101,11 @@ MainWindow::MainWindow(QWidget * parent,
             this, SLOT(slotAddLayers()));
     connect(_showExportImagesDialogAction, SIGNAL(triggered(bool)),
             _exportImageDialog, SLOT(show()));
+
+    /* On MacOS this will be changed to "Quit" */
+    _quitAction = new QAction("Exit", this);
+    _fileMenu->addAction(_quitAction);
+    connect(_quitAction, &QAction::triggered, this, &MainWindow::close);
     
     /* Edit menu */
     QMenu *editMenu = _menuBar->addMenu("Edit");
@@ -324,10 +329,10 @@ MainWindow::loadMapFile(const QString &path)
         foreach(trackFile, _fileIO->getTrackFiles()) {
             loadTrackFile(trackFile);
         }
-        LonLatBox mapViewArea = _fileIO->getViewArea();
-        if (mapViewArea.valid()) {
-            _glWidget->frameLonLatBox(mapViewArea);
-        }
+    }
+    LonLatBox mapViewArea = _fileIO->getViewArea();
+    if (mapViewArea.valid()) {
+        _glWidget->frameLonLatBox(mapViewArea);
     }
     return true;
 }
@@ -429,7 +434,7 @@ MainWindow::saveMapFile(const QString &path)
 bool
 MainWindow::confirmAbandonMap()
 {
-    if (_fileIO->isDirty()) {
+    if (!_undoStack->isClean()) {
         QMessageBox::StandardButton res = QMessageBox::question(this,
             "Save changes to map?",
             "Map has unsaved changes, save it or discard?",
@@ -479,12 +484,15 @@ MainWindow::restoreSettings()
     _settings->restoreWidgetState(_glWidget);
     _settings->restoreWidgetState(_playbackWidget);
     _settings->restoreWidgetState(_layerListWidget);
-    QString path;
-    foreach(path, _settings->getRecentMapFiles()) {
-        _addPathToRecentMenu(_recentMapsMenu, path);
+    // addPathToRecentMenu adds paths at the beginning of the menu, so
+    // we need to add the paths in reverse
+    const QStringList mapPaths = _settings->getRecentMapFiles();
+    for (auto i = mapPaths.rbegin(); i != mapPaths.rend(); i++) {
+        _addPathToRecentMenu(_recentMapsMenu, *i);
     }
-    foreach(path, _settings->getRecentLayerFiles()) {
-        _addPathToRecentMenu(_recentLayersMenu, path);
+    const QStringList layerPaths = _settings->getRecentLayerFiles();
+    for (auto i = layerPaths.rbegin(); i != layerPaths.rend(); i++) {
+        _addPathToRecentMenu(_recentLayersMenu, *i);
     }
 }
 
@@ -563,6 +571,17 @@ MainWindow::slotNewMap()
 }
 
 void
+MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (!confirmAbandonMap()) {
+        event->ignore();
+    } else {
+        event->accept();
+        QApplication::quit();
+    }
+}
+
+void
 MainWindow::_loadBaseMap()
 {
     OsmLayer *layer = new OsmLayer();
@@ -573,33 +592,39 @@ MainWindow::_loadBaseMap()
 void
 MainWindow::_addPathToRecentMenu(QMenu *theMenu, const QString &path)
 {
+    if (path.isEmpty())
+        return;
     QFileInfo thisFile(path);
     QList<QAction*> recents = theMenu->actions();
     QAction *action;
     QAction *recentSep = NULL;
+    QAction *last = NULL;
     foreach(action, recents) {
         if (action->data().toString() == path) {
             return;
         } else if (action->isSeparator()) {
             recentSep = action;
+            break;
+        } else {
+            last = action;
         }
     }
     
-    if (recents.length() > _numRecentFiles) {
-        theMenu->removeAction(recents.first());
+    if (last && recents.length() > _numRecentFiles+2) {
+        theMenu->removeAction(last);
     }
     
     QAction *thisAction = new QAction(thisFile.fileName(), this);
     thisAction->setData(QVariant(path));
-    if (recentSep) {
-        theMenu->insertAction(recentSep, thisAction);
-    } else {
+    if (recents.empty()) {
         theMenu->addAction(thisAction);
         theMenu->addSeparator();
         if (theMenu == _recentMapsMenu)
             theMenu->addAction(_clearRecentMapsMenuAction);
         else if (theMenu == _recentLayersMenu)
             theMenu->addAction(_clearRecentLayersMenuAction);
+    } else {
+        theMenu->insertAction(recents.first(), thisAction);
     }
 }
 

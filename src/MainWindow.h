@@ -154,7 +154,7 @@ protected:
         _numRecentFiles = 5
     };
     
-    void _layoutPlaybackControls(QWidget*);
+    void closeEvent(QCloseEvent * event);
     
     void _setupShortcuts();
     
@@ -178,7 +178,7 @@ protected:
             *_lockViewToLayerAction, *_showPreferencesDialogAction,
             *_clearRecentLayersMenuAction, *_clearRecentMapsMenuAction,
             *_setStartingViewAreaAction, *_showExportImagesDialogAction,
-            *_undoAction, *_redoAction;
+            *_undoAction, *_redoAction, *_quitAction;
     QShortcut *_playPauseShortcut, *_addLayerShortcut, *_saveMapShortcut,
               *_openMapShortcut, *_newMapShortcut, *_playShortcut,
               *_playReverseShortcut, *_pauseShortcut;

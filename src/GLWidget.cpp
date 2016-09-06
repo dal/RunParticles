@@ -10,8 +10,10 @@
 
 #include <QWindow>
 
+#include "cinder/gl/Fbo.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Vector.h"
+#include "cinder/ImageIo.h" // debug
 
 #include <set>
 
@@ -48,19 +50,35 @@ GLWidget::initializeGL()
 void
 GLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    gl::Fbo::Format hdrFormat;
+    hdrFormat.setColorInternalFormat( GL_RGBA32F );
+    gl::Fbo myFbo( width()*_viewCtx.getDevicePixelRatio(),
+                   height()*_viewCtx.getDevicePixelRatio(),
+                  hdrFormat );
+    GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(2, attachments);
+    myFbo.bindFramebuffer();
+    {
+        glPushMatrix();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+        // setup camera
+        gl::pushMatrices();
+        gl::setMatrices( _viewCamera );
+    
+        // clear out the window with black
+        gl::clear( Color( 0, 0, 0 ) );
+    
+        _map->draw(_viewCtx, _timeCtx);
+        
+        glPopMatrix();
+    }
+    myFbo.unbindFramebuffer();
     glPushMatrix();
-    
-    // setup camera
-	gl::pushMatrices();
-	gl::setMatrices( _viewCamera );
-    
-	// clear out the window with black
-	gl::clear( Color( 0, 0, 0 ) );
-    
-    _map->draw(_viewCtx, _timeCtx);
-    
+    gl::pushMatrices();
+    gl::setMatrices(_fboCamera);
+    gl::draw( myFbo.getTexture(0));
     glPopMatrix();
 }
 
@@ -88,7 +106,8 @@ GLWidget::resizeGL(int width, int height)
     int oldHeight = _viewCtx.getViewportHeight();
     _mapView.resize(oldWidth, oldHeight, width, height);
     _updateViewCtx();
-    glViewport (0, 0, (GLint) width, (GLint) height);
+    //glViewport (0, 0, (GLint) width, (GLint) height);
+    _fboCamera.setOrtho(0., width, 0., height, -1, 1);
 }
 
 void
@@ -418,12 +437,11 @@ void
 GLWidget::_updateViewCtx()
 {
     double left, top, right, bottom;
-    qreal pixelRatio = windowHandle()->devicePixelRatio();
     _mapView.getFrustum(left, top, right, bottom);
     _viewCtx.setViewport(MapPoint(left, top),
                          MapPoint(right, bottom),
-                         width() * pixelRatio,
-                         height() * pixelRatio);
+                         width() * _viewCtx.getDevicePixelRatio(),
+                         height() * _viewCtx.getDevicePixelRatio());
     _viewCamera.setOrtho(0., right-left, 0., top-bottom, -1, 1);
     _viewCtx.setCameraToWorld(Vec2d(left, bottom));
     qDebug("Resolution %f", _viewCtx.getResolution());

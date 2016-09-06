@@ -18,12 +18,14 @@ float line_distance(vec2 p, vec2 a, vec2 b)
 
 void main(void)
 {
-    float yVal = gsTexCoord.y;
-    if (gsTexCoord.y <= 0.5)
-        yVal = gsTexCoord.y / 0.5;
-    else if (gsTexCoord.y > 0.5)
-        yVal = (1.0 - gsTexCoord.y) / 0.5;
-    if (!SELECTED)
-        yVal *= 0.5;
+    float yVal = 0.5;
+    /*
+    if (gsTexCoord.y <= 0.2)
+        yVal = gsTexCoord.y / 0.2;
+    else if (gsTexCoord.y > 0.8)
+        yVal = (1.0 - gsTexCoord.y) / 0.2;
+    */
+    //if (!SELECTED)
+    //    yVal *= 0.5;
     gl_FragColor = gl_Color * yVal;
 }

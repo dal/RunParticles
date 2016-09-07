@@ -97,6 +97,12 @@ GLWidget::paintGL()
     mytex.unbind();
     _shader->release();
     glPopMatrix();
+    // XXX: Temporary fix for Cinder FBO memory leak
+    // See https://forum.libcinder.org/topic/constantly-changing-fbo-s-size-without-leak
+    GLuint depthTextureId = myFbo.getDepthTexture().getId();
+    myFbo.reset();
+    if (depthTextureId > 0)
+        glDeleteTextures(1, &depthTextureId);
 }
 
 GLWidget::~GLWidget()

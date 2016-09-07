@@ -34,7 +34,7 @@ public:
         lowerRight.y = bottom;
     };
     
-    bool valid() const { return _valid; }
+    bool valid() const { return _valid && width() > 0 && height() > 0; }
     
     bool overlaps(const Box<T>& other) const
     {

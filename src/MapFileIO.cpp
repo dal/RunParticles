@@ -175,8 +175,11 @@ MapFileIO::loadMapFile(QList<Track*> &tracks, char **whyNot)
         theFile->close();
         return false;
     }
-    dataStream >> _viewArea.upperLeft;
-    dataStream >> _viewArea.lowerRight;
+    LonLat ul, lr;
+    dataStream >> ul;
+    _viewArea += ul;
+    dataStream >> lr;
+    _viewArea += lr;
     QList <Track> trackData;
     dataStream >> trackData;
     Track thisTrack;

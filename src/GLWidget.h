@@ -14,6 +14,7 @@
 #include <QMouseEvent>
 #include <QSize>
 #include <QTimer>
+#include <QGLShaderProgram>
 #include <iostream>
 
 #include "cinder/Camera.h"
@@ -166,6 +167,8 @@ protected:
     LayerId _lockedLayer;
     
     double _playbackStartTime;
+    
+    QGLShaderProgram *_shader;
 
 };
 

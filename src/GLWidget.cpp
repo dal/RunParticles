@@ -24,7 +24,8 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     _timer(new QTimer(this)),
     _idleTimer(new QTimer(this)),
     _fullScreen(false),
-    _lockToLayer(false)
+    _lockToLayer(false),
+    _shader(new QGLShaderProgram(this))
 {
     setObjectName("GLWidget");
     if (_map == NULL)
@@ -45,6 +46,13 @@ void
 GLWidget::initializeGL()
 {
     glClearColor(0, 0, 0, 0);
+    _shader->addShaderFromSourceCode(QGLShader::Fragment,
+                                     "#version 110\n\n"
+                                     "uniform sampler2D tex0;\n"
+                                     "void main()\n"
+                                     "{\n"
+                                     "gl_FragColor = texture2D(tex0, gl_TexCoord[0].st);\n"
+                                     "}\n");
 }
 
 void
@@ -78,7 +86,16 @@ GLWidget::paintGL()
     glPushMatrix();
     gl::pushMatrices();
     gl::setMatrices(_fboCamera);
-    gl::draw( myFbo.getTexture(0));
+    cinder::gl::Texture mytex = myFbo.getTexture(0);
+    mytex.enableAndBind();
+    _shader->bind();
+    _shader->setUniformValue(_shader->uniformLocation("tex0"), 0 );
+    //gl::draw(mytex);
+    gl::drawSolidRect(Rectf(0, 0, width()*_viewCtx.getDevicePixelRatio(),
+                            height()*_viewCtx.getDevicePixelRatio()));
+    mytex.disable();
+    mytex.unbind();
+    _shader->release();
     glPopMatrix();
 }
 

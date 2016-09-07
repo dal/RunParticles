@@ -45,15 +45,11 @@ QDataStream& operator<<(QDataStream &stream, const Track& track)
 QDataStream& operator>>(QDataStream &stream, Track& track)
 {
     quint16 thisClassVersion = 0;
-    qDebug("At %lld", stream.device()->pos());
     stream >> thisClassVersion;
     // TODO: check for class version from the future
     stream >> track.name;
-    qDebug("At %lld", stream.device()->pos());
     stream >> track.sport;
-    qDebug("At %lld", stream.device()->pos());
     stream >> track.points;
-    qDebug("At %lld", stream.device()->pos());
     return stream;
 }
 

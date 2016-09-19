@@ -2,6 +2,8 @@
 
 #include <time.h>
 
+#include <QFile>
+
 unsigned int 
 Util::parseTime(const char* timeCStr) 
 {
@@ -27,3 +29,20 @@ Util::secondsToString(int seconds)
                                 .arg(secs, 2, 10, zero);
 }
 
+void
+Util::loadGLSLShader(QGLShader::ShaderType type, const QString &file,
+               QGLShaderProgram *program)
+{
+    QByteArray source;
+    QFile qrcFile(file);
+    if (qrcFile.open(QIODevice::ReadOnly))
+        source = qrcFile.readAll();
+    if (source.size()) {
+        if (!program->addShaderFromSourceCode(type, source)) {
+            qWarning() << "Failed to compile shader '" << file << "':"
+            << program->log();
+        }
+    } else {
+        qWarning() << "Could not find GLSL resource: '" << file << "'";
+    }
+}

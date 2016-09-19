@@ -16,6 +16,7 @@
 #include "cinder/ImageIo.h" // debug
 
 #include <set>
+#include "Util.h"
 
 GLWidget::GLWidget(Map *map, QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
@@ -46,13 +47,9 @@ void
 GLWidget::initializeGL()
 {
     glClearColor(0, 0, 0, 0);
-    _shader->addShaderFromSourceCode(QGLShader::Fragment,
-                                     "#version 110\n\n"
-                                     "uniform sampler2D tex0;\n"
-                                     "void main()\n"
-                                     "{\n"
-                                     "gl_FragColor = texture2D(tex0, gl_TexCoord[0].st);\n"
-                                     "}\n");
+    Util::loadGLSLShader(QGLShader::Fragment, ":viewportGlow.frag", _shader);
+    if (!_shader->link())
+        qWarning() << "Failed to link viewport glow shader program";
 }
 
 void

@@ -295,6 +295,7 @@ OTHER_FILES += ../resources/about.html
                ../resources/track1.frag
                ../resources/track1.geom
                ../resources/track1.vert
+               ../resources/viewportGlow.frag
 
 RESOURCES = ../resources/resources.qrc
           

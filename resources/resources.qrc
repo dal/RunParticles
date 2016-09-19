@@ -5,5 +5,6 @@
 <file alias="track1.frag">../resources/track1.frag</file>
 <file alias="track1.geom">../resources/track1.geom</file>
 <file alias="track1.vert">../resources/track1.vert</file>
+<file alias="viewportGlow.frag">../resources/viewportGlow.frag</file>
 </qresource>
 </RCC>

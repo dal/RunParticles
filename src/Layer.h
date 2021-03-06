@@ -13,6 +13,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QObject>
+#include <QMetaType>
 
 #include "BoundingBox.h"
 #include "Projection.h"

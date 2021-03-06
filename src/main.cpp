@@ -7,7 +7,7 @@
 //
 
 #include <QApplication>
-#include "GLWidget.h"
+#include <QGLFormat>
 #include "MainWindow.h"
 #include "Map.h"
 

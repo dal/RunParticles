@@ -58,7 +58,7 @@ TrackFileReaderWorker::TrackFileReaderWorker(TrackFileReader *parent) :
 void
 TrackFileReaderWorker::run() {
     while (!_cancelRequested) {
-        DeferredLoadRequest *req = Q_NULLPTR;
+        DeferredLoadRequest *req = nullptr;
         {
             QMutexLocker locker(&_inMutex);
             if (!_requests.isEmpty()) {

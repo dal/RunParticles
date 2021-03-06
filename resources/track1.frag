@@ -1,4 +1,7 @@
-#version 120
+#version 330 core
+
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 
 uniform bool SELECTED;
 varying vec2 gsTexCoord;
@@ -27,5 +30,6 @@ void main(void)
     */
     //if (!SELECTED)
     //    yVal *= 0.5;
-    gl_FragColor = gl_Color * yVal;
+    FragColor = gl_Color * yVal;
+    BrightColor = vec4(gl_Color.r*2.0, gl_Color.g*2.0, gl_Color.b*2.0, 0.1);
 }

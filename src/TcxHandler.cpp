@@ -3,6 +3,7 @@
 
 #include <QXmlStreamReader>
 #include <QtDebug>
+#include <QStringRef>
 
 #include "Util.h"
 

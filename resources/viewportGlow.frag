@@ -1,5 +1,6 @@
-#version 120
+#version 330 core
 
+out vec4 fragColor;
 uniform sampler2D tex0;
 
 void main()

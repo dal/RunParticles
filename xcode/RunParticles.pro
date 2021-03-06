@@ -85,7 +85,7 @@ QMAKE_MAC_XCODE_SETTINGS += XCODE_COMPILER_LIBRARY
 #CONFIG += x86
 #ARCHES -= x86_64
 ARCHES -= i386
-QMAKE_MAC_SDK = macosx
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13
 }
 
 CONFIG += qt
@@ -291,10 +291,10 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp \
           ../src/fitsdk/fit_buffered_record_mesg_broadcaster.cpp
 
-OTHER_FILES += ../resources/about.html
-               ../resources/track1.frag
-               ../resources/track1.geom
-               ../resources/track1.vert
+OTHER_FILES += ../resources/about.html  \
+               ../resources/track1.frag \
+               ../resources/track1.geom \
+               ../resources/track1.vert \
                ../resources/viewportGlow.frag
 
 RESOURCES = ../resources/resources.qrc

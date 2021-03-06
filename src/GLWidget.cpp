@@ -19,7 +19,7 @@
 #include "Util.h"
 
 GLWidget::GLWidget(Map *map, QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
+    : QGLWidget(parent),
     _playMode(PlayMode_Pause),
     _map(map),
     _timer(new QTimer(this)),
@@ -31,6 +31,11 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     setObjectName("GLWidget");
     if (_map == NULL)
         _map = new Map();
+    QGLFormat myFormat = QGLFormat(QGL::SampleBuffers);
+    myFormat.setProfile(QGLFormat::CoreProfile);
+    myFormat.setVersion(3, 3);
+    setFormat(myFormat);
+    qDebug("GL version %d.%d", format().majorVersion(), format().minorVersion());
     elapsedTimer.start();
     connect(_map, SIGNAL(signalLayerClicked(LayerId)),
             this, SLOT(slotLayerSelected(LayerId)));

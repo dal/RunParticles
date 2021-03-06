@@ -1,4 +1,4 @@
-#version 120
+#version 330 core
 #extension GL_EXT_geometry_shader4 : enable
 
 uniform float	THICKNESS;		// the thickness of the line in pixels

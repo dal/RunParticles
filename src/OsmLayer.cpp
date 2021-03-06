@@ -252,7 +252,7 @@ void
 OsmLayer::_setup()
 {
     _shader->addShaderFromSourceCode(QGLShader::Fragment,
-        "#version 110\n\n"
+        "#version 330 core\n\n"
         "uniform sampler2D tex0;\n"
         "void main()\n"
         "{\n"

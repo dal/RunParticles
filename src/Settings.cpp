@@ -63,10 +63,10 @@ TrackStyleRule
 TrackStyleRules::getStyleForTrackType(const QString &type) const
 {
     TrackStyleRule myPref;
-    const char* theType = type.toStdString().c_str();
+    QByteArray theType = type.toLocal8Bit();
     foreach(myPref, prefs) {
-        const char* myPattern = myPref.pattern.toStdString().c_str();
-        if (fnmatch(myPattern, theType, FNM_PATHNAME) == 0) {
+        QByteArray myPattern = myPref.pattern.toLocal8Bit();
+        if (fnmatch(myPattern.data(), theType.data(), FNM_PATHNAME) == 0) {
             return myPref;
         }
     }

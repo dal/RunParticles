@@ -8,25 +8,23 @@
 
 #include "GLWidget.h"
 
+#include <QMatrix4x4>
+#include <QSurfaceFormat>
 #include <QWindow>
 
-#include "cinder/gl/Fbo.h"
-#include "cinder/gl/gl.h"
-#include "cinder/Vector.h"
-#include "cinder/ImageIo.h" // debug
-
 #include <set>
+#include "GLUtil.h"
 #include "Util.h"
 
 GLWidget::GLWidget(Map *map, QWidget *parent)
-    : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
+    : QOpenGLWidget(parent),
     _playMode(PlayMode_Pause),
     _map(map),
     _timer(new QTimer(this)),
     _idleTimer(new QTimer(this)),
     _fullScreen(false),
     _lockToLayer(false),
-    _shader(new QGLShaderProgram(this))
+    _shader(new QOpenGLShaderProgram(this))
 {
     setObjectName("GLWidget");
     if (_map == NULL)
@@ -38,68 +36,67 @@ GLWidget::GLWidget(Map *map, QWidget *parent)
     connect(_map, SIGNAL(layerUpdated()), SLOT(slotRedrawWhenReady()));
     _timer->setInterval(Refresh_Interval);
     _idleTimer->setSingleShot(true);
-    if (QWindow *window = windowHandle())
-        _viewCtx.setDevicePixelRatio(window->devicePixelRatio());
-    connect(_idleTimer, SIGNAL(timeout()), SLOT(updateGL()));
+    connect(_idleTimer, &QTimer::timeout, this,
+            [this]() { QOpenGLWidget::update(); });
 }
 
 void
 GLWidget::initializeGL()
 {
-    glClearColor(0, 0, 0, 0);
-    Util::loadGLSLShader(QGLShader::Fragment, ":viewportGlow.frag", _shader);
+    QOpenGLFunctions_4_1_Core *f = GLUtil::gl();
+    f->glClearColor(0, 0, 0, 0);
+    Util::loadGLSLShader(QOpenGLShader::Vertex, ":quad.vert", _shader);
+    Util::loadGLSLShader(QOpenGLShader::Fragment, ":viewportGlow.frag",
+                         _shader);
     if (!_shader->link())
-        qWarning() << "Failed to link viewport glow shader program";
+        qWarning() << "Failed to link viewport glow shader program:"
+                   << _shader->log();
 }
 
 void
 GLWidget::paintGL()
 {
-    glLoadIdentity();
-    gl::Fbo::Format hdrFormat;
-    hdrFormat.setColorInternalFormat( GL_RGBA32F );
-    gl::Fbo myFbo( width()*_viewCtx.getDevicePixelRatio(),
-                   height()*_viewCtx.getDevicePixelRatio(),
-                  hdrFormat );
-    GLuint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-    glDrawBuffers(2, attachments);
-    myFbo.bindFramebuffer();
+    QOpenGLFunctions_4_1_Core *f = GLUtil::gl();
+    const double ratio = _viewCtx.getDevicePixelRatio();
+    const int pixelWidth = qMax(1, int(width() * ratio));
+    const int pixelHeight = qMax(1, int(height() * ratio));
+    
+    // Render the map into an offscreen HDR buffer
+    if (!_hdrFbo || _hdrFbo->width() != pixelWidth
+        || _hdrFbo->height() != pixelHeight)
     {
-        glPushMatrix();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-        // setup camera
-        gl::pushMatrices();
-        gl::setMatrices( _viewCamera );
-    
-        // clear out the window with black
-        gl::clear( Color( 0, 0, 0 ) );
-    
-        _map->draw(_viewCtx, _timeCtx);
-        
-        glPopMatrix();
+        QOpenGLFramebufferObjectFormat format;
+        format.setInternalTextureFormat(GL_RGBA16F);
+        _hdrFbo.reset(new QOpenGLFramebufferObject(pixelWidth, pixelHeight,
+                                                   format));
     }
-    myFbo.unbindFramebuffer();
-    glPushMatrix();
-    gl::pushMatrices();
-    gl::setMatrices(_fboCamera);
-    cinder::gl::Texture mytex = myFbo.getTexture(0);
-    mytex.enableAndBind();
+    _hdrFbo->bind();
+    f->glViewport(0, 0, pixelWidth, pixelHeight);
+    f->glClearColor(0, 0, 0, 0);
+    f->glClear(GL_COLOR_BUFFER_BIT);
+    f->glEnable(GL_BLEND);
+    f->glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    _map->draw(_viewCtx, _timeCtx);
+    _hdrFbo->release();
+    
+    // Draw the buffer to the widget through the glow shader
+    f->glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebufferObject());
+    f->glViewport(0, 0, pixelWidth, pixelHeight);
+    f->glDisable(GL_BLEND);
+    f->glActiveTexture(GL_TEXTURE0);
+    f->glBindTexture(GL_TEXTURE_2D, _hdrFbo->texture());
     _shader->bind();
-    _shader->setUniformValue(_shader->uniformLocation("tex0"), 0 );
-    //gl::draw(mytex);
-    gl::drawSolidRect(Rectf(0, 0, width()*_viewCtx.getDevicePixelRatio(),
-                            height()*_viewCtx.getDevicePixelRatio()));
-    mytex.disable();
-    mytex.unbind();
+    _shader->setUniformValue("tex0", 0);
+    // The unit quad spans (0,0)-(1,1); map it to the whole viewport. Its
+    // texture coordinates run top-down, and an FBO texture is bottom-up, so
+    // flip vertically.
+    QMatrix4x4 mvp;
+    mvp.translate(-1.f, 1.f, 0.f);
+    mvp.scale(2.f, -2.f, 1.f);
+    _shader->setUniformValue("mvp", mvp);
+    GLUtil::drawUnitQuad();
     _shader->release();
-    glPopMatrix();
-    // XXX: Temporary fix for Cinder FBO memory leak
-    // See https://forum.libcinder.org/topic/constantly-changing-fbo-s-size-without-leak
-    GLuint depthTextureId = myFbo.getDepthTexture().getId();
-    myFbo.reset();
-    if (depthTextureId > 0)
-        glDeleteTextures(1, &depthTextureId);
+    f->glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 GLWidget::~GLWidget()
@@ -122,12 +119,12 @@ GLWidget::sizeHint() const
 void
 GLWidget::resizeGL(int width, int height)
 {
+    _viewCtx.setDevicePixelRatio(devicePixelRatioF());
     int oldWidth = _viewCtx.getViewportWidth();
     int oldHeight = _viewCtx.getViewportHeight();
     _mapView.resize(oldWidth, oldHeight, width, height);
     _updateViewCtx();
     //glViewport (0, 0, (GLint) width, (GLint) height);
-    _fboCamera.setOrtho(0., width, 0., height, -1, 1);
 }
 
 void
@@ -180,7 +177,7 @@ GLWidget::mouseMoveEvent(QMouseEvent *event)
 void
 GLWidget::wheelEvent(QWheelEvent *event)
 {
-    mouseWheelZoom(-event->delta());
+    mouseWheelZoom(-event->angleDelta().y());
 }
 
 void
@@ -225,7 +222,7 @@ GLWidget::keyPressEvent(QKeyEvent *event)
             amt *= 2;
         moveView(amt);
     }
-    QGLWidget::keyPressEvent(event);
+    QOpenGLWidget::keyPressEvent(event);
 }
 
 void
@@ -244,7 +241,7 @@ GLWidget::update()
         }
     }
     
-    updateGL();
+    QOpenGLWidget::update();
     emit signalTimeChanged(_timeCtx.getMapSeconds());
 }
 
@@ -280,7 +277,7 @@ GLWidget::frameBoundingBox(const BoundingBox &bbox)
 {
     _mapView.frameBoundingBox(bbox);
     _updateViewCtx();
-    updateGL();
+    QOpenGLWidget::update();
 }
 
 void GLWidget::frameLonLatBox(const LonLatBox &llBox)
@@ -312,7 +309,7 @@ GLWidget::zoom(float amount)
 {
     _mapView.zoom(amount);
     _updateViewCtx();
-    updateGL();
+    QOpenGLWidget::update();
 }
 
 void
@@ -320,10 +317,10 @@ GLWidget::moveView(const QPoint &screenDelta)
 {
     slotUnlockView();
     MapPoint mapDelta = screenPointToRelativeMapPoint(screenDelta);
-    Vec2f moveVector(-mapDelta.x, mapDelta.y);
+    Vec2d moveVector(-mapDelta.x, mapDelta.y);
     _mapView.move(moveVector);
     _updateViewCtx();
-    updateGL();
+    QOpenGLWidget::update();
 }
 
 LonLatBox
@@ -462,7 +459,9 @@ GLWidget::_updateViewCtx()
                          MapPoint(right, bottom),
                          width() * _viewCtx.getDevicePixelRatio(),
                          height() * _viewCtx.getDevicePixelRatio());
-    _viewCamera.setOrtho(0., right-left, 0., top-bottom, -1, 1);
+    QMatrix4x4 projection;
+    projection.ortho(0., right-left, 0., top-bottom, -1, 1);
+    _viewCtx.setProjection(projection);
     _viewCtx.setCameraToWorld(Vec2d(left, bottom));
     qDebug("Resolution %f", _viewCtx.getResolution());
 }

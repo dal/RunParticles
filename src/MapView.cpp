@@ -46,20 +46,6 @@ MapView::move(const Vec2d &moveVector)
 }
 
 void
-MapView::setCurrentCam( CameraOrtho &aCurrentCam )
-{
-    float left, top, right, bottom, near, far;
-    aCurrentCam.getFrustum(&left,
-                           &top,
-                           &right,
-                           &bottom,
-                           &near,
-                           &far);
-    setFrustum(left, top, right, bottom);
-    _aspectRatio = (right - left) / (top - bottom);
-}
-
-void
 MapView::zoom(const float size)
 {
     double oldLeft, oldTop, oldRight, oldBottom;

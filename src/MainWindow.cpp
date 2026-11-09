@@ -500,9 +500,9 @@ void
 MainWindow::applyTrackStyleRule(const TrackStyleRules &rules,TrackLayer *layer)
 {
     TrackStyleRule rule = rules.getStyleForTrackType(layer->sport());
-    layer->setTrackColor(Color(rule.color.redF(),
-                               rule.color.greenF(),
-                               rule.color.blueF()));
+    layer->setTrackColor(ColorA(rule.color.redF(),
+                                rule.color.greenF(),
+                                rule.color.blueF(), 1.0f));
     layer->setTrackWidth(rule.width);
 }
 

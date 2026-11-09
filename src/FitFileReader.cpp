@@ -48,7 +48,7 @@ FitListener::OnMesg(fit::ActivityMesg& mesg)
         }
         if (!myTrack->points.empty()) {
             // Reset the track name with the new start timestamp
-            myTrack->name = QDateTime::fromTime_t(myTrack->points[0].time)
+            myTrack->name = QDateTime::fromSecsSinceEpoch(myTrack->points[0].time)
                 .toString("yyyy-MM-ddThh:mm:ss");
         }
     }
@@ -98,7 +98,7 @@ FitListener::OnMesg(fit::SessionMesg& mesg)
     // Set the name from the timestamp
     FIT_DATE_TIME tstmp = mesg.GetStartTime() + _timeZoneOffset +
         FIT_EPOCH_OFFSET;
-    _currentTrack->name = QDateTime::fromTime_t(tstmp)
+    _currentTrack->name = QDateTime::fromSecsSinceEpoch(tstmp)
                           .toString("yyyy-MM-ddThh:mm:ss");
     
     _tracks->append(_currentTrack);

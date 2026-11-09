@@ -1,11 +1,13 @@
-#version 120
-#extension GL_EXT_gpu_shader4 : enable
+#version 410 core
+
+layout(location = 0) in vec3 position; // xy: map position, z: time in seconds
+
+uniform mat4 mvp;
+
+out float vTime;
 
 void main(void)
 {
-	gl_FrontColor = gl_Color;
-	gl_BackColor = gl_Color;
-
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-    gl_Position.z = gl_Vertex.z;
+    vTime = position.z;
+    gl_Position = mvp * vec4(position.xy, 0.0, 1.0);
 }

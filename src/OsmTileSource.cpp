@@ -5,14 +5,11 @@
 
 #include "Singleton.h"
 
-#include <cinder/Buffer.h>
-#include <cinder/DataSource.h>
-#include <cinder/imageIO.h>
 
 unsigned int OsmTileSource::OsmTile::_accessCount = 0;
 
-OsmTileSource::OsmTile::OsmTile(OsmIndex idx, cinder::Surface *surf)
-: index(idx), _surface(surf), _lastAccess(++_accessCount)
+OsmTileSource::OsmTile::OsmTile(OsmIndex idx, const QImage &image)
+: index(idx), _image(image), _lastAccess(++_accessCount)
 {
 
 };
@@ -23,11 +20,11 @@ OsmTileSource::OsmTile::age() const
     return _accessCount - _lastAccess;
 }
 
-cinder::Surface8u&
-OsmTileSource::OsmTile::getSurface()
+const QImage&
+OsmTileSource::OsmTile::getImage()
 {
     _lastAccess = ++_accessCount;
-    return *_surface;
+    return _image;
 }
 
 OsmTileSource::OsmTileSource(QObject *parent)
@@ -59,10 +56,10 @@ OsmTileSource::hasFinishedTile(const OsmIndex &index) const
     return _memoryTileCache.find(index) != _memoryTileCache.end();
 }
 
-cinder::Surface8u&
+const QImage&
 OsmTileSource::retrieveFinishedTile(const OsmIndex &index)
 {
-    return _memoryTileCache[index]->getSurface();
+    return _memoryTileCache[index]->getImage();
 }
 
 void
@@ -116,18 +113,13 @@ OsmTileSource::onRequestFinished()
     
     QByteArray bytes = reply->readAll();
     
-    cinder::Buffer buffer((void*)bytes.constData(), bytes.size() + 1);
-    cinder::DataSourceBufferRef data = cinder::DataSourceBuffer::create(buffer);
-    cinder::Surface8u *surf;
-    try {
-        surf = new cinder::Surface8u(cinder::loadImage(data,
-                                                cinder::ImageSource::Options(),
-                                                "png"));
-    } catch (cinder::ImageIoException e) {
-        qWarning() << "Image load exception: " << e.what();
+    QImage image;
+    if (!image.loadFromData(bytes, "PNG")) {
+        qWarning() << "Failed to decode OSM tile image";
         return;
     }
-    OsmTileRef tileRef = OsmTileRef(new OsmTile(index, surf));
+    OsmTileRef tileRef = OsmTileRef(
+        new OsmTile(index, image.convertToFormat(QImage::Format_RGBA8888)));
     _memoryTileCache.insert(
         std::pair<OsmIndex, OsmTileRef>(index, tileRef));
     _cleanCache();

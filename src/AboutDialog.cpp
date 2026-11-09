@@ -29,7 +29,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     _textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     _textEdit->setOpenExternalLinks(true);
     QPalette p;
-    p.setColor(QPalette::Base, p.color(QPalette::Background));
+    p.setColor(QPalette::Base, p.color(QPalette::Window));
     _textEdit->setPalette(p);
     
     _version = new QLabel(QString("Version %0 (%1 %2)")

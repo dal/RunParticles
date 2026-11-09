@@ -16,17 +16,12 @@
 
 #include "Singleton.h"
 
-#include "boost/shared_ptr.hpp"
-
-#include "cinder/Surface.h"
+#include <QImage>
 #include "math.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <map>
 #include <set>
-
-typedef std::shared_ptr<cinder::Surface8u> Surface8uRef;
-typedef std::weak_ptr<cinder::Surface8u> Surface8uPtr;
 
 struct OsmIndex {
     
@@ -74,13 +69,13 @@ class OsmTileSource : public QObject
     
     public:
         OsmTile() { };
-        OsmTile(OsmIndex idx, cinder::Surface *surf);
+        OsmTile(OsmIndex idx, const QImage &image);
         OsmIndex index;
         unsigned int age() const;
-        cinder::Surface8u& getSurface();
+        const QImage& getImage();
     protected:
         static unsigned int _accessCount;
-        Surface8uRef _surface;
+        QImage _image;
         unsigned int _lastAccess;
     };
     
@@ -114,7 +109,7 @@ public:
     
     bool hasFinishedTile(const OsmIndex &index) const;
     
-    cinder::Surface8u& retrieveFinishedTile(const OsmIndex &index);
+    const QImage& retrieveFinishedTile(const OsmIndex &index);
     
 signals:
     

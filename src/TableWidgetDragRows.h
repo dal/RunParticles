@@ -19,5 +19,5 @@ private:
 class ExampleDialog : public QDialog
 {
 public:
-  ExampleDialog(QWidget* parent=0, Qt::WindowFlags f=0);
+  ExampleDialog(QWidget* parent=0, Qt::WindowFlags f = Qt::WindowFlags());
 };

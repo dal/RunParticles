@@ -96,7 +96,7 @@ void ExportImageDialog::slotExportImage()
         _target->setMapSeconds(newTime);
         QString imgName = _baseImageNameLineEdit->text();
         QString ext = _imageExtensionLineEdit->text();
-        QImage theImage = _target->grabFrameBuffer();
+        QImage theImage = _target->grabFramebuffer();
         QString imgPath = QString("%0/%1.%2.%3")
                             .arg(_outputDir)
                             .arg(imgName)

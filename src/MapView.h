@@ -10,12 +10,9 @@
 #ifndef MAPVIEW_H
 #define MAPVIEW_H
 
-#include "cinder/Vector.h"
-#include "cinder/Camera.h"
 #include "Types.h"
 #include "ViewCtx.h"
 
-using namespace cinder;
 /*
  * Encapsulates one camera view onto a map.
  */
@@ -26,7 +23,6 @@ public:
     void move(const Vec2d &moveVector);
     void resize(int oldWidth, int oldHieght, int newWidth, int newHeight);
     
-    void setCurrentCam( CameraOrtho &aCurrentCam );
     void zoom( const float );
     void recenter(const MapPoint &position);
     void frameBoundingBox(const BoundingBox &bbox);

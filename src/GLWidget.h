@@ -10,21 +10,21 @@
 #define __RunParticles__GLWidget__
 
 #include <QElapsedTimer>
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QMouseEvent>
 #include <QSize>
 #include <QTimer>
-#include <QGLShaderProgram>
+#include <QOpenGLFramebufferObject>
+#include <QOpenGLShaderProgram>
+#include <memory>
 #include <iostream>
-
-#include "cinder/Camera.h"
 
 #include "BoundingBox.h"
 #include "Map.h"
 #include "MapView.h"
 #include "TimeCtx.h"
 
-class GLWidget : public QGLWidget
+class GLWidget : public QOpenGLWidget
 {
 
     Q_OBJECT
@@ -142,7 +142,7 @@ protected:
     
     qint64 _currentSeconds;
     
-    CameraOrtho _viewCamera, _fboCamera;
+    std::unique_ptr<QOpenGLFramebufferObject> _hdrFbo;
     
     QPoint _lastMovePos, _lastDownPos;
     
@@ -168,7 +168,7 @@ protected:
     
     double _playbackStartTime;
     
-    QGLShaderProgram *_shader;
+    QOpenGLShaderProgram *_shader;
 
 };
 

@@ -30,8 +30,8 @@ Util::secondsToString(int seconds)
 }
 
 void
-Util::loadGLSLShader(QGLShader::ShaderType type, const QString &file,
-               QGLShaderProgram *program)
+Util::loadGLSLShader(QOpenGLShader::ShaderType type, const QString &file,
+               QOpenGLShaderProgram *program)
 {
     QByteArray source;
     QFile qrcFile(file);

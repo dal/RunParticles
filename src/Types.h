@@ -13,14 +13,20 @@
 #include <set>
 #include <vector>
 
-#include "cinder/Vector.h"
+#include <atomic>
+
+#include <glm/glm.hpp>
 
 #include <QDataStream>
 #include <QDateTime>
 #include <QList>
 #include <QString>
 
-using namespace cinder;
+typedef glm::dvec2 Vec2d;
+typedef glm::vec2 Vec2f;
+typedef glm::vec3 Vec3f;
+typedef glm::vec3 Color;
+typedef glm::vec4 ColorA;
 
 typedef std::set<unsigned int> PassMap;
 

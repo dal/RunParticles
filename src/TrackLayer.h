@@ -5,13 +5,14 @@
 #include "Layer.h"
 #include "Types.h"
 
-#include "cinder/gl/gl.h"
-#include "cinder/gl/DisplayList.h"
-#include "cinder/gl/Vbo.h"
+#include "GLUtil.h"
+
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
 #include <QDataStream>
 #include <QString>
-#include <QGLShader>
-#include <QGLShaderProgram>
+#include <QOpenGLShader>
+#include <QOpenGLShaderProgram>
 
 class TrackLayer;
 
@@ -28,7 +29,7 @@ public:
         Pass_Count
     };
     
-    static const Color SelectedColor;
+    static const ColorA SelectedColor;
     
     TrackLayer(Track *track);
     
@@ -80,7 +81,21 @@ public:
 
 protected:
     
-    gl::VboMesh _makeVbo(const Path &path);
+    /*
+     * The GPU buffers for one level of detail of the path. The vertices are
+     * drawn as GL_LINES_ADJACENCY.
+     */
+    struct PathMesh
+    {
+        QOpenGLVertexArrayObject vao;
+        QOpenGLBuffer vertices;
+        QOpenGLBuffer indices{QOpenGLBuffer::IndexBuffer};
+        int indexCount = 0;
+        
+        bool valid() const { return indexCount > 0; }
+    };
+    
+    void _makeVbo(const Path &path, PathMesh &mesh);
     
     void _initializeVbos();
     
@@ -116,15 +131,14 @@ protected:
     
     float *_pathBuffer;
     
-    gl::VboMesh _vboHi, _vboMd, _vboLo, _vboXLo;
+    PathMesh _vboHi, _vboMd, _vboLo, _vboXLo;
     
     static bool _isSetup;
     
-    static gl::DisplayList _particle, _selectedParticle;
     
     MapPoint _positionOffset;
     
-    static QGLShaderProgram *_shader;
+    static QOpenGLShaderProgram *_shader;
 
 private:
     

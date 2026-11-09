@@ -5,6 +5,11 @@
 <file alias="track1.frag">../resources/track1.frag</file>
 <file alias="track1.geom">../resources/track1.geom</file>
 <file alias="track1.vert">../resources/track1.vert</file>
+<file alias="quad.vert">../resources/quad.vert</file>
+<file alias="osmTile.frag">../resources/osmTile.frag</file>
+<file alias="label.frag">../resources/label.frag</file>
+<file alias="flat.vert">../resources/flat.vert</file>
+<file alias="flat.frag">../resources/flat.frag</file>
 <file alias="viewportGlow.frag">../resources/viewportGlow.frag</file>
 </qresource>
 </RCC>

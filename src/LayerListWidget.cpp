@@ -116,7 +116,7 @@ LayerListWidget::addLayer(Layer *layer)
 void
 LayerListWidget::removeLayers(const QList<LayerId> &layerIds)
 {
-    QSet<LayerId> layerIdsSet = QSet<LayerId>().fromList(layerIds);
+    QSet<LayerId> layerIdsSet = QSet<LayerId>(layerIds.begin(), layerIds.end());
     QList<QTreeWidgetItem*> toRemove;
     QTreeWidgetItemIterator it(this);
     while(*it) {

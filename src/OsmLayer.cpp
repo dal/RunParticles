@@ -3,6 +3,16 @@
 
 #include <stdio.h>
 
+#include <QDebug>
+#include <QFont>
+#include <QFontMetrics>
+#include <QMatrix4x4>
+#include <QPainter>
+#include <QVector4D>
+
+#include "GLUtil.h"
+#include "Util.h"
+
 #define MAXLAT 85.0511287798066
 #define MAXLON 180.0
 
@@ -37,33 +47,19 @@ OsmLayer::OsmLayer() : Layer(),
     _currentZoom(0),
     _numEdgeTiles(1),
     _lastResolution(0.),
-    _shader(new QGLShaderProgram),
+    _shader(new QOpenGLShaderProgram),
+    _labelShader(new QOpenGLShaderProgram),
     _isSetup(false)
 {
     connect(_tileSource, SIGNAL(tileReady(OsmIndex)),
                          SLOT(onTileReady(OsmIndex)));
-    _quad = gl::DisplayList(GL_COMPILE);
-    _quad.newList();
-    gl::drawSolidRect(Rectf(0., 10.0,
-                            10.0, 0.0));
-    _quad.endList();
-    
-    // Initialize the copyright label displayList
-    _font = Font("Monaco", 80);
-    _tFont = gl::TextureFont::create( _font );
-    std::string copyright("(c) OpenStreetMap contributors");
-    _labelWidth = _tFont->measureString(copyright);
-    _label = gl::DisplayList(GL_COMPILE);
-    _label.newList();
-    gl::color(ColorA( 0.8f, 0.8f, 0.8f, 1.0f ));
-    _tFont->drawString(copyright, Vec2f(0., 0.));
-    _label.endList();
 }
 
 OsmLayer::~OsmLayer()
 {
     delete _tileSource;
     delete _shader;
+    delete _labelShader;
 }
 
 QString
@@ -135,7 +131,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
             visibleTiles.insert(idx);
             TileMap::iterator foundTile = _tiles.find(idx);
             if (foundTile == _tiles.end()) {
-                TileRefPtr newTile = std::make_shared<Tile>(&_quad);
+                TileRefPtr newTile = std::make_shared<Tile>();
                 newTile->shader = _shader;
                 newTile->index = idx;
                 newTile->upperLeft.x = _worldTopLeft.x +
@@ -153,16 +149,7 @@ OsmLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx&)
         }
     }
     
-    // draw the credit label at the lower left
-    glPushMatrix();
-    gl::enableAlphaBlending();
-    float res = viewCtx.getResolution();
-    glTranslated(res*10.0, res*8., 1.0);
-    float textScale = _labelWidth.x / 10000. * res;
-    glScalef(textScale, -textScale, 1.0);
-    _label.draw();
-    gl::disableAlphaBlending();
-    glPopMatrix();
+    _drawLabel(viewCtx);
     
     // clean up tiles we no longer display
     for (TileMap::iterator i=_tiles.begin(); i != _tiles.end();) {
@@ -193,15 +180,13 @@ OsmLayer::onTileReady(OsmIndex index)
     TileMap::iterator i = _tiles.find(index);
     if (i != _tiles.end()) {
         if (_tileSource->hasFinishedTile(index)) {
-            i->second->setTexture(_tileSource->retrieveFinishedTile(index));
+            i->second->setImage(_tileSource->retrieveFinishedTile(index));
             emit layerUpdated();
         }
     }
 }
 
-OsmLayer::Tile::Tile(gl::DisplayList *quad) :
-    quadDisplayList(quad),
-    texture(NULL),
+OsmLayer::Tile::Tile() :
     shader(NULL)
 {
     
@@ -210,34 +195,43 @@ OsmLayer::Tile::Tile(gl::DisplayList *quad) :
 void
 OsmLayer::Tile::draw(const ViewCtx &viewCtx)
 {
-    MapPoint w2c = viewCtx.getWorldToCamera();
-    if (texture != NULL) {
-        texture->enableAndBind();
-        shader->bind();
-        shader->setUniformValue(shader->uniformLocation("tex0"), 0 );
-        _drawQuad(w2c+ upperLeft, w2c + lowerRight);
-        texture->unbind();
-        shader->release();
+    if (image.isNull())
+        return;
+    if (!texture) {
+        texture.reset(new QOpenGLTexture(image.convertToFormat(
+                                            QImage::Format_RGBA8888),
+                                         QOpenGLTexture::DontGenerateMipMaps));
+        texture->setMinMagFilters(QOpenGLTexture::Linear,
+                                  QOpenGLTexture::Linear);
+        texture->setWrapMode(QOpenGLTexture::ClampToEdge);
+        image = QImage(); // the GPU has its own copy now
     }
+    MapPoint w2c = viewCtx.getWorldToCamera();
+    texture->bind(0);
+    shader->bind();
+    shader->setUniformValue("tex0", 0);
+    _drawQuad(viewCtx, w2c + upperLeft, w2c + lowerRight);
+    texture->release();
+    shader->release();
 }
 
 void
-OsmLayer::Tile::_drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight)
+OsmLayer::Tile::_drawQuad(const ViewCtx &viewCtx, const MapPoint &upperLeft,
+                          const MapPoint &lowerRight)
 {
-    //gl::drawSolidRect(Rectf(upperLeft.x, upperLeft.y,
-    //                        lowerRight.x, lowerRight.y));
-    glPushMatrix();
-    glTranslated(upperLeft.x, lowerRight.y, 0.0);
+    QMatrix4x4 mvp = viewCtx.getProjection();
+    mvp.translate(float(upperLeft.x), float(lowerRight.y), 0.f);
     float width = lowerRight.x - upperLeft.x;
-    glScalef(width/10., width/10., 1.0);
-    quadDisplayList->draw();
-    glPopMatrix();
+    mvp.scale(width, width, 1.0f);
+    shader->setUniformValue("mvp", mvp);
+    GLUtil::drawUnitQuad();
 }
 
 void
-OsmLayer::Tile::setTexture(const Surface8u &surface)
+OsmLayer::Tile::setImage(const QImage &newImage)
 {
-    texture = new cinder::gl::Texture(surface);
+    image = newImage;
+    texture.reset();
 }
 
 uint
@@ -251,18 +245,65 @@ OsmLayer::_getZoomLevel(double resolution) const
 void
 OsmLayer::_setup()
 {
-    _shader->addShaderFromSourceCode(QGLShader::Fragment,
-        "#version 110\n\n"
-        "uniform sampler2D tex0;\n"
-        "void main()\n"
-        "{\n"
-        "vec4 texelColor = texture2D(tex0, gl_TexCoord[0].st);\n"
-        "vec4 scaledColor = texelColor * vec4(0.3, 0.59, 0.11, 1.0);\n"
-        "float luminance = scaledColor.r + scaledColor.g + scaledColor.b;\n"
-        "luminance = 1. - luminance;\n"
-        "gl_FragColor = vec4( luminance, luminance, luminance, texelColor.a);\n"
-        "}\n");
+    Util::loadGLSLShader(QOpenGLShader::Vertex, ":quad.vert", _shader);
+    Util::loadGLSLShader(QOpenGLShader::Fragment, ":osmTile.frag", _shader);
+    if (!_shader->link())
+        qWarning() << "Failed to link OSM tile shader:" << _shader->log();
+    
+    Util::loadGLSLShader(QOpenGLShader::Vertex, ":quad.vert", _labelShader);
+    Util::loadGLSLShader(QOpenGLShader::Fragment, ":label.frag", _labelShader);
+    if (!_labelShader->link())
+        qWarning() << "Failed to link OSM label shader:" << _labelShader->log();
+    
+    // Render the copyright label to a texture
+    QFont font("Monaco", 80);
+    font.setStyleHint(QFont::Monospace);
+    QFontMetrics metrics(font);
+    QString copyright("(c) OpenStreetMap contributors");
+    int width = metrics.horizontalAdvance(copyright);
+    QImage image(width, metrics.height(),
+                 QImage::Format_RGBA8888_Premultiplied);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    painter.setFont(font);
+    painter.setPen(Qt::white);
+    painter.drawText(0, metrics.ascent(), copyright);
+    painter.end();
+    _labelTexture.reset(new QOpenGLTexture(image,
+                                           QOpenGLTexture::DontGenerateMipMaps));
+    _labelTexture->setMinMagFilters(QOpenGLTexture::Linear,
+                                    QOpenGLTexture::Linear);
+    _labelTexture->setWrapMode(QOpenGLTexture::ClampToEdge);
+    // The label's baseline sits ascent() down from the top of the image
+    _labelSize = QSizeF(width, metrics.height());
+    _labelAscent = metrics.ascent();
+    
     _isSetup = true;
+}
+
+void
+OsmLayer::_drawLabel(const ViewCtx &viewCtx)
+{
+    // draw the credit label at the lower left
+    QOpenGLFunctions_4_1_Core *f = GLUtil::gl();
+    f->glEnable(GL_BLEND);
+    f->glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); // premultiplied
+    float res = viewCtx.getResolution();
+    float textScale = _labelSize.width() / 10000. * res;
+    QMatrix4x4 mvp = viewCtx.getProjection();
+    mvp.translate(res*10.0, res*8., 0.f);
+    // The text baseline is the origin, and the image extends upward from it
+    mvp.translate(0.f, -(_labelSize.height() - _labelAscent) * textScale, 0.f);
+    mvp.scale(_labelSize.width() * textScale,
+              _labelSize.height() * textScale, 1.0f);
+    _labelTexture->bind(0);
+    _labelShader->bind();
+    _labelShader->setUniformValue("tex0", 0);
+    _labelShader->setUniformValue("mvp", mvp);
+    _labelShader->setUniformValue("uColor", QVector4D(0.8f, 0.8f, 0.8f, 1.0f));
+    GLUtil::drawUnitQuad();
+    _labelShader->release();
+    _labelTexture->release();
 }
 
 

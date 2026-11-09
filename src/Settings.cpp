@@ -9,7 +9,6 @@
 #include "Settings.h"
 
 #include <QApplication>
-#include <QDesktopWidget>
 
 #include <fnmatch.h>
 

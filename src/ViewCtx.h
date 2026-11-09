@@ -21,6 +21,8 @@
 #include "BoundingBox.h"
 #include "TimeCtx.h"
 
+#include <QMatrix4x4>
+
 #include <string>
 #include <set>
 
@@ -53,6 +55,14 @@ public:
     
     int getViewportHeight() const { return _height; }
     
+    /* Orthographic projection from camera space to clip space. */
+    const QMatrix4x4& getProjection() const { return _projection; }
+    
+    void setProjection(const QMatrix4x4 &projection)
+    {
+        _projection = projection;
+    }
+    
     bool isSelected(const LayerId id) const;
     
     std::set<LayerId> selectedLayers;
@@ -68,6 +78,8 @@ protected:
     double _resolution;
     
     double _devicePixelRatio;
+    
+    QMatrix4x4 _projection;
     
 };
 

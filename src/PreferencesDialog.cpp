@@ -114,7 +114,7 @@ PreferencesDialog::getTrackStyleRules() const
         myRule.pattern = rItem->text();
         QTableWidgetItem *cItem = _tableWidget->item(row,
                                                      TrackStyleTable_Color_Col);
-        myRule.color = cItem->backgroundColor();
+        myRule.color = cItem->background().color();
         QLineEdit *widthLineEdit =
             dynamic_cast<QLineEdit*>(_tableWidget->cellWidget(row,
                                                      TrackStyleTable_Width_Col));

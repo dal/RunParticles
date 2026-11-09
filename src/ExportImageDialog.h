@@ -26,7 +26,7 @@ public:
     ExportImageDialog(GLWidget *target,
                       PlaybackWidget *playbackWidget,
                       QWidget *parent=0,
-                      Qt::WindowFlags f = 0);
+                      Qt::WindowFlags f = Qt::WindowFlags());
     
 protected slots:
     void slotExportImage();

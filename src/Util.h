@@ -2,8 +2,8 @@
 #include <QString>
 #include <QDataStream>
 #include <QString>
-#include <QGLShader>
-#include <QGLShaderProgram>
+#include <QOpenGLShader>
+#include <QOpenGLShaderProgram>
 
 namespace Util
 {
@@ -11,7 +11,7 @@ namespace Util
     
     QString secondsToString(int seconds);
     
-    void loadGLSLShader(QGLShader::ShaderType, const QString&,
-                        QGLShaderProgram*);
+    void loadGLSLShader(QOpenGLShader::ShaderType, const QString&,
+                        QOpenGLShaderProgram*);
 };
 

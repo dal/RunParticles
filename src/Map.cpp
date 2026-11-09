@@ -140,7 +140,8 @@ Map::onMapClicked(const MapPoint &pt, const ViewCtx &viewCtx) const
     LayerPtrList::const_iterator it;
     for (it = _layers.begin(); it != _layers.end(); it++) {
         if ((*it)->visible()) {
-            double myDist = pt.distanceSquared((*it)->position());
+            MapPoint offset = pt - (*it)->position();
+            double myDist = glm::dot(offset, offset);
             if (myDist < limit && (!found || myDist < closestDistance)) {
                 closestDistance = myDist;
                 closestId = (*it)->id();

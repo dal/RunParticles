@@ -6,6 +6,10 @@
 #include "Util.h"
 #include "ViewCtx.h"
 
+#include <QDebug>
+#include <QMatrix4x4>
+#include <QVector4D>
+
 #include <vector>
 
 #define PARTICLE_RADIUS 12.0
@@ -13,46 +17,26 @@
 #define LO_LOD_RES 10.0
 #define XLO_LOD_RES 350.0
 
-using namespace cinder;
-
-const Color TrackLayer::SelectedColor = Color( 1, 1, 0 );
+const ColorA TrackLayer::SelectedColor = ColorA( 1, 1, 0, 1 );
 
 const quint32 TrackLayer::_streamHeader = 4;
 
 const quint16 TrackLayer::_classVersion = 1;
 
 bool TrackLayer::_isSetup = false;
-gl::DisplayList TrackLayer::_particle;
-gl::DisplayList TrackLayer::_selectedParticle;
-QGLShaderProgram *TrackLayer::_shader;
+QOpenGLShaderProgram *TrackLayer::_shader;
 
 void
 TrackLayer::_setup()
 {
-    // Initialize the shaders
-    _shader = new QGLShaderProgram();
-    _shader->setGeometryInputType(GL_LINES_ADJACENCY_EXT);
-    _shader->setGeometryOutputType(GL_TRIANGLE_STRIP);
-    _shader->setGeometryOutputVertexCount(7);
-    Util::loadGLSLShader(QGLShader::Vertex, ":track1.vert", _shader);
-    Util::loadGLSLShader(QGLShader::Fragment, ":track1.frag", _shader);
-    Util::loadGLSLShader(QGLShader::Geometry, ":track1.geom", _shader);
+    // Initialize the shaders. This needs a current GL context, so it's done
+    // on the first draw rather than at construction.
+    _shader = new QOpenGLShaderProgram();
+    Util::loadGLSLShader(QOpenGLShader::Vertex, ":track1.vert", _shader);
+    Util::loadGLSLShader(QOpenGLShader::Geometry, ":track1.geom", _shader);
+    Util::loadGLSLShader(QOpenGLShader::Fragment, ":track1.frag", _shader);
     if (!_shader->link())
-        qWarning() << "Failed to link shader program";
-
-    _particle = gl::DisplayList(GL_COMPILE);
-    _particle.newList();
-    gl::drawSolidCircle( Vec2d(0.f, 0.f), 10.);
-    gl::color( Color( 0.3, 0.3, 0.3 ) );
-    gl::drawStrokedCircle( Vec2d(0.f, 0.f), 10.);
-    _particle.endList();
-    
-    _selectedParticle = gl::DisplayList(GL_COMPILE);
-    _selectedParticle.newList();
-    gl::color(SelectedColor);
-    gl::drawStrokedCircle(Vec2d(0.f, 0.f), 15.);
-    gl::drawStrokedCircle(Vec2d(0.f, 0.f), 20.);
-    _selectedParticle.endList();
+        qWarning() << "Failed to link shader program:" << _shader->log();
     
     _isSetup = true;
 }
@@ -64,15 +48,13 @@ _loLodRes(LO_LOD_RES),
 _xLoLodRes(XLO_LOD_RES),
 _track(track),
 _duration(0),
-_trackColor(Color(1,0,0)),
+_trackColor(ColorA(1, 0, 0, 1)),
 _trackWidth(1),
 _projected(false)
 {
-    if (!_isSetup)
-        _setup();
     int numPts = track->points.size();
     if (numPts > 0)
-        _startTime = QDateTime::fromTime_t(track->points[0].time);
+        _startTime = QDateTime::fromSecsSinceEpoch(track->points[0].time);
     if (numPts > 1)
         _duration = track->points[numPts-1].time - track->points[0].time;
     _pathBuffer = (float*)malloc(sizeof(float)*4*numPts);
@@ -166,7 +148,7 @@ TrackLayer::project(const Projection &projection)
             startTime = pt.time;
             _positionOffset = newPt.pos;
             lastPt = newPt.pos;
-        } else if ((newPt.pos - lastPt).length() < 4.) {
+        } else if (glm::length(newPt.pos - lastPt) < 4.) {
             continue;
         }
         newPt.time = pt.time - startTime;
@@ -183,8 +165,8 @@ TrackLayer::project(const Projection &projection)
     _projected = true;
 }
 
-gl::VboMesh
-TrackLayer::_makeVbo(const Path &path)
+void
+TrackLayer::_makeVbo(const Path &path, PathMesh &mesh)
 {
     std::vector<Vec3f> vertices;
     vertices.reserve( path.size() + 2);
@@ -221,17 +203,22 @@ TrackLayer::_makeVbo(const Path &path)
         indices.push_back(i+2);
     }
     
-    // finally, create the mesh
-    gl::VboMesh::Layout layout;
-    layout.setStaticPositions();
-    layout.setStaticIndices();
-    layout.setStaticTexCoords2d();
-    
-    gl::VboMesh vboMesh = gl::VboMesh(vertices.size(), indices.size(), layout,
-                           GL_LINES_ADJACENCY_EXT );
-    vboMesh.bufferPositions( &(vertices.front()), vertices.size() );
-    vboMesh.bufferIndices( indices );
-    return vboMesh;
+    // finally, upload the mesh
+    QOpenGLFunctions_4_1_Core *f = GLUtil::gl();
+    mesh.vao.create();
+    mesh.vao.bind();
+    mesh.vertices.create();
+    mesh.vertices.bind();
+    mesh.vertices.allocate(vertices.data(),
+                           int(vertices.size() * sizeof(Vec3f)));
+    f->glEnableVertexAttribArray(0);
+    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3f), nullptr);
+    mesh.indices.create();
+    mesh.indices.bind();
+    mesh.indices.allocate(indices.data(),
+                          int(indices.size() * sizeof(uint32_t)));
+    mesh.indexCount = int(indices.size());
+    mesh.vao.release();
 }
 
 void
@@ -244,16 +231,18 @@ TrackLayer::_initializeVbos()
     // Make the low res path
     _path_lo = PathUtil::DouglasPeucker(_path_md, _loLodRes*2.);
     _path_xlo = PathUtil::DouglasPeucker(_path_lo, _xLoLodRes);
-    _vboHi = _makeVbo(_path_hi);
-    _vboMd = _makeVbo(_path_md);
-    _vboLo = _makeVbo(_path_lo);
-    _vboXLo = _makeVbo(_path_xlo);
+    _makeVbo(_path_hi, _vboHi);
+    _makeVbo(_path_md, _vboMd);
+    _makeVbo(_path_lo, _vboLo);
+    _makeVbo(_path_xlo, _vboXLo);
 }
 
 void
 TrackLayer::draw(uint pass, const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
-    if (!_vboHi)
+    if (!_isSetup)
+        _setup();
+    if (!_vboHi.valid())
         _initializeVbos();
     
     if (!visible() || !_bounds.overlaps(viewCtx.getBoundingBox()))
@@ -278,15 +267,13 @@ void
 TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
 {
     MapPoint w2c = viewCtx.getWorldToCamera();
-    glPushMatrix();
-    glTranslated(w2c.x+_positionOffset.x, w2c.y+_positionOffset.y, 0.);
+    QMatrix4x4 mvp = viewCtx.getProjection();
+    mvp.translate(float(w2c.x+_positionOffset.x),
+                  float(w2c.y+_positionOffset.y), 0.f);
     bool selected = viewCtx.isSelected(id());
-    if (selected)
-        gl::color(SelectedColor);
-    else
-        gl::color(_trackColor);
-    if (_vboHi) {
-        gl::VboMesh *theMesh = &_vboHi;
+    const ColorA &color = selected ? SelectedColor : _trackColor;
+    if (_vboHi.valid()) {
+        PathMesh *theMesh = &_vboHi;
         double res = viewCtx.getResolution();
         float miter_limit = 0.75;
         if (res >= _mediumLodRes && res < _loLodRes) {
@@ -298,25 +285,27 @@ TrackLayer::_drawPath(const ViewCtx &viewCtx, const TimeCtx &timeCtx)
             theMesh = &_vboXLo;
             miter_limit = -1.0;
         }
+        QOpenGLFunctions_4_1_Core *f = GLUtil::gl();
         _shader->bind();
         float time = timeCtx.getMapSeconds();
-        _shader->setUniformValue(_shader->uniformLocation("WIN_SCALE"),
+        _shader->setUniformValue("mvp", mvp);
+        _shader->setUniformValue("uColor",
+                                 QVector4D(color.r, color.g, color.b, color.a));
+        _shader->setUniformValue("WIN_SCALE",
                                  (GLfloat)viewCtx.getViewportWidth(),
                                  (GLfloat)viewCtx.getViewportHeight() );
-        _shader->setUniformValue(_shader->uniformLocation("MITER_LIMIT"),
+        _shader->setUniformValue("MITER_LIMIT",
                                  (GLfloat)miter_limit ); /* -1.0 never, 1.0 always */
-        _shader->setUniformValue(_shader->uniformLocation("THICKNESS"),
-                                 (GLfloat)float(_trackWidth) );
-        _shader->setUniformValue(_shader->uniformLocation("TIME_SECONDS"),
-                                 (GLfloat)float(time) );
-        _shader->setUniformValue(_shader->uniformLocation("SELECTED"),
-                                 selected);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        gl::draw(*theMesh);
+        _shader->setUniformValue("THICKNESS", (GLfloat)float(_trackWidth) );
+        _shader->setUniformValue("TIME_SECONDS", (GLfloat)float(time) );
+        f->glEnable(GL_BLEND);
+        f->glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        theMesh->vao.bind();
+        f->glDrawElements(GL_LINES_ADJACENCY, theMesh->indexCount,
+                          GL_UNSIGNED_INT, nullptr);
+        theMesh->vao.release();
         _shader->release();
     }
-    glPopMatrix();
     
     // Choose which path to display
     Path *currentPath = &_path_hi;
@@ -363,16 +352,20 @@ TrackLayer::_drawParticle(const ViewCtx &viewCtx)
     else if (radius / viewCtx.getResolution() > 24.)
         radius = viewCtx.getResolution() * 24.;
     const Vec2d particlePosCamera = viewCtx.getWorldToCamera() + _particlePos;
-    gl::color(1.0, 1.0, 1.0);
-    glPushMatrix();
-    glTranslated(particlePosCamera.x, particlePosCamera.y, 0.0);
-    glScalef(radius/10., radius/10., 1.0);
+    QMatrix4x4 mvp = viewCtx.getProjection();
+    mvp.translate(float(particlePosCamera.x), float(particlePosCamera.y), 0.f);
+    mvp.scale(radius/10., radius/10., 1.0f);
     
-    _particle.draw();
+    GLUtil::gl()->glEnable(GL_BLEND);
+    GLUtil::gl()->glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    GLUtil::drawCircle(mvp, QVector4D(1.f, 1.f, 1.f, 1.f), 10.f, true);
+    GLUtil::drawCircle(mvp, QVector4D(0.3f, 0.3f, 0.3f, 1.f), 10.f, false);
     if (viewCtx.isSelected(id())) {
-        _selectedParticle.draw();
+        const QVector4D sel(SelectedColor.r, SelectedColor.g,
+                            SelectedColor.b, SelectedColor.a);
+        GLUtil::drawCircle(mvp, sel, 15.f, false);
+        GLUtil::drawCircle(mvp, sel, 20.f, false);
     }
-    glPopMatrix();
 }
 
 BoundingBox

@@ -48,7 +48,7 @@ PlaybackWidget::PlaybackWidget(QWidget *parent) :
     connect(_backButton, SIGNAL(clicked()), SIGNAL(signalBack()));
     connect(_pauseButton, SIGNAL(clicked()), SIGNAL(signalPause()));
     connect(_forwardButton, SIGNAL(clicked()), SIGNAL(signalForward()));
-    connect(_playSpeedCombo, SIGNAL(activated(const QString&)),
+    connect(_playSpeedCombo, SIGNAL(textActivated(QString)),
             this, SLOT(slotPlaybackRateChanged(const QString&)));
     connect(_slider, SIGNAL(valueChanged(int)),
             SIGNAL(signalTimeSliderChanged(int)));
@@ -114,10 +114,10 @@ void
 PlaybackWidget::_layoutPlaybackControls()
 {
     QVBoxLayout *mainCol = new QVBoxLayout(this);
-    mainCol->setMargin(0);
+    mainCol->setContentsMargins(0, 0, 0, 0);
     mainCol->setSpacing(2);
     QGridLayout *layout = new QGridLayout();
-    layout->setMargin(8);
+    layout->setContentsMargins(8, 8, 8, 8);
     layout->setSpacing(8);
     layout->addWidget(_rewindButton, 0, 0);
     layout->addWidget(_backButton, 0, 1);

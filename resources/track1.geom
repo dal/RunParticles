@@ -1,36 +1,40 @@
-#version 120
-#extension GL_EXT_geometry_shader4 : enable
+#version 410 core
+
+layout(lines_adjacency) in;
+layout(triangle_strip, max_vertices = 7) out;
+
+in float vTime[];
 
 uniform float	THICKNESS;		// the thickness of the line in pixels
 uniform float	MITER_LIMIT;	// 1.0: always miter, -1.0: never miter, 0.75: default
 uniform vec2	WIN_SCALE;		// the size of the viewport in pixels
 uniform float   TIME_SECONDS;
 
-varying out vec2 gsTexCoord;
+out vec2 gsTexCoord;
 
 vec2 screen_space(vec4 vertex) {
 	return vec2( vertex.xy / vertex.w ) * WIN_SCALE;
 }
 
 vec2 lerp( vec2 A, vec2 B, float t ) {
-    return A*t + B*(1.f-t) ;
+    return A*t + B*(1.0-t) ;
 }
 
 void main(void) {
   
     
     // get the four vertices passed to the shader:
-    vec2 p0 = screen_space( gl_PositionIn[0] );	// start of previous segment
-    vec2 p1 = screen_space( gl_PositionIn[1] );	// end of previous segment, start of current segment
-    vec2 p2 = screen_space( gl_PositionIn[2] );	// end of current segment, start of next segment
-    vec2 p3 = screen_space( gl_PositionIn[3] );	// end of next segment
+    vec2 p0 = screen_space( gl_in[0].gl_Position );	// start of previous segment
+    vec2 p1 = screen_space( gl_in[1].gl_Position );	// end of previous segment, start of current segment
+    vec2 p2 = screen_space( gl_in[2].gl_Position );	// end of current segment, start of next segment
+    vec2 p3 = screen_space( gl_in[3].gl_Position );	// end of next segment
   
-    if (TIME_SECONDS < gl_PositionIn[1].z) {
+    if (TIME_SECONDS < vTime[1]) {
         return;
-    } else if (TIME_SECONDS < gl_PositionIn[2].z) {
-        float t = (TIME_SECONDS - gl_PositionIn[1].z) /
-                  (gl_PositionIn[2].z - gl_PositionIn[1].z);
-        p2 = lerp(p1, p2, 1.f-t);
+    } else if (TIME_SECONDS < vTime[2]) {
+        float t = (TIME_SECONDS - vTime[1]) /
+                  (vTime[2] - vTime[1]);
+        p2 = lerp(p1, p2, 1.0-t);
     }
     
 
@@ -67,29 +71,23 @@ void main(void) {
         // close the gap
         if( dot(v0,n1) > 0. ) {
             gsTexCoord = vec2(0, 0);
-            gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 + THICKNESS * n0) / WIN_SCALE, 0.0, 1.0 );
             EmitVertex();
             gsTexCoord = vec2(0, 0);
-            gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 + THICKNESS * n1) / WIN_SCALE, 0.0, 1.0 );
             EmitVertex();
             gsTexCoord = vec2(0, 0.5);
-            gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( p1 / WIN_SCALE, 0.0, 1.0 );
             EmitVertex();
             EndPrimitive();
         } else {
             gsTexCoord = vec2(0, 1);
-            gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 - THICKNESS * n1) / WIN_SCALE, 0.0, 1.0 );
             EmitVertex();
             gsTexCoord = vec2(0, 1);
-            gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( (p1 - THICKNESS * n0) / WIN_SCALE, 0.0, 1.0 );
             EmitVertex();
             gsTexCoord = vec2(0, 0.5);
-            gl_FrontColor = gl_FrontColorIn[1];
             gl_Position = vec4( p1 / WIN_SCALE, 0.0, 1.0 );
             EmitVertex();
             EndPrimitive();
@@ -103,19 +101,15 @@ void main(void) {
   
     // generate the triangle strip
     gsTexCoord = vec2(0, 0);
-    gl_FrontColor = gl_FrontColorIn[1];
     gl_Position = vec4( (p1 + length_a * miter_a) / WIN_SCALE, 0.0, 1.0 );
     EmitVertex();
     gsTexCoord = vec2(0, 1);
-    gl_FrontColor = gl_FrontColorIn[1];
     gl_Position = vec4( (p1 - length_a * miter_a) / WIN_SCALE, 0.0, 1.0 );
     EmitVertex();
     gsTexCoord = vec2(0, 0);
-    gl_FrontColor = gl_FrontColorIn[2];
     gl_Position = vec4( (p2 + length_b * miter_b) / WIN_SCALE, 0.0, 1.0 );
     EmitVertex();
     gsTexCoord = vec2(0, 1);
-    gl_FrontColor = gl_FrontColorIn[2];
     gl_Position = vec4( (p2 - length_b * miter_b) / WIN_SCALE, 0.0, 1.0 );
     EmitVertex();
 

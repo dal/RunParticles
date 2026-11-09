@@ -4,14 +4,22 @@ CINDER="../cinder_0.8.2_vc2008"
 }
 
 macx {
-CINDER="/usr/local/cinder_0.8.5_mac"
 FRAMEWORKS=/System/Library/Frameworks
 }
 
+# glm (header only) is used for vector math. The copy bundled with Cinder is
+# fine; override with qmake GLM_DIR=/path/containing/glm to use another.
+isEmpty(GLM_DIR): GLM_DIR = /Users/dal/Documents/cinder/Cinder/include
+INCLUDEPATH += $${GLM_DIR}
+DEFINES += GLM_FORCE_CTOR_INIT
+INCLUDEPATH += ../src ../src/commands ../src/fitsdk ../include
+
+win32 {
 VPATH += $${CINDER}/include/
 INCLUDEPATH += $${CINDER}/include/
 INCLUDEPATH += $${CINDER}/boost/
 INCLUDEPATH += $${CINDER}/boost/boost/
+}
 
 win32 {
 debug {
@@ -38,54 +46,15 @@ LIBS += $${CINDER}"/lib/msw/zlib.lib"
 }
 
 macx {
-CONFIG += c++11
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/Accelerate.framework
-LIBS += -framework Accelerate
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/AudioToolbox.framework
-LIBS += -framework AudioToolbox
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/AudioUnit.framework
-LIBS += -framework AudioUnit
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/CoreAudio.framework
-LIBS += -framework CoreAudio
-#QMAKE_LFLAGS += -L$${FRAMEWORKS}/QuickTime.framework
-#LIBS += -framework QuickTime
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/QTKit.framework
-LIBS += -framework QTKit
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/CoreVideo.framework
-LIBS += -framework CoreVideo
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/Carbon.framework
-LIBS += -framework Carbon
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/OpenGL.framework
+CONFIG += c++17
 LIBS += -framework OpenGL
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/Cocoa.framework
 LIBS += -framework Cocoa
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/AppKit.framework
 LIBS += -framework AppKit
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/CoreData.framework
-LIBS += -framework CoreData
-QMAKE_LFLAGS += -L$${FRAMEWORKS}/Foundation.framework
 LIBS += -framework Foundation
-}
-
-macx {
-LIBS += $${CINDER}/lib/libcinder.a
-LIBS += $${CINDER}"/lib/macosx/libboost_date_time.a"
-LIBS += $${CINDER}"/lib/macosx/libboost_filesystem.a"
-LIBS += $${CINDER}"/lib/macosx/libboost_system.a"
-#LIBS += "/usr/local/lib/libcairo.a"
-#LIBS += "/usr/local/lib/libpixman-1.a"
-#LIBS += "/usr/local/lib/libpng.a"
-CONFIG += -stdlib=libc++    
-QMAKE_CXXFLAGS += -std=c++11
-QMAKE_CXXFLAGS += -stdlib=libc++
-XCODE_COMPILER_LIBRARY.name = CLANG_CXX_LIBRARY
-XCODE_COMPILER_LIBRARY.value = libc++
-QMAKE_MAC_XCODE_SETTINGS += XCODE_COMPILER_LIBRARY
-#CONFIG -= x86_64 ppc64
-#CONFIG += x86
-#ARCHES -= x86_64
-ARCHES -= i386
-QMAKE_MAC_SDK = macosx
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 12.0
+# AGL was removed from the macOS SDK; older Qt mkspecs still link it
+QMAKE_LIBS_OPENGL = -framework OpenGL
+QMAKE_INCDIR_OPENGL = /System/Library/Frameworks/OpenGL.framework/Headers
 }
 
 CONFIG += qt
@@ -106,6 +75,7 @@ HEADERS = ../src/AboutDialog.h \
           ../src/Box.h \
           ../src/FitFileReader.h \
           ../src/ExportImageDialog.h \
+          ../src/GLUtil.h \
           ../src/GLWidget.h \
           ../src/GpxHandler.h \
           ../src/Layer.h \
@@ -245,6 +215,7 @@ HEADERS = ../src/AboutDialog.h \
 SOURCES = ../src/AboutDialog.cpp \
           ../src/ExportImageDialog.cpp \
           ../src/FitFileReader.cpp \
+          ../src/GLUtil.cpp \
           ../src/GLWidget.cpp \
           ../src/GpxHandler.cpp \
           ../src/main.cpp \
@@ -291,12 +262,17 @@ SOURCES = ../src/AboutDialog.cpp \
           ../src/fitsdk/fit_mesg_with_event_broadcaster.cpp \
           ../src/fitsdk/fit_buffered_record_mesg_broadcaster.cpp
 
-OTHER_FILES += ../resources/about.html
-               ../resources/track1.frag
-               ../resources/track1.geom
-               ../resources/track1.vert
-               ../resources/viewportGlow.frag
+OTHER_FILES += ../resources/about.html \
+               ../resources/track1.frag \
+               ../resources/track1.geom \
+               ../resources/track1.vert \
+               ../resources/viewportGlow.frag \
+               ../resources/quad.vert \
+               ../resources/osmTile.frag \
+               ../resources/label.frag \
+               ../resources/flat.vert \
+               ../resources/flat.frag
 
 RESOURCES = ../resources/resources.qrc
           
-QT += opengl network xml
+QT += widgets opengl openglwidgets network xml core5compat

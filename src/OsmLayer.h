@@ -6,21 +6,13 @@
 #include "Types.h"
 #include "ViewCtx.h"
 
-#include "boost/shared_ptr.hpp"
-
-#include "cinder/gl/gl.h"
-#include "cinder/gl/DisplayList.h"
-#include "cinder/ImageIo.h"
-#include "cinder/CinderResources.h"
-#include "cinder/gl/Texture.h"
-
-#include "cinder/gl/TextureFont.h"
-#include "cinder/Text.h"
-
+#include <memory>
 #include <unordered_map>
 
+#include <QImage>
 #include <QObject>
-#include <QGLShaderProgram>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
 
 class OsmLayer : public Layer
 {
@@ -70,19 +62,22 @@ protected:
     
     struct Tile
     {
-        Tile(gl::DisplayList *quad);
-        gl::DisplayList *quadDisplayList;
-        gl::Texture *texture;
+        Tile();
+        
+        /* The tile image, uploaded to the GPU on the first draw. */
+        QImage image;
+        std::unique_ptr<QOpenGLTexture> texture;
         OsmIndex index;
         MapPoint upperLeft;
         MapPoint lowerRight;
-        QGLShaderProgram *shader;
+        QOpenGLShaderProgram *shader;
         
-        void setTexture(const Surface8u &surface);
+        void setImage(const QImage &image);
         
         void draw(const ViewCtx &viewCtx);
         
-        void _drawQuad(const MapPoint &upperLeft, const MapPoint &lowerRight);
+        void _drawQuad(const ViewCtx &viewCtx, const MapPoint &upperLeft,
+                       const MapPoint &lowerRight);
     };
     
     typedef std::shared_ptr<Tile> TileRefPtr;
@@ -93,7 +88,8 @@ protected:
     
     TileMap _tiles;
     
-    gl::DisplayList _quad, _label;
+    void _drawLabel(const ViewCtx &viewCtx);
+    
     
     uint _getZoomLevel(double resolution) const;
     
@@ -113,15 +109,17 @@ protected:
     
     float _resolutions[numZoomLevels];
     
-    QGLShaderProgram *_shader;
+    QOpenGLShaderProgram *_shader;
     
     bool _isSetup;
     
-    gl::TextureFontRef _tFont;
+    QOpenGLShaderProgram *_labelShader;
     
-    Font _font;
+    std::unique_ptr<QOpenGLTexture> _labelTexture;
     
-    Vec2f _labelWidth;
+    QSizeF _labelSize;
+    
+    float _labelAscent;
     
 };
 

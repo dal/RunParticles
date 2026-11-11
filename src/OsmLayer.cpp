@@ -195,7 +195,9 @@ OsmLayer::Tile::Tile() :
 void
 OsmLayer::Tile::draw(const ViewCtx &viewCtx)
 {
-    if (image.isNull())
+    // Nothing to draw until the tile image has arrived. Once it's uploaded
+    // the image is released, so check the texture first.
+    if (!texture && image.isNull())
         return;
     if (!texture) {
         texture.reset(new QOpenGLTexture(image.convertToFormat(

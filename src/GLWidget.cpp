@@ -120,8 +120,11 @@ void
 GLWidget::resizeGL(int width, int height)
 {
     _viewCtx.setDevicePixelRatio(devicePixelRatioF());
-    int oldWidth = _viewCtx.getViewportWidth();
-    int oldHeight = _viewCtx.getViewportHeight();
+    // The view context's viewport is in device pixels, but MapView works in
+    // the widget's logical pixels, like the new width and height.
+    const double ratio = _viewCtx.getDevicePixelRatio();
+    int oldWidth = qRound(_viewCtx.getViewportWidth() / ratio);
+    int oldHeight = qRound(_viewCtx.getViewportHeight() / ratio);
     _mapView.resize(oldWidth, oldHeight, width, height);
     _updateViewCtx();
     //glViewport (0, 0, (GLint) width, (GLint) height);

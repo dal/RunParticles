@@ -8,8 +8,7 @@ RunParticles displays multiple GPS tracklogs in .TCX, .GPX or
 animates them on an [OpenStreetMap](http://openstreetmap.org). 
 
 ## Requirements
-RunParticles requires [Cinder](http://libcinder.org) and 
-[Qt 5](http://qt-project.org/qt5).
+RunParticles requires [Qt 6](http://qt-project.org/qt6).
 
 ## License
 RunParticles is free software licensed under the 
